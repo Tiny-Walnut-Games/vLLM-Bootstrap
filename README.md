@@ -1,11 +1,11 @@
 # Local LLM Ritual — Three-Scroll Doctrine
 
-## Foreward
+## Foreword
 
-This bootstrap was created in reponse for my, @jmeyer1980's, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces.
+This bootstrap was created in response for my, @jmeyer1980's, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces.
 It was developed for myself and a friend who recently grabbed a 16gig VRAM card and plans on self-hosting as well. I cannot claim usability of this script for every system.
 Feel free to comment with suggested updates. Please stick to those HuggingFace hosted models that can be easily pulled and served using this workflow.
-Collaborators should keep the over-all mental model in conideration when recommending updates.
+Collaborators should keep the overall mental model in consideration when recommending updates.
 
 ## Files
 
