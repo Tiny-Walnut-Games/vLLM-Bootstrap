@@ -1,150 +1,202 @@
 #!/usr/bin/env bash
 set -e
 
-echo "🏗️ Initial Bootstrap: preparing the temple..."
+DOCTRINE_VERSION="2025.10.08"
+echo "🏗️ Initial Bootstrap (v$DOCTRINE_VERSION): preparing the temple..."
 
 # --- System prep ---
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y python3 python3-venv python3-pip build-essential git curl netcat tmux
+sudo apt update && sudo apt install -y python3 python3-venv python3-pip git curl tmux netcat
 
 # --- Virtual environment ---
-python3 -m venv ~/torch-env
+if [ ! -d ~/torch-env ]; then
+  python3 -m venv ~/torch-env
+fi
 source ~/torch-env/bin/activate
 pip install --upgrade pip
-
-# --- Core libraries ---
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 pip install vllm autoawq huggingface_hub
 
-# --- Pre-cache pantheon models (optional but recommended) ---
-huggingface-cli download meta-llama/Llama-3.2-1B --local-dir ./models/llama-1b
-huggingface-cli download microsoft/phi-3.5-mini-3.8b-instruct --local-dir ./models/phi-3.5
-huggingface-cli download mistralai/Mistral-7B-Instruct-v0.3 --local-dir ./models/mistral-7b
-huggingface-cli download bigcode/starcoder2-15b --local-dir ./models/starcoder2-15b
+# --- Ensure models directory ---
+mkdir -p ./models
 
-# --- Write daily-bootstrap.sh ---
-cat > ./daily-bootstrap.sh <<'DAILY'
+# --- Artifact writer ---
+write_if_missing_or_outdated() {
+  local file=$1
+  local content=$2
+  if [ ! -f "$file" ] || ! grep -q "doctrine-version: $DOCTRINE_VERSION" "$file"; then
+    echo "📜 Updating $file"
+    printf "%s" "$content" > "$file"
+  else
+    echo "✅ $file is up to date"
+  fi
+}
+
+# --- daily-bootstrap.sh ---
+DAILY_CONTENT=$(cat <<'EOF'
 #!/usr/bin/env bash
+# doctrine-version: 2025.10.08
 set -e
 source ~/torch-env/bin/activate
 
-# --- Pantheon (comment-swap as desired) ---
-MODEL_1B="meta-llama/Llama-3.2-1B"
-# MODEL_1B="Qwen/Qwen2.5-0.5B-Instruct"
-# MODEL_1B="HuggingFaceTB/SmolLM2-1.7B-Instruct"
+MODEL_ROLE=$1
+MODELS_CONF="./models.conf"
+PORTS_CONF="./ports.conf"
 
-MODEL_4B="microsoft/phi-3.5-mini-3.8b-instruct"
-# MODEL_4B="google/gemma-3-4b"
-# MODEL_4B="cerebras/Cerebras-GPT-2.7B"
-
-MODEL_7B="mistralai/Mistral-7B-Instruct-v0.3"
-# MODEL_7B="teknium/OpenHermes-2.5-Mistral-7B"
-# MODEL_7B="WizardLM/WizardLM-2-7B"
-
-MODEL_15B="bigcode/starcoder2-15b"
-# MODEL_15B="deepseek-ai/DeepSeek-Coder-V2"
-# MODEL_15B="mistralai/Codestral-15B"
-
-# --- Port ranges ---
-RANGE_1B_START=8100
-RANGE_4B_START=8300
-RANGE_7B_START=8500
-RANGE_15B_START=8700
-RANGE_SIZE=200
-
-# Helper: find next free port
-next_free_port() {
-  local start=$1
-  local end=$((start + RANGE_SIZE - 1))
-  for port in $(seq $start $end); do
-    if ! nc -z localhost $port 2>/dev/null; then
-      echo $port
-      return
-    fi
-  done
-  echo "No free port in range $start-$end" >&2
+if [ -z "$MODEL_ROLE" ]; then
+  echo "Usage: ./daily-bootstrap.sh {fast|edit|qa|plan}"
   exit 1
-}
+fi
 
-# Dispatcher
-case "$1" in
-  fast|1b)
-    PORT=$(next_free_port $RANGE_1B_START)
-    echo "⚡ Summoning 1B model on port $PORT"
-    vllm serve $MODEL_1B --port $PORT --host 0.0.0.0 --gpu-memory-utilization 0.2
-    ;;
-  edit|4b)
-    PORT=$(next_free_port $RANGE_4B_START)
-    echo "📝 Summoning 4B model on port $PORT"
-    vllm serve $MODEL_4B --port $PORT --host 0.0.0.0 --gpu-memory-utilization 0.3
-    ;;
-  qa|7b)
-    PORT=$(next_free_port $RANGE_7B_START)
-    echo "❓ Summoning 7B model on port $PORT"
-    vllm serve $MODEL_7B --port $PORT --host 0.0.0.0 --gpu-memory-utilization 0.5
-    ;;
-  plan|15b)
-    PORT=$(next_free_port $RANGE_15B_START)
-    echo "📐 Summoning 15B model on port $PORT"
-    vllm serve $MODEL_15B --port $PORT --host 0.0.0.0 --gpu-memory-utilization 0.6
-    ;;
-  *)
-    echo "Usage: $0 {fast|edit|qa|plan}"
-    exit 1
-    ;;
+case "$MODEL_ROLE" in
+  fast)  TIER="1B" ;;
+  edit)  TIER="4B" ;;
+  qa)    TIER="7B" ;;
+  plan)  TIER="15B" ;;
+  *) echo "Unknown role: $MODEL_ROLE"; exit 1 ;;
 esac
-DAILY
 
+MODEL=$(awk -F"=" -v tier="[$TIER]" '
+  $0==tier {found=1}
+  found && $1 ~ /default/ {gsub(/ /,"",$2); print $2; exit}
+' "$MODELS_CONF")
+
+RANGE=$(awk -F"=" -v tier="$TIER" '
+  $1 ~ tier {gsub(/ /,"",$2); print $2; exit}
+' "$PORTS_CONF")
+
+START=$(echo $RANGE | cut -d"-" -f1)
+END=$(echo $RANGE | cut -d"-" -f2)
+
+# --- Dynamic GPU memory utilization ---
+TOTAL_MEM=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -n1)
+
+if [ -z "$TOTAL_MEM" ]; then
+  case "$TIER" in
+    1B) UTIL=0.2 ;;
+    4B) UTIL=0.3 ;;
+    7B) UTIL=0.5 ;;
+    15B) UTIL=0.6 ;;
+  esac
+else
+  if [ "$TOTAL_MEM" -le 8192 ]; then
+    case "$TIER" in
+      1B) UTIL=0.25 ;;
+      4B) UTIL=0.35 ;;
+      7B) UTIL=0.55 ;;
+      15B) UTIL=0.65 ;;
+    esac
+  else
+    case "$TIER" in
+      1B) UTIL=0.15 ;;
+      4B) UTIL=0.25 ;;
+      7B) UTIL=0.45 ;;
+      15B) UTIL=0.55 ;;
+    esac
+  fi
+fi
+
+for PORT in $(seq $START $END); do
+  if ! nc -z localhost $PORT 2>/dev/null; then
+    echo "🚀 Launching $MODEL_ROLE ($MODEL) on port $PORT with GPU util $UTIL"
+    exec python3 -m vllm.entrypoints.openai.api_server --model "$MODEL" --port $PORT --gpu-memory-utilization $UTIL
+  fi
+done
+
+echo "❌ No free ports in range $RANGE"
+exit 1
+EOF
+)
+write_if_missing_or_outdated "./daily-bootstrap.sh" "$DAILY_CONTENT"
 chmod +x ./daily-bootstrap.sh
 
-# --- Write README.txt ---
-cat > ./README.txt <<'README'
-# Local LLM Ritual — Three-Scroll Doctrine
+# --- models.conf ---
+MODELS_CONTENT=$(cat <<'EOF'
+[1B]
+default = meta-llama/Llama-3.2-1B
+alt1 = Qwen/Qwen2.5-0.5B-Instruct
+alt2 = HuggingFaceTB/SmolLM2-1.7B-Instruct
+
+[4B]
+default = microsoft/phi-3.5-mini-3.8b-instruct
+alt1 = google/gemma-3-4b
+alt2 = cerebras/Cerebras-GPT-2.7B
+
+[7B]
+default = mistralai/Mistral-7B-Instruct-v0.3
+alt1 = teknium/OpenHermes-2.5-Mistral-7B
+alt2 = WizardLM/WizardLM-2-7B
+
+[15B]
+default = bigcode/starcoder2-15b
+alt1 = deepseek-ai/DeepSeek-Coder-V2
+alt2 = mistralai/Codestral-15B
+
+# doctrine-version: 2025.10.08
+EOF
+)
+write_if_missing_or_outdated "./models.conf" "$MODELS_CONTENT"
+
+# --- ports.conf ---
+PORTS_CONTENT=$(cat <<'EOF'
+[ranges]
+1B = 8100-8299
+4B = 8300-8499
+7B = 8500-8699
+15B = 8700-8899
+
+# doctrine-version: 2025.10.08
+EOF
+)
+write_if_missing_or_outdated "./ports.conf" "$PORTS_CONTENT"
+
+# --- README.txt ---
+README_CONTENT=$(cat <<'EOF'
+# Local LLM Ritual — Four-Scroll Doctrine
+# doctrine-version: 2025.10.08
 
 ## Foreword
-
 This bootstrap was created in response for my, @jmeyer1980's, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces.
-It was developed for myself and a friend who recently grabbed a 16gig VRAM card and plans on self-hosting as well. I cannot claim usability of this script for every system.
+It was developed for myself and a friend who recently grabbed a 16GB VRAM card and plans on self-hosting as well. I cannot claim usability of this script for every system.
 Feel free to comment with suggested updates. Please stick to those HuggingFace hosted models that can be easily pulled and served using this workflow.
 Collaborators should keep the overall mental model in consideration when recommending updates.
 
 ## Files
-
-- `initial-bootstrap.sh` — Run once on a fresh machine. Installs dependencies, sets up venv, caches models, and writes the daily scroll + this README.
-- `daily-bootstrap.sh` — Run every day to summon a model by role.
-- `README.txt` — This file. Instructions and reference.
+- initial-bootstrap.sh — Run once on a fresh machine. Installs dependencies, sets up venv, caches models, and writes the daily scroll + this README.
+- daily-bootstrap.sh — Run every day to summon a model by role.
+- models.conf — Created/updated by the bootstrap.
+- ports.conf — Created/updated by the bootstrap.
+- README.txt — This file.
 
 ## Usage
+1. Run ./initial-bootstrap.sh once on a new system.
+2. After that, use ./daily-bootstrap.sh {fast|edit|qa|plan} to awaken a model.
 
-1. Run `./initial-bootstrap.sh` once on a new system.
-2. After that, use `./daily-bootstrap.sh {fast|edit|qa|plan}` to awaken a model:
-   - `fast` → 1B model (autocomplete, boilerplate)
-   - `edit` → 4B model (light editing)
-   - `qa`   → 7B model (general assistant)
-   - `plan` → 15B model (deep planning)
+## Roles
+- fast → 1B model (autocomplete, boilerplate)
+- edit → 4B model (light editing)
+- qa   → 7B model (general assistant)
+- plan → 15B model (deep planning)
+
+## Config
+- models.conf → model pantheon
+- ports.conf  → port ranges
 
 ## Comment-Swap
-
-Each tier has 2–3 models defined. To switch, open `daily-bootstrap.sh` and comment/uncomment the one you want.
+Each tier has 2–3 models defined. To switch, edit models.conf.
 
 ## Solo vs Indi-Team
-
 - Default: Solo-dev mode (safe for 8GB VRAM).
-- Indi-team mode: On 16GB+, you can modify `daily-bootstrap.sh` to spawn multiple tmux sessions per tier across port ranges.
+- Indi-team mode: On 16GB+, you can modify daily-bootstrap.sh to spawn multiple tmux sessions per tier across port ranges.
 
 ## Port Ranges
-
 - 1B → 8100–8299
 - 4B → 8300–8499
 - 7B → 8500–8699
 - 15B → 8700–8899
 
 Each invocation picks the next free port in its tier’s range.
+EOF
+)
+write_if_missing_or_outdated "./README.txt" "$README_CONTENT"
 
-README
-
-echo "✅ Ritual complete. You now have:"
-echo "  - initial-bootstrap.sh"
-echo "  - daily-bootstrap.sh"
-echo "  - README.txt"
-echo "Run ./daily-bootstrap.sh {fast|edit|qa|plan} to begin."
+echo "🎉 Ritual complete. All scrolls verified or created."
