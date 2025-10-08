@@ -1,8 +1,19 @@
-# Local LLM Ritual — Four-Scroll Doctrine
+# -------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction...
+# THE SOFTWARE IS PROVIDED "AS IS"...
+# -------------------------------------------------------------------
 # doctrine-version: 2025.10.08
 
+# Local LLM Ritual — Four-Scroll Doctrine
+
 ## Foreword
-This bootstrap was created in response for my, @jmeyer1980's, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces.
+This bootstrap was created in response for my, @jmeyer1980, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces.
 It was developed for myself and a friend who recently grabbed a 16GB VRAM card and plans on self-hosting as well. I cannot claim usability of this script for every system.
 Feel free to comment with suggested updates. Please stick to those HuggingFace hosted models that can be easily pulled and served using this workflow.
 Collaborators should keep the overall mental model in consideration when recommending updates.

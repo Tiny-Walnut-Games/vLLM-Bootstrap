@@ -1,4 +1,28 @@
 #!/usr/bin/env bash
+# -------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# -------------------------------------------------------------------
+
 set -e
 
 DOCTRINE_VERSION="2025.10.08"
@@ -34,7 +58,18 @@ write_if_missing_or_outdated() {
 # --- daily-bootstrap.sh ---
 DAILY_CONTENT=$(cat <<'EOF'
 #!/usr/bin/env bash
+# -------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction...
+# THE SOFTWARE IS PROVIDED "AS IS"...
+# -------------------------------------------------------------------
 # doctrine-version: 2025.10.08
+
 set -e
 source ~/torch-env/bin/activate
 
@@ -60,12 +95,22 @@ MODEL=$(awk -F"=" -v tier="[$TIER]" '
   found && $1 ~ /default/ {gsub(/ /,"",$2); print $2; exit}
 ' "$MODELS_CONF")
 
+if [ -z "$MODEL" ]; then
+  echo "❌ No model found for tier $TIER in $MODELS_CONF"
+  exit 1
+fi
+
 RANGE=$(awk -F"=" -v tier="$TIER" '
   $1 ~ tier {gsub(/ /,"",$2); print $2; exit}
 ' "$PORTS_CONF")
 
-START=$(echo $RANGE | cut -d"-" -f1)
-END=$(echo $RANGE | cut -d"-" -f2)
+if [ -z "$RANGE" ]; then
+  echo "❌ No port range found for tier $TIER in $PORTS_CONF"
+  exit 1
+fi
+
+START=$(echo "$RANGE" | cut -d"-" -f1)
+END=$(echo "$RANGE" | cut -d"-" -f2)
 
 # --- Dynamic GPU memory utilization ---
 TOTAL_MEM=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -n1)
@@ -95,10 +140,10 @@ else
   fi
 fi
 
-for PORT in $(seq $START $END); do
-  if ! nc -z localhost $PORT 2>/dev/null; then
+for PORT in $(seq "$START" "$END"); do
+  if ! nc -z localhost "$PORT" 2>/dev/null; then
     echo "🚀 Launching $MODEL_ROLE ($MODEL) on port $PORT with GPU util $UTIL"
-    exec python3 -m vllm.entrypoints.openai.api_server --model "$MODEL" --port $PORT --gpu-memory-utilization $UTIL
+    exec python3 -m vllm.entrypoints.openai.api_server --model "$MODEL" --port "$PORT" --gpu-memory-utilization "$UTIL"
   fi
 done
 
@@ -111,6 +156,18 @@ chmod +x ./daily-bootstrap.sh
 
 # --- models.conf ---
 MODELS_CONTENT=$(cat <<'EOF'
+# -------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction...
+# THE SOFTWARE IS PROVIDED "AS IS"...
+# -------------------------------------------------------------------
+# doctrine-version: 2025.10.08
+
 [1B]
 default = meta-llama/Llama-3.2-1B
 alt1 = Qwen/Qwen2.5-0.5B-Instruct
@@ -130,32 +187,51 @@ alt2 = WizardLM/WizardLM-2-7B
 default = bigcode/starcoder2-15b
 alt1 = deepseek-ai/DeepSeek-Coder-V2
 alt2 = mistralai/Codestral-15B
-
-# doctrine-version: 2025.10.08
 EOF
 )
 write_if_missing_or_outdated "./models.conf" "$MODELS_CONTENT"
 
 # --- ports.conf ---
 PORTS_CONTENT=$(cat <<'EOF'
+# -------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction...
+# THE SOFTWARE IS PROVIDED "AS IS"...
+# -------------------------------------------------------------------
+# doctrine-version: 2025.10.08
+
 [ranges]
 1B = 8100-8299
 4B = 8300-8499
 7B = 8500-8699
 15B = 8700-8899
-
-# doctrine-version: 2025.10.08
 EOF
 )
 write_if_missing_or_outdated "./ports.conf" "$PORTS_CONTENT"
 
 # --- README.txt ---
 README_CONTENT=$(cat <<'EOF'
-# Local LLM Ritual — Four-Scroll Doctrine
+# -------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction...
+# THE SOFTWARE IS PROVIDED "AS IS"...
+# -------------------------------------------------------------------
 # doctrine-version: 2025.10.08
 
+# Local LLM Ritual — Four-Scroll Doctrine
+
 ## Foreword
-This bootstrap was created in response for my, @jmeyer1980's, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces.
+This bootstrap was created in response for my, @jmeyer1980, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces.
 It was developed for myself and a friend who recently grabbed a 16GB VRAM card and plans on self-hosting as well. I cannot claim usability of this script for every system.
 Feel free to comment with suggested updates. Please stick to those HuggingFace hosted models that can be easily pulled and served using this workflow.
 Collaborators should keep the overall mental model in consideration when recommending updates.
