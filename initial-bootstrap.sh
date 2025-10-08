@@ -2,7 +2,7 @@
 # -------------------------------------------------------------------
 # MIT License
 #
-# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+# Copyright (c) 2025 Jerimiah Michael Meyer (@jmeyer1980)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
