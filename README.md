@@ -25,7 +25,6 @@ Collaborators should keep the overall mental model in consideration when recomme
 - README.txt — This file.
 
 ## Installation
-
 1. Download the gist zip.
 2. Open and extract the scripts themselves into a folder within your WSL venv's ~/.config/ directory
    - I use `~/.config/llm-doctrine` which lives in the following UNC path: `\\wsl.localhost\Ubuntu\home\jerio\.config\llm-doctrine` on my machine.

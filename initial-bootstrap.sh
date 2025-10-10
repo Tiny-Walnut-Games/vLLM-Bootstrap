@@ -243,9 +243,16 @@ Collaborators should keep the overall mental model in consideration when recomme
 - ports.conf — Created/updated by the bootstrap.
 - README.txt — This file.
 
+## Installation
+1. Download the gist zip.
+2. Open and extract the scripts themselves into a folder within your WSL venv's ~/.config/ directory
+   - I use `~/.config/llm-doctrine` which lives in the following UNC path: `\\wsl.localhost\Ubuntu\home\jerio\.config\llm-doctrine` on my machine.
+
 ## Usage
-1. Run ./initial-bootstrap.sh once on a new system.
-2. After that, use ./daily-bootstrap.sh {fast|edit|qa|plan} to awaken a model.
+1. Open your WSL terminal.
+   - Note that the bootstrap will create the Pytorch sub-environment for you.
+3. Run ./initial-bootstrap.sh once on the intended host system.
+4. After that, use ./daily-bootstrap.sh {fast|edit|qa|plan} to awaken a model.
 
 ## Roles
 - fast → 1B model (autocomplete, boilerplate)
