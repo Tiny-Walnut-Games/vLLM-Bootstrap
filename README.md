@@ -7,7 +7,7 @@ of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction...
 THE SOFTWARE IS PROVIDED "AS IS"...
 -------------------------------------------------------------------
-**doctrine-version: 2025.10.08**
+**doctrine-version: 2025.10.10**
 
 # Local LLM Ritual — Four-Scroll Doctrine
 

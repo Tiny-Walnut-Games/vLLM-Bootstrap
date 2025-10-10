@@ -25,7 +25,7 @@
 
 set -e
 
-DOCTRINE_VERSION="2025.10.08"
+DOCTRINE_VERSION="2025.10.10"
 echo "🏗️ Initial Bootstrap (v$DOCTRINE_VERSION): preparing the temple..."
 
 # --- System prep ---
@@ -68,7 +68,7 @@ DAILY_CONTENT=$(cat <<'EOF'
 # in the Software without restriction...
 # THE SOFTWARE IS PROVIDED "AS IS"...
 # -------------------------------------------------------------------
-# doctrine-version: 2025.10.08
+# doctrine-version: 2025.10.10
 
 set -e
 source ~/torch-env/bin/activate
@@ -166,7 +166,7 @@ MODELS_CONTENT=$(cat <<'EOF'
 # in the Software without restriction...
 # THE SOFTWARE IS PROVIDED "AS IS"...
 # -------------------------------------------------------------------
-# doctrine-version: 2025.10.08
+# doctrine-version: 2025.10.10
 
 [1B]
 default = meta-llama/Llama-3.2-1B
@@ -226,7 +226,7 @@ README_CONTENT=$(cat <<'EOF'
 # in the Software without restriction...
 # THE SOFTWARE IS PROVIDED "AS IS"...
 # -------------------------------------------------------------------
-# doctrine-version: 2025.10.08
+# doctrine-version: 2025.10.10
 
 # Local LLM Ritual — Four-Scroll Doctrine
 
