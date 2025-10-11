@@ -1,0 +1,143 @@
+# vLLM-Doctrine .gitignore
+# Excludes generated files, logs, and local artifacts
+
+# ============================================================================
+# GENERATED FILES (Created by initial-bootstrap.sh)
+# ============================================================================
+# These files are automatically generated during bootstrap
+# Note: chat-templates.conf is kept in repo as reference documentation
+daily-bootstrap.sh
+test-connection.sh
+validate-config.sh
+preload-models.sh
+models.conf
+ports.conf
+README.txt
+
+# ============================================================================
+# RUNTIME ARTIFACTS
+# ============================================================================
+# Logs
+logs/
+*.log
+
+# Model cache (HuggingFace)
+models/
+.cache/
+
+# Backup files
+*.bak
+*.bak.*
+
+# ============================================================================
+# PYTHON / VIRTUAL ENVIRONMENTS
+# ============================================================================
+# Virtual environment (if created locally)
+venv/
+env/
+torch-env/
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ============================================================================
+# SYSTEM FILES
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# ============================================================================
+# IDE / EDITOR FILES
+# ============================================================================
+# JetBrains (Rider, PyCharm, etc.)
+.idea/
+*.iml
+*.iws
+.vs/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============================================================================
+# TEMPORARY / DEVELOPMENT FILES
+# ============================================================================
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Test results
+test-results/
+*.test
+
+# Development notes (keep in local only)
+NOTES.md
+TODO.md
+SCRATCH.md
+
+# ============================================================================
+# SECURITY / SENSITIVE DATA
+# ============================================================================
+# HuggingFace tokens (should be in ~/.cache/huggingface/)
+.huggingface/
+token
+*.token
+
+# API keys
+.env
+.env.local
+secrets/
+*.key
+
+# ============================================================================
+# ZENCODER (IDE Assistant)
+# ============================================================================
+.zencoder/
+
+# ============================================================================
+# DOCUMENTATION ARTIFACTS (Development Only - To Be Removed)
+# ============================================================================
+# These were used during development and are consolidated into CHANGELOG.md
+# They should be deleted from the repository after consolidation
+SUMMARY.md
+ACTION-PLAN.md
+IMPLEMENTATION-STATUS.md
+CURRENT-STATE-ANALYSIS.md
+
+# ============================================================================
+# WHAT SHOULD BE IN VERSION CONTROL
+# ============================================================================
+# Only these files should be tracked:
+# - initial-bootstrap.sh (main setup script)
+# - README.md (repository documentation)
+# - COMPLETE-GUIDE.md (comprehensive user guide)
+# - TESTING-GUIDE.md (testing procedures)
+# - CHANGELOG.md (version history)
+# - LICENSE (MIT license)
+# - .gitignore (this file)
+# - chat-templates.conf (reference documentation)
