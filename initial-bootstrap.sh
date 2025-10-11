@@ -75,7 +75,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "Paste your HuggingFace token (input will be hidden):"
   read -s HF_TOKEN
   if [ -n "$HF_TOKEN" ]; then
-    huggingface-cli login --token "$HF_TOKEN" && echo "✅ HuggingFace authentication successful!" || echo "⚠️  Authentication failed, you can retry later with: huggingface-cli login"
+    hf auth login --token "$HF_TOKEN" && echo "✅ HuggingFace authentication successful!" || echo "⚠️  Authentication failed, you can retry later with: huggingface-cli login"
   else
     echo "⚠️  No token provided. You can authenticate later with: huggingface-cli login"
   fi

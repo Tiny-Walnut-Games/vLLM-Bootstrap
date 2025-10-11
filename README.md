@@ -34,6 +34,7 @@ Feel free to comment with suggested updates. Please stick to those HuggingFace h
 
 ## 🎯 Quick Start
 
+### Just Want to Use vLLM? (Most Users)
 ```bash
 # 1. Install WSL (Windows PowerShell as Admin)
 wsl --install -d Ubuntu
@@ -62,6 +63,26 @@ source ~/torch-env/bin/activate
 ```
 
 **See [COMPLETE-GUIDE.md](COMPLETE-GUIDE.md) for detailed instructions.**
+
+### Want to Test Your Installation? (Optional)
+
+**⚠️ Testing is a separate process** but now with **one-click setup**:
+
+```cmd
+# 1. One-click installer (auto-installs Node.js if needed)
+E:\Tiny_Walnut_Games\vLLM-Doctrine\.vs\install-test-dependencies.bat
+
+# 2. Run comprehensive tests
+.\tests\run-comprehensive-tests.ps1
+
+# OR individual tests:
+npx playwright test
+npx playwright test --ui
+```
+
+**See [tests/QUICK-START-TESTING.md](tests/QUICK-START-TESTING.md) for complete testing guide.**
+
+**Testing validates your installation but is not required for normal usage.**
 
 ---
 

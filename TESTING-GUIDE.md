@@ -2,6 +2,15 @@
 **Version**: 2025.10.10  
 **Purpose**: Validate chat templates and system functionality
 
+## 🛑 IMPORTANT: Two Types of Testing
+
+**This document covers MANUAL testing for developers who want to validate specific functionality.**
+
+**For AUTOMATED comprehensive testing, see:**
+- `tests/QUICK-START-TESTING.md` ← **Start here for automated testing**
+- Automated tests require Node.js installation (separate from vLLM)
+- Manual tests only require your existing vLLM installation
+
 ---
 
 ## 🎯 Testing Objectives

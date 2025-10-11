@@ -1,0 +1,22 @@
+{
+  "name": "vllm-doctrine-tests",
+  "version": "2025.10.10",
+  "description": "End-to-end tests for vLLM-Doctrine local LLM toolkit",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "@types/node": "^18.0.0",
+    "@types/node-fetch": "^2.6.4",
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "node.js": "^0.0.1-security"
+  }
+}
