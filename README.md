@@ -6,18 +6,16 @@
 [![GitHub stars](https://img.shields.io/github/stars/Tiny-Walnut-Games/vLLM-Bootstrap.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Tiny-Walnut-Games/vLLM-Bootstrap.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/members)
 [![GitHub issues](https://img.shields.io/github/issues/Tiny-Walnut-Games/vLLM-Bootstrap.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/)
-[![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-green.svg)]()
+[![Production status](https://img.shields.io/badge/production-in%20active%20development-yellow?style=flat-square)]()
 [![Testing: Pending](https://img.shields.io/badge/Testing-Pending-orange.svg)]()
 
 ---
 
 ## 📖 Foreword
 
-This bootstrap was created in response for my, @jmeyer1980, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces.
+This bootstrap was created in response for my, @jmeyer1980, desire to quickly set up and distribute LLMs internally for use with Rider and other agentic IDE interfaces. It was developed for myself and a friend who recently grabbed a 16GB VRAM card and plans on self-hosting as well. I cannot claim usability of this script for every system.
 
-It was developed for myself and a friend who recently grabbed a 16GB VRAM card and plans on self-hosting as well. I cannot claim usability of this script for every system.
-
-Feel free to comment with suggested updates. Please stick to those HuggingFace hosted models that can be easily pulled and served using this workflow. Collaborators should keep the overall mental model in consideration when recommending updates.
+Feel free to create issues for bugs, desired features, and model suggestions. Please stick to those HuggingFace hosted models that can be easily pulled and served using this workflow. Collaborators should keep the overall mental model in consideration when recommending updates and avoid models that are inefficient in setup and deployment.
 
 ---
 
