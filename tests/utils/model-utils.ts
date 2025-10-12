@@ -43,7 +43,7 @@ export const MODEL_TIERS: ModelTier[] = [
     portStart: 8300,
     portEnd: 8499,
     models: [
-      'microsoft/phi-3.5-mini-3.8b-instruct',
+      'microsoft/phi-3.5-mini-instruct',
       'google/gemma-3-4b',
       'cerebras/Cerebras-GPT-2.7B'
     ],
@@ -58,7 +58,7 @@ export const MODEL_TIERS: ModelTier[] = [
     models: [
       'mistralai/Mistral-7B-Instruct-v0.3',
       'teknium/OpenHermes-2.5-Mistral-7B',
-      'WizardLM/WizardLM-2-7B'
+      'MaziyarPanahi/WizardLM-2-7B-GGUF'
     ],
     expectedTemplate: 'mistral'
   },
@@ -70,7 +70,7 @@ export const MODEL_TIERS: ModelTier[] = [
     portEnd: 8899,
     models: [
       'bigcode/starcoder2-15b',
-      'deepseek-ai/DeepSeek-Coder-V2',
+      'ServiceNow-AI/Apriel-1.5-15b-Thinker',
       'mistralai/Codestral-15B'
     ],
     expectedTemplate: 'starcoder'

@@ -25,7 +25,7 @@
 
 set -e
 
-DOCTRINE_VERSION="2025.10.10"
+DOCTRINE_VERSION="2025.10.12"
 echo "🏗️ Initial Bootstrap (v$DOCTRINE_VERSION): preparing the temple..."
 
 # --- System prep ---
@@ -115,7 +115,7 @@ DAILY_CONTENT=$(cat <<'EOF'
 # in the Software without restriction...
 # THE SOFTWARE IS PROVIDED "AS IS"...
 # -------------------------------------------------------------------
-# doctrine-version: 2025.10.10
+# doctrine-version: 2025.10.12
 
 set -e
 source ~/torch-env/bin/activate
@@ -242,7 +242,10 @@ MODELS_CONTENT=$(cat <<'EOF'
 # in the Software without restriction...
 # THE SOFTWARE IS PROVIDED "AS IS"...
 # -------------------------------------------------------------------
-# doctrine-version: 2025.10.10
+# doctrine-version: 2025.10.12
+# Remarks: Some models require preauthorization or acceptance of terms of service.
+# Access may remain gated until such conditions are met.
+# Please ensure compliance with the respective licenses and usage policies.
 
 [1B]
 default = meta-llama/Llama-3.2-1B
@@ -250,18 +253,18 @@ alt1 = Qwen/Qwen2.5-0.5B-Instruct
 alt2 = HuggingFaceTB/SmolLM2-1.7B-Instruct
 
 [4B]
-default = microsoft/phi-3.5-mini-3.8b-instruct
+default = microsoft/phi-3.5-mini-instruct
 alt1 = google/gemma-3-4b
 alt2 = cerebras/Cerebras-GPT-2.7B
 
 [7B]
 default = mistralai/Mistral-7B-Instruct-v0.3
 alt1 = teknium/OpenHermes-2.5-Mistral-7B
-alt2 = WizardLM/WizardLM-2-7B
+alt2 = MaziyarPanahi/WizardLM-2-7B-GGUF
 
 [15B]
 default = bigcode/starcoder2-15b
-alt1 = deepseek-ai/DeepSeek-Coder-V2
+alt1 = ServiceNow-AI/Apriel-1.5-15b-Thinker
 alt2 = mistralai/Codestral-15B
 EOF
 )
@@ -279,7 +282,7 @@ PORTS_CONTENT=$(cat <<'EOF'
 # in the Software without restriction...
 # THE SOFTWARE IS PROVIDED "AS IS"...
 # -------------------------------------------------------------------
-# doctrine-version: 2025.10.10
+# doctrine-version: 2025.10.12
 
 [ranges]
 1B = 8100-8299
@@ -302,7 +305,7 @@ CHAT_TEMPLATES_CONTENT=$(cat <<'EOF'
 # in the Software without restriction...
 # THE SOFTWARE IS PROVIDED "AS IS"...
 # -------------------------------------------------------------------
-# doctrine-version: 2025.10.10
+# doctrine-version: 2025.10.12
 
 # Chat Template Configuration
 # Maps model identifiers to their appropriate chat templates
@@ -313,18 +316,18 @@ Qwen/Qwen2.5-0.5B-Instruct = chatml
 HuggingFaceTB/SmolLM2-1.7B-Instruct = chatml
 
 # 4B Tier
-microsoft/phi-3.5-mini-3.8b-instruct = phi3
+microsoft/phi-3.5-mini-instruct = phi3
 google/gemma-3-4b = gemma
 cerebras/Cerebras-GPT-2.7B = gpt2
 
 # 7B Tier
 mistralai/Mistral-7B-Instruct-v0.3 = mistral
 teknium/OpenHermes-2.5-Mistral-7B = chatml
-WizardLM/WizardLM-2-7B = vicuna
+MaziyarPanahi/WizardLM-2-7B-GGUF = vicuna
 
 # 15B Tier
 bigcode/starcoder2-15b = starcoder
-deepseek-ai/DeepSeek-Coder-V2 = deepseek
+ServiceNow-AI/Apriel-1.5-15b-Thinker = chatml
 mistralai/Codestral-15B = mistral
 EOF
 )
@@ -557,7 +560,7 @@ for MODEL in $MODELS; do
   echo "[$CURRENT/$TOTAL] Downloading: $MODEL"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   
-  if huggingface-cli download "$MODEL" --quiet 2>&1 | grep -v "^Fetching"; then
+  if hf download "$MODEL" --quiet 2>&1 | grep -v "^Fetching"; then
     echo "✅ Downloaded: $MODEL"
   else
     echo "⚠️  Download may have failed for: $MODEL"

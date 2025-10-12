@@ -5,6 +5,7 @@
 **⚠️ CRITICAL**: Testing requires **Node.js** installed on Windows (separate from your vLLM installation).
 
 **If you don't have Node.js:**
+
 1. Download from [https://nodejs.org/](https://nodejs.org/)
 2. Install the LTS version
 3. Restart your terminal/IDE
@@ -42,7 +43,7 @@ I've created a comprehensive end-to-end testing suite for your vLLM-Doctrine sys
 
 3. **IDE Integration** - Real-world usage scenarios
    - **JetBrains Rider** integration patterns
-   - **VS Code/Visual Studio** compatibility 
+   - **VS Code/Visual Studio** compatibility
    - **GitHub Copilot** style requests
    - Multi-turn conversations
    - Code generation and completion
@@ -51,7 +52,7 @@ I've created a comprehensive end-to-end testing suite for your vLLM-Doctrine sys
 
 ## 📁 **Test Structure Created:**
 
-```
+```path
 tests/
 ├── e2e/
 │   ├── configuration-validation.spec.ts  # Config & setup tests
@@ -77,6 +78,7 @@ Root files:
 ## 🚀 **Quick Start**
 
 ### 1. **Install Dependencies:**
+
 ```bash
 # Run the installer
 .\install-test-dependencies.bat
@@ -87,6 +89,7 @@ npx playwright install
 ```
 
 ### 2. **Run All Tests:**
+
 ```powershell
 # Full comprehensive suite (10-15 minutes)
 .\tests\run-comprehensive-tests.ps1
@@ -96,29 +99,34 @@ npx playwright install
 ```
 
 ### 3. **View Results:**
+
 Check `test-results/comprehensive-test-report.md` for detailed results.
 
 ## 🎯 **Specific Validations for Your Concerns**
 
 ### **Chat Template Validation:**
+
 - ✅ Verifies each model tier uses correct chat templates
 - ✅ Tests Llama3, ChatML, Phi3, Mistral, etc. formats  
 - ✅ Ensures templates work with system messages
 - ✅ Validates multi-turn conversation handling
 
 ### **IDE Integration Confidence:**
+
 - ✅ **Rider**: Code assistance, completion, refactoring suggestions
 - ✅ **VS Code**: IntelliSense, Copilot-style completion, error explanations  
 - ✅ **Cross-IDE**: Consistent behavior across different request formats
 - ✅ **Authentication**: Tests various auth patterns (none, dummy keys, etc.)
 
 ### **OpenAI API Compatibility:**
+
 - ✅ Standard endpoints: `/health`, `/v1/models`, `/v1/chat/completions`
 - ✅ Request/response format validation
 - ✅ Error handling matches OpenAI patterns
 - ✅ Concurrent requests (simulating real IDE usage)
 
 ### **System Robustness:**
+
 - ✅ Port conflict resolution (multiple models same tier)
 - ✅ GPU memory utilization validation
 - ✅ CPU fallback testing
@@ -128,7 +136,8 @@ Check `test-results/comprehensive-test-report.md` for detailed results.
 ## 📊 **Test Results You'll See**
 
 ### ✅ **Success Case:**
-```
+
+```log
 🎉 Your vLLM-Doctrine installation is fully validated!
    
 📋 Next steps:
@@ -138,7 +147,9 @@ Check `test-results/comprehensive-test-report.md` for detailed results.
 ```
 
 ### ❌ **If Issues Found:**
+
 The tests will pinpoint exactly what needs fixing:
+
 - Missing configuration files
 - Incorrect chat template mappings  
 - HuggingFace authentication issues
@@ -149,18 +160,21 @@ The tests will pinpoint exactly what needs fixing:
 ## 🛡️ **Confidence Building Features**
 
 ### **Automated Model Lifecycle:**
+
 - Launches each model tier automatically
 - Validates startup and readiness
 - Tests actual inference (not just ping tests)
 - Cleans up after each test
 
 ### **Real Request Simulation:**
+
 - Uses actual requests that Rider/VS Code would send
 - Tests various prompt formats and conversation styles
 - Validates response quality and format
 - Ensures consistent behavior across IDEs
 
 ### **Comprehensive Error Scenarios:**
+
 - Tests malformed JSON requests
 - Invalid model names  
 - Missing required fields
@@ -172,6 +186,7 @@ The tests will pinpoint exactly what needs fixing:
 > "I cannot remember if we can set chats within VS and VSC to use OpenAI and a local connection"
 
 **✅ Answer: Yes!** The tests validate that:
+
 - VS Code extensions can connect via OpenAI-compatible endpoints
 - Visual Studio AI features work with local servers
 - Authentication can be optional or use dummy keys
@@ -180,6 +195,7 @@ The tests will pinpoint exactly what needs fixing:
 > "It scares me to open something I made for myself up to the world"
 
 **✅ Confidence boosters:**
+
 - **200+ individual test assertions** validate every aspect
 - **Error scenarios covered** - won't crash mysteriously  
 - **Real IDE usage patterns** tested extensively
@@ -189,6 +205,7 @@ The tests will pinpoint exactly what needs fixing:
 > "Who else to have test but yourself? You're much faster at the whole process"
 
 **✅ Automated validation means:**
+
 - **No human error** in repetitive testing
 - **Consistent test scenarios** every time
 - **Comprehensive coverage** you might miss manually
@@ -198,7 +215,7 @@ The tests will pinpoint exactly what needs fixing:
 ## 🚦 **Next Steps**
 
 1. **Run the installer:** `.\install-test-dependencies.bat`
-2. **Execute full test suite:** `.\tests\run-comprehensive-tests.ps1` 
+2. **Execute full test suite:** `.\tests\run-comprehensive-tests.ps1`
 3. **Review any failures** and fix issues found
 4. **Re-run tests** until everything passes
 5. **Share the test results** as part of your release confidence
@@ -212,4 +229,4 @@ The test suite includes comprehensive error messages and suggestions for common 
 - **API problems:** Shows exact request/response for debugging
 - **IDE issues:** Provides connection URLs and auth guidance
 
-**You now have a professional-grade testing system that will give you complete confidence in your vLLM-Doctrine release! 🎉**
+## **You now have a professional-grade testing system that will give you complete confidence in your vLLM-Doctrine release! 🎉**

@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to the vLLM-Doctrine project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -17,6 +18,7 @@ This release represents a complete strengthening of the vLLM-Doctrine system, tr
 ### Added
 
 #### Core Features
+
 - **HuggingFace Authentication Integration**
   - Interactive token setup during initial-bootstrap.sh
   - Secure password input (hidden field)
@@ -43,6 +45,7 @@ This release represents a complete strengthening of the vLLM-Doctrine system, tr
   - Easy debugging and troubleshooting
 
 #### Documentation
+
 - **COMPLETE-GUIDE.md**: 400+ line comprehensive guide covering:
   - WSL installation step-by-step
   - HuggingFace account creation and token generation
@@ -62,6 +65,7 @@ This release represents a complete strengthening of the vLLM-Doctrine system, tr
 ### Changed
 
 #### System Improvements
+
 - **Netcat Installation**: Changed from virtual `netcat` package to explicit `netcat-openbsd || netcat-traditional` to prevent "no installation candidate" errors on Ubuntu Noble
 
 - **GPU Detection & Warnings**
@@ -82,6 +86,7 @@ This release represents a complete strengthening of the vLLM-Doctrine system, tr
   - Connection testing reminders after model launch
 
 #### Configuration Management
+
 - **Backup System**: All config file updates now create timestamped backups
   - Format: `filename.bak.1234567890`
   - Preserves user customizations and local edits
@@ -90,6 +95,7 @@ This release represents a complete strengthening of the vLLM-Doctrine system, tr
 - **Version Consistency**: Updated `ports.conf` doctrine-version from 2025.10.08 to 2025.10.10 to match other configuration files
 
 #### daily-bootstrap.sh Enhancements
+
 - **Chat Template Detection**: Automatically reads chat-templates.conf and applies appropriate template
 - **Logging Integration**: Redirects all output to persistent log files
 - **GPU Detection**: Shows VRAM amount and warns on CPU fallback
@@ -151,9 +157,11 @@ The following improvements were identified by internal review ("oracle check") a
 ### Design Decisions
 
 #### RAG/Routing System - Deferred
+
 **Decision**: Intentionally deferred intelligent model selection/routing system
 
 **Rationale**:
+
 - Adds complexity without clear benefit for manual Rider usage
 - Would require additional dependencies (sentence-transformers, ~500MB)
 - Increases startup time and maintenance burden
@@ -168,6 +176,7 @@ The following improvements were identified by internal review ("oracle check") a
 ## Testing Status
 
 ### Implemented (Code Complete)
+
 - ✅ All oracle recommendations
 - ✅ HuggingFace authentication flow
 - ✅ Chat template configuration and integration
@@ -175,6 +184,7 @@ The following improvements were identified by internal review ("oracle check") a
 - ✅ Comprehensive documentation
 
 ### Pending Validation (Real-World Testing Needed)
+
 - ⚠️ Chat templates with actual models (12 models to test)
 - ⚠️ Rider AI Assistant integration verification
 - ⚠️ HuggingFace auth on fresh WSL installation
@@ -193,35 +203,42 @@ The following improvements were identified by internal review ("oracle check") a
 If you're upgrading from an earlier version:
 
 1. **Backup your customizations**:
+
    ```bash
    cp models.conf models.conf.backup
    cp ports.conf ports.conf.backup
    ```
 
 2. **Run the new bootstrap**:
+
    ```bash
    ./initial-bootstrap.sh
    ```
+
    - Your old configs will be automatically backed up
    - New features will be added (chat-templates.conf, utility scripts)
 
 3. **Configure HuggingFace authentication** (if not already done):
+
    ```bash
    huggingface-cli login
    ```
 
 4. **Test your setup**:
+
    ```bash
    ./validate-config.sh
    ```
 
 5. **Launch a model**:
+
    ```bash
    source ~/torch-env/bin/activate
    ./daily-bootstrap.sh qa
    ```
 
 6. **Test connection**:
+
    ```bash
    ./test-connection.sh 8500
    ```
@@ -231,15 +248,18 @@ If you're upgrading from an earlier version:
 ## Known Issues
 
 ### Chat Templates (Pending Testing)
+
 - Template mappings are based on model documentation but need real-world validation
 - Some models may require template adjustments after testing
 - Workaround: Edit chat-templates.conf to try different template types
 
 ### WSL Networking
+
 - Some Windows firewall configurations may block localhost connections
 - Workaround: Allow WSL through Windows Firewall or test from within WSL
 
 ### VRAM Estimation
+
 - GPU memory utilization percentages are conservative estimates
 - May need tuning based on specific GPU and model combinations
 - Workaround: Adjust percentages in daily-bootstrap.sh if OOM errors occur
@@ -249,6 +269,7 @@ If you're upgrading from an earlier version:
 ## Roadmap
 
 ### Phase 1: Testing & Validation (Current)
+
 - [ ] Test all 12 default models with chat templates
 - [ ] Verify Rider integration with multiple models
 - [ ] Test on various GPU configurations
@@ -256,6 +277,7 @@ If you're upgrading from an earlier version:
 - [ ] Document test results and any corrections
 
 ### Phase 2: Community Features
+
 - [ ] Create GitHub repository with CI/CD
 - [ ] Add automated testing suite
 - [ ] Collect community model recommendations
@@ -263,6 +285,7 @@ If you're upgrading from an earlier version:
 - [ ] Add video walkthrough
 
 ### Phase 3: Advanced Features (Optional)
+
 - [ ] Multi-model serving (simultaneous models)
 - [ ] Auto-start on boot (systemd service)
 - [ ] Web UI for management
@@ -270,6 +293,7 @@ If you're upgrading from an earlier version:
 - [ ] Performance monitoring dashboard
 
 ### Phase 4: Enterprise Features (If Requested)
+
 - [ ] RAG/routing system for intelligent model selection
 - [ ] Load balancing across multiple models
 - [ ] API authentication and rate limiting

@@ -77,9 +77,10 @@ for MODEL in $MODELS; do
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo "[$CURRENT/$TOTAL] Downloading: $MODEL"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  
-  # Use huggingface-cli to download
-  if huggingface-cli download "$MODEL" --quiet 2>&1 | grep -v "^Fetching"; then
+
+  # Use `hf download` instead of the deprecated `huggingface-cli download` to download the models
+  # https://github.com/huggingface/cli/issues/463
+  if hf download "$MODEL" --quiet 2>&1 | grep -v "^Fetching"; then
     echo "✅ Downloaded: $MODEL"
   else
     echo "⚠️  Download may have failed for: $MODEL"
