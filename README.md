@@ -3,9 +3,9 @@
 ## **doctrine-version: 2025.10.11**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/jmeyer1980/vLLM-Doctrine/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/jmeyer1980/vLLM-Doctrine/network/members)
-[![GitHub issues](https://img.shields.io/github/issues/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/jmeyer1980/vLLM-Bootstrap)
+[![GitHub stars](https://img.shields.io/github/stars/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/members)
+[![GitHub issues](https://img.shields.io/github/issues/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/)
 [![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-green.svg)]()
 [![Testing: Pending](https://img.shields.io/badge/Testing-Pending-orange.svg)]()
 
