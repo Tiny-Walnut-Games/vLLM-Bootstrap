@@ -1,0 +1,66 @@
+title: "[Show & Tell] "
+labels: [show-and-tell]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎉 Show & Tell
+        
+        Share your vLLM-Doctrine setup, configurations, or use cases with the community!
+        
+  - type: textarea
+    id: what-you-built
+    attributes:
+      label: What did you build/configure?
+      description: Tell us about your setup or project
+      placeholder: |
+        I set up vLLM-Doctrine with...
+        I'm using it for...
+        I configured it to...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: hardware-config
+    attributes:
+      label: Hardware Configuration
+      description: What hardware are you running on?
+      placeholder: |
+        GPU: RTX 4070 (12GB VRAM)
+        RAM: 32GB
+        OS: Windows 11 + WSL2 Ubuntu 22.04
+    validations:
+      required: false
+      
+  - type: textarea
+    id: models-used
+    attributes:
+      label: Models Used
+      description: Which models are you running?
+      placeholder: |
+        - Qwen2.5-Coder-7B-Instruct
+        - DeepSeek-Coder-6.7B-Instruct
+    validations:
+      required: false
+      
+  - type: textarea
+    id: screenshots-links
+    attributes:
+      label: Screenshots or Links
+      description: Share screenshots, videos, or links to your work
+      placeholder: |
+        ![Screenshot](url)
+        [Link to project](url)
+    validations:
+      required: false
+      
+  - type: textarea
+    id: tips-tricks
+    attributes:
+      label: Tips & Tricks
+      description: Any tips or tricks you discovered?
+      placeholder: |
+        I found that...
+        A useful optimization is...
+    validations:
+      required: false

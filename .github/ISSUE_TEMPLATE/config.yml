@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions
+    about: Ask questions, share ideas, or discuss the project with the community
+  - name: 📚 Documentation
+    url: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/tree/main/docs
+    about: Read the complete setup guides and reference documentation
+  - name: 🐛 Known Issues
+    url: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/blob/main/docs/reference/known-issues.md
+    about: Check if your issue is already documented with workarounds

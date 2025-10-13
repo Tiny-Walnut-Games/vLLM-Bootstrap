@@ -355,21 +355,22 @@ wsl hostname -I
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please:
+Contributions are welcome! We need help with:
 
-1. Keep the ritual-framed mental model
-2. Test thoroughly before submitting
-3. Update documentation
-4. Follow existing code style
-5. Use the artifact writer pattern for generated files
+- **Hardware Testing** - Validate on different GPUs and configurations
+- **Chat Template Testing** - Verify models respond correctly
+- **Documentation** - Improve guides and add examples
+- **Bug Reports** - Help us find and fix issues
+- **Feature Suggestions** - Share your ideas
 
-### Areas for Contribution
+**See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.**
 
-- Testing chat templates with various models
-- Performance benchmarking on different GPUs
-- Additional model recommendations
-- Documentation improvements
-- Bug fixes and error handling
+### Quick Links
+
+- 📋 [Roadmap](ROADMAP.md) - Project direction and milestones
+- 🎯 [Milestones](MILESTONES.md) - Release planning
+- 💬 [Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions) - Community Q&A
+- 🐛 [Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues) - Bug reports and features
 
 ---
 
@@ -410,9 +411,20 @@ SOFTWARE.
 
 ## 📞 Support
 
-- **Issues**: Report bugs with `./validate-config.sh` output and log excerpts
-- **Questions**: Check COMPLETE-GUIDE.md first
-- **Contributions**: Pull requests welcome!
+### Getting Help
+
+- 📚 **Documentation**: Start with [COMPLETE-GUIDE.md](COMPLETE-GUIDE.md)
+- 💬 **Discussions**: Ask questions in [GitHub Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)
+- 🐛 **Bug Reports**: Use [issue templates](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues/new/choose)
+- 🔍 **Known Issues**: Check [docs/reference/known-issues.md](docs/reference/known-issues.md)
+
+### Reporting Bugs
+
+When reporting issues, please include:
+- Output from `./validate-config.sh`
+- Relevant log excerpts from `./logs/`
+- Hardware specs (GPU model, VRAM, RAM)
+- OS and WSL version information
 
 ---
 

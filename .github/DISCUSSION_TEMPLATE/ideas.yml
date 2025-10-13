@@ -1,0 +1,51 @@
+title: "[Idea] "
+labels: [idea]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💡 Share Your Idea
+        
+        Have an idea for improving vLLM-Doctrine? Share it here for community discussion!
+        
+        **Note:** If your idea is well-formed and ready for implementation, consider opening a [Feature Request](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues/new?template=feature_request.md) instead.
+        
+  - type: textarea
+    id: idea-description
+    attributes:
+      label: Your Idea
+      description: Describe your idea
+      placeholder: What if we could...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: problem-solved
+    attributes:
+      label: What Problem Does This Solve?
+      description: What pain point or limitation does this address?
+      placeholder: Currently, users have to... This would make it easier to...
+    validations:
+      required: false
+      
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases
+      description: How would this be used in practice?
+      placeholder: |
+        - Use case 1
+        - Use case 2
+    validations:
+      required: false
+      
+  - type: textarea
+    id: open-questions
+    attributes:
+      label: Open Questions
+      description: What questions or concerns do you have about this idea?
+      placeholder: |
+        - How would this work with...?
+        - Would this conflict with...?
+    validations:
+      required: false
