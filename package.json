@@ -1,6 +1,6 @@
 {
   "name": "vllm-doctrine-tests",
-  "version": "2025.10.10",
+  "version": "0.1.0-alpha",
   "description": "E2E tests for vLLM-Doctrine local LLM deployment toolkit",
   "author": "Jerimiah Michael Meyer (@jmeyer1980)",
   "license": "MIT",

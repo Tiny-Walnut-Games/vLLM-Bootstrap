@@ -6,7 +6,7 @@ This guide will get you up and running with comprehensive testing of your vLLM-D
 
 **⚠️ CRITICAL UNDERSTANDING**: 
 
-- **Using vLLM**: Run models, chat with them, integrate with your IDE ← This is in `COMPLETE-GUIDE.md`
+- **Using vLLM**: Run models, chat with them, integrate with your IDE ← This is in the [Complete Setup Guide](../docs/guides/complete-setup.md)
 - **Testing vLLM**: Validate your installation works correctly ← This is what you're doing now
 
 **These are completely separate processes with different requirements:**
@@ -58,13 +58,13 @@ choco install nodejs
 ```
 
 ### 2. Your vLLM-Doctrine Installation
-You should have already completed the main installation guide (`COMPLETE-GUIDE.md`) and have:
+You should have already completed the [Complete Setup Guide](../docs/guides/complete-setup.md) and have:
 - ✅ WSL with Ubuntu installed
 - ✅ vLLM-Doctrine scripts in `~/.config/llm-doctrine/`
 - ✅ Python environment at `~/torch-env/`
 - ✅ HuggingFace authentication configured
 
-**If you haven't done the main installation yet, stop here and complete `COMPLETE-GUIDE.md` first.**
+**If you haven't done the main installation yet, stop here and complete the [Complete Setup Guide](../docs/guides/complete-setup.md) first.**
 
 ---
 

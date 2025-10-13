@@ -7,11 +7,71 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-alpha] - 2025-10-11
+
+### 🎉 Alpha Release: Community Testing Phase
+
+**This is an alpha release seeking community feedback and testing.**
+
+Core functionality is complete and well-documented, but real-world validation is limited to the author's hardware (8GB + 16GB VRAM systems). We need testers with different GPU configurations, Windows versions, and IDE setups.
+
+### Added
+
+#### Documentation
+- **docs/reference/known-issues.md**: Comprehensive documentation of known limitations and workarounds
+  - WSL C: drive preference issue and solutions
+  - Chat template compatibility notes
+  - Windows Firewall configuration
+  - Hardware/software testing gaps
+  - Quick diagnostic commands
+- **CONTRIBUTING.md**: Community contribution guidelines
+  - How to test on different hardware
+  - Bug reporting process
+  - Model suggestion criteria
+  - Development setup instructions
+  - Code style guidelines
+
+#### Project Status
+- **Alpha status badges**: Updated README with honest alpha status
+- **Tester recruitment section**: Clear call for community testing
+- **Version alignment**: Unified version to 0.1.0-alpha across all files
+
+### Changed
+
+- **README.md**: 
+  - Updated badges to reflect alpha status
+  - Fixed repository URLs (Tiny-Walnut-Games/vLLM-Bootstrap)
+  - Added prominent "ALPHA STATUS - TESTERS WANTED" section
+  - Listed known limitations upfront
+- **package.json**: Version updated to 0.1.0-alpha
+- **Project positioning**: Shifted from "production-ready" to "alpha - seeking testers"
+
+### Known Limitations (Alpha)
+
+- Chat templates tested with limited model subset
+- Rider integration verified on author's setup only
+- WSL quirks on various Windows configurations not fully explored
+- WSL C: drive preference requires manual workarounds
+- Limited testing on GPU configurations outside 8GB/16GB VRAM
+
+### Testing Needed
+
+We need community validation on:
+- [ ] 4GB, 6GB, 12GB, 24GB+ VRAM GPUs
+- [ ] AMD GPUs with ROCm
+- [ ] Windows 10/11 various builds
+- [ ] Different WSL distributions
+- [ ] VS Code, Cursor, and other IDE integrations
+- [ ] Non-C: drive WSL installations
+- [ ] Multi-GPU setups
+
+---
+
 ## [2025.10.10] - 2025-10-10
 
-### 🎉 Major Release: Production-Ready System
+### 🎉 Feature Complete: Core System Implementation
 
-This release represents a complete strengthening of the vLLM-Doctrine system, transforming it from a solid foundation into a production-grade, user-friendly system that takes users from zero knowledge to chatting with local LLMs in Rider.
+This release represents a complete implementation of the vLLM-Doctrine system, transforming it from a solid foundation into a feature-complete, user-friendly system that takes users from zero knowledge to chatting with local LLMs in Rider.
 
 ---
 
@@ -46,7 +106,7 @@ This release represents a complete strengthening of the vLLM-Doctrine system, tr
 
 #### Documentation
 
-- **COMPLETE-GUIDE.md**: 400+ line comprehensive guide covering:
+- **docs/guides/complete-setup.md**: 400+ line comprehensive guide covering:
   - WSL installation step-by-step
   - HuggingFace account creation and token generation
   - Doctrine installation and bootstrap process
@@ -325,7 +385,7 @@ MIT License - See LICENSE file for details
 
 ## Support
 
-- **Documentation**: See COMPLETE-GUIDE.md for comprehensive setup guide
+- **Documentation**: See docs/guides/complete-setup.md for comprehensive setup guide
 - **Validation**: Run `./validate-config.sh` to diagnose issues
 - **Logs**: Check `./logs/` directory for detailed error messages
 - **Issues**: Report bugs with validation output and log excerpts
