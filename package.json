@@ -1,22 +1,36 @@
 {
   "name": "vllm-doctrine-tests",
   "version": "2025.10.10",
-  "description": "End-to-end tests for vLLM-Doctrine local LLM toolkit",
+  "description": "E2E tests for vLLM-Doctrine local LLM deployment toolkit",
+  "author": "Jerimiah Michael Meyer (@jmeyer1980)",
+  "license": "MIT",
   "scripts": {
     "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug",
     "test:headed": "playwright test --headed",
-    "test:report": "playwright show-report"
+    "test:debug": "playwright test --debug",
+    "test:journey": "playwright test tests/e2e/new-user-journey.spec.ts",
+    "test:rider": "playwright test tests/e2e/rider-integration.spec.ts",
+    "test:report": "playwright show-report",
+    "install-playwright": "playwright install"
   },
   "devDependencies": {
     "@playwright/test": "^1.44.0",
-    "@types/node": "^18.0.0",
-    "@types/node-fetch": "^2.6.4",
-    "node-fetch": "^3.3.2",
-    "typescript": "^5.0.0"
+    "@types/node": "^20.0.0"
   },
-  "dependencies": {
-    "node.js": "^0.0.1-security"
-  }
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jmeyer1980/vLLM-Doctrine.git"
+  },
+  "keywords": [
+    "vllm",
+    "llm",
+    "local-ai",
+    "jetbrains-rider",
+    "ai-assistant",
+    "playwright",
+    "testing"
+  ]
 }

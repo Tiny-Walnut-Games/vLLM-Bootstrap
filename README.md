@@ -1,8 +1,11 @@
 # Local LLM Ritual — Four-Scroll Doctrine
 
-**doctrine-version: 2025.10.10**
+## **doctrine-version: 2025.10.11**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/members)
+[![GitHub issues](https://img.shields.io/github/issues/jmeyer1980/vLLM-Doctrine.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/)
 [![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-green.svg)]()
 [![Testing: Pending](https://img.shields.io/badge/Testing-Pending-orange.svg)]()
 
@@ -35,6 +38,7 @@ Feel free to comment with suggested updates. Please stick to those HuggingFace h
 ## 🎯 Quick Start
 
 ### Just Want to Use vLLM? (Most Users)
+
 ```bash
 # 1. Install WSL (Windows PowerShell as Admin)
 wsl --install -d Ubuntu
@@ -89,6 +93,7 @@ npx playwright test --ui
 ## 📋 Prerequisites
 
 ### System Requirements
+
 - **OS**: Windows 10/11 with WSL2, or native Linux
 - **GPU**: NVIDIA GPU with 8GB+ VRAM (recommended)
   - CPU fallback supported but slower
@@ -99,13 +104,17 @@ npx playwright test --ui
 
 1. Open PowerShell as Administrator
 2. Install Ubuntu:
+
    ```powershell
    wsl --install -d Ubuntu
    ```
+
 3. If WSL is already installed:
+
    ```powershell
    wsl --update
    ```
+
 4. Restart if prompted
 5. Launch WSL:
    - Start menu → type "Ubuntu" → Enter
@@ -119,6 +128,7 @@ npx playwright test --ui
 ## 📦 Installation
 
 ### Method 1: Git Clone (Recommended)
+
 ```bash
 cd ~/.config
 git clone <repository-url> llm-doctrine
@@ -128,10 +138,12 @@ chmod +x *.sh
 ```
 
 ### Method 2: Manual Download
+
 1. Download the repository as ZIP
 2. Extract to `~/.config/llm-doctrine` in WSL
    - Windows UNC path: `\\wsl.localhost\Ubuntu\home\<username>\.config\llm-doctrine`
 3. Make scripts executable:
+
    ```bash
    cd ~/.config/llm-doctrine
    chmod +x *.sh
@@ -179,6 +191,7 @@ source ~/torch-env/bin/activate
 ## ⚙️ Configuration
 
 ### models.conf
+
 Defines available models for each tier. Each tier has 3 models (default + 2 alts).
 
 ```ini
@@ -191,6 +204,7 @@ alt2 = WizardLM/WizardLM-2-7B
 To switch models, edit `models.conf` and change which line is labeled `default`.
 
 ### ports.conf
+
 Defines port ranges for each tier.
 
 ```ini
@@ -202,6 +216,7 @@ Defines port ranges for each tier.
 ```
 
 ### chat-templates.conf
+
 Maps models to their appropriate chat templates for OpenAI API compatibility.
 
 ```ini
@@ -217,6 +232,7 @@ meta-llama/Llama-3.2-1B = llama3
 ## 🔌 Rider Integration
 
 ### Setup
+
 1. Launch a model: `./daily-bootstrap.sh qa`
 2. Open Rider
 3. Go to: **Settings → Tools → AI Assistant → Models**
@@ -229,6 +245,7 @@ meta-llama/Llama-3.2-1B = llama3
 7. Expected: ✅ "Connection successful"
 
 ### Usage
+
 - Open AI Assistant panel in Rider
 - Select your local model from dropdown
 - Start chatting or use code completion features
@@ -240,6 +257,7 @@ meta-llama/Llama-3.2-1B = llama3
 ## 🎨 Architecture
 
 ### Design Philosophy
+
 - **Ritual-Framed**: Temple/scroll metaphor for mental model
 - **Self-Documenting**: Scripts explain themselves
 - **Fail-Safe**: Backups, validation, clear errors
@@ -248,7 +266,8 @@ meta-llama/Llama-3.2-1B = llama3
 - **Universal**: OpenAI API compatibility
 
 ### File Structure
-```
+
+```path
 ~/.config/llm-doctrine/
 ├── initial-bootstrap.sh      # Main setup script
 ├── daily-bootstrap.sh         # Model launcher (generated)
@@ -273,6 +292,7 @@ meta-llama/Llama-3.2-1B = llama3
 ## 🐛 Troubleshooting
 
 ### Model won't load
+
 ```bash
 # Check logs
 tail -f ./logs/*_*.log
@@ -284,6 +304,7 @@ tail -f ./logs/*_*.log
 ```
 
 ### Connection refused
+
 ```bash
 # Verify model is running
 ./test-connection.sh <port>
@@ -296,6 +317,7 @@ tail -f ./logs/*_*.log
 ```
 
 ### Rider can't connect
+
 ```bash
 # Test from Windows PowerShell
 curl http://localhost:8500/health
@@ -344,6 +366,7 @@ Contributions are welcome! Please:
 5. Use the artifact writer pattern for generated files
 
 ### Areas for Contribution
+
 - Testing chat templates with various models
 - Performance benchmarking on different GPUs
 - Additional model recommendations

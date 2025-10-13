@@ -1316,3 +1316,10 @@ node_modules/web-streams-polyfill/es6/package.json
 node_modules/web-streams-polyfill/ponyfill/package.json
 node_modules/web-streams-polyfill/ponyfill/es2018/package.json
 node_modules/web-streams-polyfill/ponyfill/es6/package.json
+/node_modules/undici-types/env-http-proxy-agent.d.ts
+/node_modules/undici-types/eventsource.d.ts
+/node_modules/undici-types/LICENSE
+/node_modules/undici-types/retry-agent.d.ts
+/node_modules/undici-types/retry-handler.d.ts
+/node_modules/@types/node/sea.d.ts
+/node_modules/undici-types/util.d.ts
