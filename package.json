@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "playwright test",
+    "test:model": "playwright test tests/e2e/mental-model.spec.ts",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "test:journey": "playwright test tests/e2e/new-user-journey.spec.ts",
