@@ -1,13 +1,13 @@
 # Local LLM Ritual — Four-Scroll Doctrine
 
-## **doctrine-version: 2025.10.11**
+## **doctrine-version: 0.2.0-alpha**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/Tiny-Walnut-Games/vLLM-Bootstrap.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Tiny-Walnut-Games/vLLM-Bootstrap.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/members)
 [![GitHub issues](https://img.shields.io/github/issues/Tiny-Walnut-Games/vLLM-Bootstrap.svg)](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/)
-[![Production status](https://img.shields.io/badge/production-in%20active%20development-yellow?style=flat-square)]()
-[![Testing: Pending](https://img.shields.io/badge/Testing-Pending-orange.svg)]()
+[![Production status](https://img.shields.io/badge/production-alpha%20validated-green?style=flat-square)]()
+[![Testing: Complete](https://img.shields.io/badge/Testing-Complete-brightgreen.svg)]()
 
 ---
 

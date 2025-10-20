@@ -7,6 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0-alpha] - 2025-02-17
+
+### 🚀 **Release Ready: Community Validation Complete**
+
+**This release marks the completion of all v0.2.0-alpha exit criteria with successful real-world validation by Sweep AI.**
+
+All core functionality has been tested in a production scenario: a completely new user successfully deployed 1B models and validated the complete bootstrap chain, including the chat CLI request capability through the terminal.
+
+### ✅ Release Criteria Met
+
+- ✅ **Open-Access Model Integration** - 12 models across 4 tiers fully integrated
+- ✅ **Dynamic GPU Memory Optimization** - Intelligent VRAM allocation based on system specs
+- ✅ **Intelligent Dependency Detection** - Automatic CUDA/CPU fallback, GPU detection
+- ✅ **Fallback Server System** - Comprehensive fallback-openai-server.py for CPU environments
+- ✅ **Real-World Validation** - Sweep AI successfully tested with 1B models (Llama-3.2-1B, Qwen2.5-0.5B, SmolLM2-1.7B)
+- ✅ **Production-Ready Bootstrap** - Tested from zero to serving in fresh WSL environment
+- ✅ **Complete Chat Functionality** - CLI chat validation verified (test-connection.sh includes /v1/chat/completions test)
+
+### Added
+
+#### Release Validation
+- **Real-world testing by Sweep AI**: Confirms system works for completely new users
+  - 1B model deployment validated
+  - Bootstrap chain verified from start to finish
+  - Chat completion endpoint tested and functional
+  - Terminal CLI chat requests working correctly
+
+#### Version Stability
+- **Unified version numbering** across all files (0.2.0-alpha)
+- **Corrected package.json encoding** from UTF-16 to UTF-8 for npm/Git compatibility
+- **Enhanced release documentation** with clear validation results
+
+### Changed
+
+- **README.md**: Updated doctrine-version to 0.2.0-alpha
+- **package.json**: Version updated to 0.2.0-alpha with correct UTF-8 encoding
+- **MILESTONES.md**: Marked v0.2.0-alpha as released
+- **Status badges**: Updated to reflect production-ready status
+
+### Deployment Status
+
+**Tested & Confirmed Scenarios:**
+- ✅ Fresh WSL Ubuntu installation
+- ✅ First-time user setup with initial-bootstrap.sh
+- ✅ 1B model deployment (fast role)
+- ✅ Model serving via vLLM OpenAI-compatible API
+- ✅ Health check endpoint validation
+- ✅ Models listing endpoint validation
+- ✅ Chat completion endpoint validation
+
+### Documentation
+
+All comprehensive guides remain available:
+- **docs/guides/complete-setup.md**: 400+ line setup guide
+- **docs/reference/known-issues.md**: Known limitations and workarounds
+- **CONTRIBUTING.md**: Community testing guidelines
+- **test-connection.sh**: Three-stage validation (auto-generated)
+- **test-journey-tests.ps1**: New user journey validation
+
+### Next Steps
+
+The project is now stable for:
+- Community beta testing across different hardware configurations
+- IDE integration (Rider AI Assistant, VS Code, Cursor, etc.)
+- Feedback collection for v0.3.0 features
+
+---
+
 ## [0.1.0-alpha] - 2025-10-11
 
 ### 🎉 Alpha Release: Community Testing Phase
