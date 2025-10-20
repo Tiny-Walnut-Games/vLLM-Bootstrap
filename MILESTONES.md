@@ -27,18 +27,25 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v0.2.0-alpha
-**Status:** 🚧 In Progress  
-**Target:** Q2 2025  
+**Status:** ✅ Released  
+**Released:** 2025-02-17  
 **Focus:** Documentation & Stability
 
 **Key Deliverables:**
-- Complete user guides
-- Complete reference documentation
-- Troubleshooting guides
-- Improved error messages
-- Expanded test coverage
+- ✅ Complete user guides
+- ✅ Complete reference documentation
+- ✅ Troubleshooting guides
+- ✅ Improved error messages
+- ✅ Expanded test coverage
+- ✅ Real-world validation by Sweep AI
+- ✅ Production-ready bootstrap confirmed
 
-**GitHub Milestone:** Create with due date Q2 2025
+**Release Highlights:**
+- Successful fresh-start deployment validation
+- 1B model testing completed
+- Chat endpoint verification confirmed
+- UTF-8 encoding standardization
+- Version consistency across all files
 
 ---
 

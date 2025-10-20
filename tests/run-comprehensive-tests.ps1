@@ -150,11 +150,11 @@ $($script:TestResults -join "`n")
 
 ## Environment Information
 
-- **OS:** $($env:OS) $($env:PROCESSOR_ARCHITECTURE)
-- **Date:** $(Get-Date)
-- **Node.js:** $(try { node --version } catch { "Not available" })
-- **Python:** $(try { python3 --version } catch { "Not available" })
-- **PowerShell:** $($PSVersionTable.PSVersion)
+OS: $($env:OS) $($env:PROCESSOR_ARCHITECTURE)
+Date: $(Get-Date)
+Node.js: $(try { node --version } catch { "Not available" })
+Python: $(try { python3 --version } catch { "Not available" })
+PowerShell: $($PSVersionTable.PSVersion)
 
 ## Notes
 
@@ -163,7 +163,7 @@ For detailed test outputs, check the individual test result files in the test-re
 "@
 
     Set-Content -Path $reportFile -Value $content
-    Write-Success "Test report generated: $reportFile"
+    Write-Host "Test report generated: $reportFile" -ForegroundColor Green
 }
 
 function Show-Help {
