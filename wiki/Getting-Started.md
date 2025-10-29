@@ -178,6 +178,11 @@ Do you want to configure HuggingFace authentication now? (y/n)
 🚀 Ready to launch models
 ```
 
+**🎯 After installation**, these helper scripts are automatically created for you:
+- `daily-bootstrap.sh` - Launches models by tier
+- `test-connection.sh` - Tests if a model is running
+- Configuration files in `~/.config/llm-doctrine/`
+
 ---
 
 ## Step 5: Launch Your First Model
@@ -194,7 +199,7 @@ source ~/torch-env/bin/activate
 
 ```bash
 cd ~/.config/llm-doctrine
-./scripts/daily-bootstrap.sh qa
+./daily-bootstrap.sh qa
 ```
 
 **What this does**: Launches Mistral-7B on port 8500
@@ -234,7 +239,7 @@ Open a second WSL terminal:
 ```bash
 cd ~/.config/llm-doctrine
 source ~/torch-env/bin/activate
-./scripts/test-connection.sh 8500
+./test-connection.sh 8500
 ```
 
 **Expected output**:
@@ -340,11 +345,13 @@ You now have:
 
 ### Try Different Models
 ```bash
+cd ~/.config/llm-doctrine
+
 # Smaller model (1B, faster)
-./scripts/daily-bootstrap.sh fast
+./daily-bootstrap.sh fast
 
 # Larger model (15B, more capable)
-./scripts/daily-bootstrap.sh plan
+./daily-bootstrap.sh plan
 ```
 
 ---

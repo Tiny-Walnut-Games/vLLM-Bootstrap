@@ -56,6 +56,28 @@ function Check-Warn {
     Write-Host "⚠️  Warning: $Message" -ForegroundColor Yellow
 }
 
+function Fix-WSLScriptPermissions {
+    param([string]$ScriptName)
+    try {
+        # Check if file is executable in WSL, and fix if needed
+        $checkCmd = "test -x ~/.config/llm-doctrine/$ScriptName"
+        $result = wsl bash -c $checkCmd 2>$null
+        if ($LASTEXITCODE -ne 0) {
+            # Not executable, try to fix it
+            $fixCmd = "chmod +x ~/.config/llm-doctrine/$ScriptName"
+            wsl bash -c $fixCmd 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                return $true
+            } else {
+                return $false
+            }
+        }
+        return $true
+    } catch {
+        return $false
+    }
+}
+
 # Print header
 Write-Host ""
 Write-Host "╔════════════════════════════════════════════════════════╗" -ForegroundColor Blue
@@ -140,7 +162,28 @@ try {
 }
 
 # ============================================================================
-# CHECK 5: GitHub Repository Files
+# CHECK 5: Helper Scripts in WSL (with auto-recovery)
+# ============================================================================
+if ($checksFail -eq 0) {  # Only check if WSL passed
+    Check-Start "daily-bootstrap.sh helper script"
+    if (Fix-WSLScriptPermissions "daily-bootstrap.sh") {
+        Check-Pass
+    } else {
+        Check-Warn "Helper script not accessible - did you run initial-bootstrap.sh in WSL?"
+        $script:checksFail++
+    }
+    
+    Check-Start "test-connection.sh helper script"
+    if (Fix-WSLScriptPermissions "test-connection.sh") {
+        Check-Pass
+    } else {
+        Check-Warn "Helper script not accessible - did you run initial-bootstrap.sh in WSL?"
+        $script:checksFail++
+    }
+}
+
+# ============================================================================
+# CHECK 6: GitHub Repository Files
 # ============================================================================
 Check-Start ".gitignore file"
 if (Test-Path "$doctrineDir\.gitignore") {
@@ -158,7 +201,7 @@ if (Test-Path "$doctrineDir\.gitignore") {
 }
 
 # ============================================================================
-# CHECK 6: Documentation Files
+# CHECK 7: Documentation Files
 # ============================================================================
 Check-Start "README.md documentation"
 if (Test-Path "$doctrineDir\README.md") {
@@ -176,7 +219,7 @@ if (Test-Path "$doctrineDir\wiki\Getting-Started.md") {
 }
 
 # ============================================================================
-# CHECK 7: Test Files
+# CHECK 8: Test Files
 # ============================================================================
 Check-Start "Test infrastructure"
 if (Test-Path "$doctrineDir\tests\e2e") {
