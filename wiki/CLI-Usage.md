@@ -18,24 +18,22 @@ source ~/torch-env/bin/activate
 cd ~/.config/llm-doctrine
 
 # Launch a model by tier
-./daily-bootstrap.sh {fast|edit|qa|plan}
+./scripts/daily-bootstrap.sh {fast|edit|qa|plan}
 ```
-
-**Note**: The `daily-bootstrap.sh` script was automatically created by `initial-bootstrap.sh` during setup.
 
 ### Model Tiers
 
 | Tier | Command | Port | Model | VRAM |
 |------|---------|------|-------|------|
-| **fast** | `./daily-bootstrap.sh fast` | 8100 | Llama-3.2-1B | 2-3GB |
-| **edit** | `./daily-bootstrap.sh edit` | 8300 | Phi-3.5-mini | 4-5GB |
-| **qa** | `./daily-bootstrap.sh qa` | 8500 | Mistral-7B | 7-8GB |
-| **plan** | `./daily-bootstrap.sh plan` | 8700 | StarCoder2-15B | 14-16GB |
+| **fast** | `./scripts/daily-bootstrap.sh fast` | 8100 | Llama-3.2-1B | 2-3GB |
+| **edit** | `./scripts/daily-bootstrap.sh edit` | 8300 | Phi-3.5-mini | 4-5GB |
+| **qa** | `./scripts/daily-bootstrap.sh qa` | 8500 | Mistral-7B | 7-8GB |
+| **plan** | `./scripts/daily-bootstrap.sh plan` | 8700 | StarCoder2-15B | 14-16GB |
 
 ### What Happens When You Launch
 
 ```bash
-$ ./daily-bootstrap.sh qa
+$ ./scripts/daily-bootstrap.sh qa
 
 🚀 Launching qa (mistralai/Mistral-7B-Instruct-v0.3) on port 8500
 📝 Logs: ./logs/qa_8500.log
@@ -196,7 +194,7 @@ curl http://localhost:8500/v1/models
 ### Using Test Script
 
 ```bash
-./test-connection.sh 8500
+./scripts/test-connection.sh 8500
 ```
 
 **Comprehensive check**:
@@ -230,14 +228,14 @@ Open separate terminals for each:
 ```bash
 source ~/torch-env/bin/activate
 cd ~/.config/llm-doctrine
-./daily-bootstrap.sh fast  # Port 8100
+./scripts/daily-bootstrap.sh fast  # Port 8100
 ```
 
 **Terminal 2**:
 ```bash
 source ~/torch-env/bin/activate
 cd ~/.config/llm-doctrine
-./daily-bootstrap.sh qa    # Port 8500
+./scripts/daily-bootstrap.sh qa    # Port 8500
 ```
 
 Now you can chat with either:
@@ -260,7 +258,7 @@ tmux new -s llm-qa
 # Launch model
 source ~/torch-env/bin/activate
 cd ~/.config/llm-doctrine
-./daily-bootstrap.sh qa
+./scripts/daily-bootstrap.sh qa
 
 # Detach: Press Ctrl+B, then press D
 

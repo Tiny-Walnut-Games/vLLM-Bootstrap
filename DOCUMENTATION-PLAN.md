@@ -194,18 +194,18 @@ Every major step includes:
 
 ## 🚀 Implementation Order
 
-    ### Phase 1: Core Documentation (Week 1)
+### Phase 1: Core Documentation (Week 1)
 1. `Home.md` - Landing page
 2. `Getting-Started.md` - Zero to CLI chat
 3. `Installation-Guide.md` - Detailed setup
 4. `CLI-Usage.md` - Using the system
 
-    ### Phase 2: Advanced Topics (Week 2)
+### Phase 2: Advanced Topics (Week 2)
 5. `Model-Configuration.md` - Model management
 6. `Testing-Guide.md` - Test suite usage
 7. `Troubleshooting.md` - Problem solving
 
-    ### Phase 3: Reference & Polish (Week 3)
+### Phase 3: Reference & Polish (Week 3)
 8. `FAQ.md` - Common questions
 9. GitBook conversion
 10. Internal review and validation
