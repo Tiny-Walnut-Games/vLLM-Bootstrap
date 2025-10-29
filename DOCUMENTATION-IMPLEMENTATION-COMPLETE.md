@@ -165,24 +165,24 @@ Following Scrollkeeper Doctrine principles, all documentation has been:
 
 ### ✅ Fully Documented (Proven Features)
 
-| Feature | Documentation | Status |
-|---------|---------------|--------|
-| WSL installation | Getting Started, Installation Guide | ✅ Detailed |
-| HuggingFace setup | Installation Guide | ✅ Detailed |
-| Model launching | CLI Usage, Getting Started | ✅ Detailed |
-| CLI chat via curl | CLI Usage | ✅ With examples |
-| Model configuration | Model Configuration | ✅ Complete |
-| Testing (1B tier) | Testing Guide | ✅ Complete |
-| Troubleshooting | Troubleshooting | ✅ Comprehensive |
+| Feature             | Documentation                       | Status          |
+|---------------------|-------------------------------------|-----------------|
+| WSL installation    | Getting Started, Installation Guide | ✅ Detailed      |
+| HuggingFace setup   | Installation Guide                  | ✅ Detailed      |
+| Model launching     | CLI Usage, Getting Started          | ✅ Detailed      |
+| CLI chat via curl   | CLI Usage                           | ✅ With examples |
+| Model configuration | Model Configuration                 | ✅ Complete      |
+| Testing (1B tier)   | Testing Guide                       | ✅ Complete      |
+| Troubleshooting     | Troubleshooting                     | ✅ Comprehensive |
 
 ### ⚠️ Mentioned But Not Detailed (Future Features)
 
-| Feature | Reason Not Detailed | When Will Be |
-|---------|---------------------|--------------|
+| Feature         | Reason Not Detailed            | When Will Be             |
+|-----------------|--------------------------------|--------------------------|
 | IDE integration | Chat templates not implemented | After templates verified |
-| Rider chat | Depends on IDE integration | Phase 2 |
-| VS Code chat | Depends on IDE integration | Phase 2 |
-| Chat UI | Not yet planned | Future milestone |
+| Rider chat      | Depends on IDE integration     | Phase 2                  |
+| VS Code chat    | Depends on IDE integration     | Phase 2                  |
+| Chat UI         | Not yet planned                | Future milestone         |
 
 ### ❌ Intentionally Not Documented (Out of Scope)
 

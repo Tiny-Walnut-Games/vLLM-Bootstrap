@@ -10,22 +10,22 @@
 
 ### Core Pages
 
-| Page | File | Purpose | Size |
-|------|------|---------|------|
-| **Home** | `wiki/Home.md` | Landing page, overview | 3.4 KB |
-| **Getting Started** | `wiki/Getting-Started.md` | Zero-to-chat guide | 10.2 KB |
-| **Installation** | `wiki/Installation-Guide.md` | Detailed setup | 14.8 KB |
-| **CLI Usage** | `wiki/CLI-Usage.md` | Using models | 11.7 KB |
-| **Configuration** | `wiki/Model-Configuration.md` | Model management | 9.3 KB |
-| **Testing** | `wiki/Testing-Guide.md` | Validation | 8.9 KB |
-| **Troubleshooting** | `wiki/Troubleshooting.md` | Problem solving | 10.1 KB |
-| **FAQ** | `wiki/FAQ.md` | Common questions | 9.8 KB |
+| Page                | File                          | Purpose                | Size    |
+|---------------------|-------------------------------|------------------------|---------|
+| **Home**            | `wiki/Home.md`                | Landing page, overview | 3.4 KB  |
+| **Getting Started** | `wiki/Getting-Started.md`     | Zero-to-chat guide     | 10.2 KB |
+| **Installation**    | `wiki/Installation-Guide.md`  | Detailed setup         | 14.8 KB |
+| **CLI Usage**       | `wiki/CLI-Usage.md`           | Using models           | 11.7 KB |
+| **Configuration**   | `wiki/Model-Configuration.md` | Model management       | 9.3 KB  |
+| **Testing**         | `wiki/Testing-Guide.md`       | Validation             | 8.9 KB  |
+| **Troubleshooting** | `wiki/Troubleshooting.md`     | Problem solving        | 10.1 KB |
+| **FAQ**             | `wiki/FAQ.md`                 | Common questions       | 9.8 KB  |
 
 ### Supporting Files
 
-| File | Purpose |
-|------|---------|
-| `wiki/README.md` | Wiki index and navigation |
+| File              | Purpose                   |
+|-------------------|---------------------------|
+| `wiki/README.md`  | Wiki index and navigation |
 | `wiki/SUMMARY.md` | GitBook table of contents |
 
 **Total**: 8 core pages, ~78 KB
@@ -50,11 +50,11 @@
 
 ## 📋 Planning Documents
 
-| Document | Location | Purpose |
-|----------|----------|---------|
-| **Documentation Plan** | `DOCUMENTATION-PLAN.md` | Strategy, structure, guidelines |
-| **Implementation Complete** | `DOCUMENTATION-IMPLEMENTATION-COMPLETE.md` | Delivery summary |
-| **Documentation Index** | `DOCUMENTATION-INDEX.md` | This file |
+| Document                    | Location                                   | Purpose                         |
+|-----------------------------|--------------------------------------------|---------------------------------|
+| **Documentation Plan**      | `DOCUMENTATION-PLAN.md`                    | Strategy, structure, guidelines |
+| **Implementation Complete** | `DOCUMENTATION-IMPLEMENTATION-COMPLETE.md` | Delivery summary                |
+| **Documentation Index**     | `DOCUMENTATION-INDEX.md`                   | This file                       |
 
 ---
 
@@ -120,14 +120,14 @@ This documentation follows **Scrollkeeper Doctrine**:
 
 ## 🔄 Documentation Status
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| Archive | ✅ Complete | `docs-archive/2025-10-29_114041/` |
-| Planning | ✅ Complete | `DOCUMENTATION-PLAN.md` |
-| Core Docs | ✅ Complete | `wiki/` (8 pages) |
-| Main README | ✅ Updated | Points to wiki |
-| GitHub Wiki | ⏳ Pending | Ready to publish |
-| GitBook | ⏳ Pending | Structure ready |
+| Component   | Status     | Notes                             |
+|-------------|------------|-----------------------------------|
+| Archive     | ✅ Complete | `docs-archive/2025-10-29_114041/` |
+| Planning    | ✅ Complete | `DOCUMENTATION-PLAN.md`           |
+| Core Docs   | ✅ Complete | `wiki/` (8 pages)                 |
+| Main README | ✅ Updated  | Points to wiki                    |
+| GitHub Wiki | ⏳ Pending  | Ready to publish                  |
+| GitBook     | ⏳ Pending  | Structure ready                   |
 
 ---
 
