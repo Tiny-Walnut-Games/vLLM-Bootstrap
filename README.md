@@ -104,12 +104,12 @@ curl http://localhost:8500/v1/chat/completions \
 
 ## Model Tiers
 
-| Tier | Size | Model | Port | VRAM | Use Case |
-|------|------|-------|------|------|----------|
-| **fast** | 1B | Llama-3.2-1B | 8100 | 2-3GB | Quick responses |
-| **edit** | 4B | Phi-3.5-mini | 8300 | 4-5GB | Code editing |
-| **qa** | 7B | Mistral-7B | 8500 | 7-8GB | General chat |
-| **plan** | 15B | StarCoder2-15B | 8700 | 14-16GB | Complex reasoning |
+| Tier     | Size | Model          | Port | VRAM    | Use Case          |
+|----------|------|----------------|------|---------|-------------------|
+| **fast** | 1B   | Llama-3.2-1B   | 8100 | 2-3GB   | Quick responses   |
+| **edit** | 4B   | Phi-3.5-mini   | 8300 | 4-5GB   | Code editing      |
+| **qa**   | 7B   | Mistral-7B     | 8500 | 7-8GB   | General chat      |
+| **plan** | 15B  | StarCoder2-15B | 8700 | 14-16GB | Complex reasoning |
 
 ---
 
@@ -176,13 +176,13 @@ We welcome contributions!
 
 ## Comparison with Alternatives
 
-| Feature | vLLM-Bootstrap | Ollama | LM Studio |
-|---------|----------------|--------|-----------|
-| **OpenAI API** | ✅ Yes | ❌ Different format | ⚠️ Partial |
-| **CLI-first** | ✅ Yes | ✅ Yes | ❌ GUI-focused |
-| **IDE integration** | 🚧 In progress | ❌ No | ⚠️ Limited |
-| **Setup complexity** | ⚠️ Medium | ✅ Simple | ✅ Simple |
-| **Open source** | ✅ Yes (MIT) | ✅ Yes | ❌ Commercial |
+| Feature              | vLLM-Bootstrap | Ollama             | LM Studio     |
+|----------------------|----------------|--------------------|---------------|
+| **OpenAI API**       | ✅ Yes          | ❌ Different format | ⚠️ Partial    |
+| **CLI-first**        | ✅ Yes          | ✅ Yes              | ❌ GUI-focused |
+| **IDE integration**  | 🚧 In progress | ❌ No               | ⚠️ Limited    |
+| **Setup complexity** | ⚠️ Medium      | ✅ Simple           | ✅ Simple      |
+| **Open source**      | ✅ Yes (MIT)    | ✅ Yes              | ❌ Commercial  |
 
 **Choose vLLM-Bootstrap if**: You want OpenAI API compatibility for development tools  
 **Choose Ollama if**: You want simplest setup and don't need OpenAI API format  
