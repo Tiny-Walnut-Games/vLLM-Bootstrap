@@ -282,12 +282,12 @@ wsl curl http://localhost:8100/health
 
 ## Performance Expectations
 
-| Tier | Model        | Size  | Time to Ready | Time per Chat |
-|------|--------------|-------|---------------|---------------|
-| 1B   | Qwen2.5-0.5B | ~1GB  | 30-60s        | <1s           |
-| 4B   | SmolLM2-1.7B | ~3GB  | 60-120s       | 2-3s          |
-| 7B   | Mistral-7B   | ~14GB | 120-180s      | 5-10s         |
-| 15B  | StarCoder2   | ~30GB | 180-300s      | 15-30s        |
+| Tier | Model | Size | Time to Ready | Time per Chat |
+|------|-------|------|---------------|---------------|
+| 1B | Qwen2.5-0.5B | ~1GB | 30-60s | <1s |
+| 4B | SmolLM2-1.7B | ~3GB | 60-120s | 2-3s |
+| 7B | Mistral-7B | ~14GB | 120-180s | 5-10s |
+| 15B | StarCoder2 | ~30GB | 180-300s | 15-30s |
 
 *Times are approximate for A100 40GB. RTX 2060 6GB: 1B only (~30-60s startup)*
 

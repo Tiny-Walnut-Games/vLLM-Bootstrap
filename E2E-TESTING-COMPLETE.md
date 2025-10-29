@@ -21,15 +21,15 @@ The comprehensive End-to-End testing infrastructure for vLLM-Doctrine has been *
 
 ## 📊 Testing Framework Details
 
-| Aspect                  | Details                                 |
-|-------------------------|-----------------------------------------|
-| **Framework**           | Playwright v1.44.0+ (TypeScript)        |
-| **Configuration**       | `playwright.config.ts`                  |
-| **Test Directory**      | `tests/e2e/` (6 test suites)            |
-| **Node.js Requirement** | ≥ 18.0.0                                |
-| **Test Timeout**        | 2 minutes per test                      |
-| **Execution Model**     | Sequential (1 worker, prevents GPU OOM) |
-| **Reporters**           | HTML, JSON, JUnit                       |
+| Aspect | Details |
+|--------|---------|
+| **Framework** | Playwright v1.44.0+ (TypeScript) |
+| **Configuration** | `playwright.config.ts` |
+| **Test Directory** | `tests/e2e/` (6 test suites) |
+| **Node.js Requirement** | ≥ 18.0.0 |
+| **Test Timeout** | 2 minutes per test |
+| **Execution Model** | Sequential (1 worker, prevents GPU OOM) |
+| **Reporters** | HTML, JSON, JUnit |
 
 ---
 
@@ -314,13 +314,13 @@ async function launch1BModel() {...}
 
 ## 📚 Documentation Files
 
-| File                            | Purpose                           |
-|---------------------------------|-----------------------------------|
-| `tests/QUICK-START-TESTING.md`  | User-friendly quick start guide   |
-| `.github/CI-TESTING-GUIDE.md`   | CI/CD setup and GPU runner config |
-| `TEST-INFRASTRUCTURE-STATUS.md` | Detailed infrastructure overview  |
-| `E2E-TESTING-COMPLETE.md`       | This completion document          |
-| `.zencoder/rules/repo.md`       | Repository metadata (updated)     |
+| File | Purpose |
+|------|---------|
+| `tests/QUICK-START-TESTING.md` | User-friendly quick start guide |
+| `.github/CI-TESTING-GUIDE.md` | CI/CD setup and GPU runner config |
+| `TEST-INFRASTRUCTURE-STATUS.md` | Detailed infrastructure overview |
+| `E2E-TESTING-COMPLETE.md` | This completion document |
+| `.zencoder/rules/repo.md` | Repository metadata (updated) |
 
 ---
 
