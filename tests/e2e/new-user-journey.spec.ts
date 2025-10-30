@@ -55,11 +55,14 @@ test.describe('New User Journey - Complete Setup', () => {
     ];
 
     // Mock results - in real implementation, these would be actual shell commands
+    // eslint-disable-next-line no-console
     console.log('🧹 Verifying clean environment...');
     cleanEnvironmentChecks.forEach((check) => {
       if (check.name === 'NVIDIA drivers') {
+        // eslint-disable-next-line no-console
         console.log(`✅ ${check.name}: Available`);
       } else {
+        // eslint-disable-next-line no-console
         console.log(`✅ ${check.name}: Not found (expected for clean install)`);
       }
     });
@@ -68,6 +71,7 @@ test.describe('New User Journey - Complete Setup', () => {
   });
 
   test('Step 2: Run initial-bootstrap.sh', async () => {
+    // eslint-disable-next-line no-console
     console.log('🚀 Running initial-bootstrap.sh...');
 
     // Test should verify that the script:
@@ -91,27 +95,34 @@ test.describe('New User Journey - Complete Setup', () => {
 
     // Mock file creation verification
     expectedFiles.forEach((file) => {
+      // eslint-disable-next-line no-console
       console.log(`✅ Created: ${file}`);
     });
 
     // Mock virtual environment verification
+    // eslint-disable-next-line no-console
     console.log('✅ Python virtual environment created at ~/torch-env');
+    // eslint-disable-next-line no-console
     console.log('✅ PyTorch installed with CUDA support');
+    // eslint-disable-next-line no-console
     console.log('✅ vLLM and dependencies installed');
 
     expect(true).toBe(true); // Placeholder
   });
 
   test('Step 3: Handle HuggingFace Authentication', async () => {
+    // eslint-disable-next-line no-console
     console.log('🔐 Testing HuggingFace authentication flow...');
 
     if (setupContext.hfToken) {
+      // eslint-disable-next-line no-console
       console.log('✅ HuggingFace token provided via environment');
       // In real test, this would:
       // 1. Activate virtual environment
       // 2. Run: huggingface-cli login --token $HF_TOKEN
       // 3. Verify: huggingface-cli whoami
     } else {
+      // eslint-disable-next-line no-console
       console.log('⚠️ No HuggingFace token - testing skip flow');
       // This tests the scenario where user skips authentication
       // Some models may fail to download later
@@ -121,6 +132,7 @@ test.describe('New User Journey - Complete Setup', () => {
   });
 
   test('Step 4: Validate Configuration', async () => {
+    // eslint-disable-next-line no-console
     console.log('🔍 Running configuration validation...');
 
     // Test should run: ./validate-config.sh
@@ -140,6 +152,7 @@ test.describe('New User Journey - Complete Setup', () => {
     ];
 
     validationChecks.forEach((check) => {
+      // eslint-disable-next-line no-console
       console.log(`✅ ${check}`);
     });
 
@@ -147,6 +160,7 @@ test.describe('New User Journey - Complete Setup', () => {
   });
 
   test('Step 5: Download Test Model (Optional Preload)', async () => {
+    // eslint-disable-next-line no-console
     console.log('📦 Testing model preload...');
 
     // This test should:
@@ -156,6 +170,7 @@ test.describe('New User Journey - Complete Setup', () => {
     // 4. Handle authentication errors gracefully
 
     if (setupContext.hfToken) {
+      // eslint-disable-next-line no-console
       console.log('✅ Downloading default models for offline use...');
       const defaultModels = [
         'meta-llama/Llama-3.2-1B',
@@ -165,9 +180,11 @@ test.describe('New User Journey - Complete Setup', () => {
       ];
 
       defaultModels.forEach((model) => {
+        // eslint-disable-next-line no-console
         console.log(`  ✅ Downloaded: ${model}`);
       });
     } else {
+      // eslint-disable-next-line no-console
       console.log('⚠️ Skipping preload - will download on first use');
     }
 
@@ -175,6 +192,7 @@ test.describe('New User Journey - Complete Setup', () => {
   });
 
   test('Step 6: Launch First Model (QA Tier)', async () => {
+    // eslint-disable-next-line no-console
     console.log('🚀 Launching QA model...');
 
     // This test should:
@@ -183,11 +201,15 @@ test.describe('New User Journey - Complete Setup', () => {
     // 3. Wait for model to load (this can take several minutes)
     // 4. Verify server starts on expected port (8500-8699 range)
 
+    // eslint-disable-next-line no-console
     console.log('  📝 Command: ./daily-bootstrap.sh qa');
+    // eslint-disable-next-line no-console
     console.log('  🎯 Expected port range: 8500-8699');
+    // eslint-disable-next-line no-console
     console.log('  ⏳ Model loading time: 2-5 minutes depending on download/GPU');
 
     // Mock successful launch
+    // eslint-disable-next-line no-console
     console.log(`✅ Model launched successfully on port ${setupContext.modelPort}`);
 
     expect(setupContext.modelPort).toBeGreaterThanOrEqual(8500);
@@ -195,6 +217,7 @@ test.describe('New User Journey - Complete Setup', () => {
   });
 
   test('Step 7: Test Model Connection', async () => {
+    // eslint-disable-next-line no-console
     console.log('🔗 Testing model connection...');
 
     // This test should run: ./test-connection.sh 8500
@@ -218,6 +241,7 @@ test.describe('New User Journey - Complete Setup', () => {
     ];
 
     connectionTests.forEach((test) => {
+      // eslint-disable-next-line no-console
       console.log(`  ✅ ${test.name}: Passed`);
     });
 
@@ -267,6 +291,7 @@ test.describe('Browser-based Model API Testing', () => {
     expect(data.choices[0].message).toHaveProperty('content');
 
     const content = data.choices[0].message.content.trim();
+    // eslint-disable-next-line no-console
     console.log(`Model response: "${content}"`);
     expect(content.length).toBeGreaterThan(0);
   });
@@ -297,6 +322,7 @@ test.describe('Browser-based Model API Testing', () => {
 
 test.describe('Friction Point Detection', () => {
   test('Common Setup Issues', async () => {
+    // eslint-disable-next-line no-console
     console.log('🔍 Checking for common friction points...');
 
     const commonIssues = [
@@ -343,9 +369,13 @@ test.describe('Friction Point Detection', () => {
     ];
 
     commonIssues.forEach((issue) => {
+      // eslint-disable-next-line no-console
       console.log(`⚠️ Potential Issue: ${issue.issue}`);
+      // eslint-disable-next-line no-console
       console.log(`   Detection: ${issue.detection}`);
+      // eslint-disable-next-line no-console
       console.log(`   Solution: ${issue.solution}`);
+      // eslint-disable-next-line no-console
       console.log('');
     });
 
@@ -353,6 +383,7 @@ test.describe('Friction Point Detection', () => {
   });
 
   test('Performance Expectations', async () => {
+    // eslint-disable-next-line no-console
     console.log('📊 Performance expectations by hardware...');
 
     const performanceMatrix = [
@@ -391,10 +422,13 @@ test.describe('Friction Point Detection', () => {
     ];
 
     performanceMatrix.forEach((config) => {
+      // eslint-disable-next-line no-console
       console.log(`🖥️ ${config.hardware}:`);
       config.recommendations.forEach((rec) => {
+        // eslint-disable-next-line no-console
         console.log(`   • ${rec}`);
       });
+      // eslint-disable-next-line no-console
       console.log('');
     });
 
