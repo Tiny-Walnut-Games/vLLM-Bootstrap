@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Playwright configuration for vLLM-Doctrine E2E tests
- * 
+ *
  * These tests validate the complete new user journey from
  * initial setup through successful Rider integration.
  */
@@ -20,7 +20,7 @@ export default defineConfig({
   reporter: [
     ['html', { outputFolder: 'test-reports/html' }],
     ['json', { outputFile: 'test-reports/results.json' }],
-    ['line']
+    ['line'],
   ],
   /* Shared settings for all the projects below. */
   use: {
@@ -49,12 +49,12 @@ export default defineConfig({
   globalTeardown: require.resolve('./tests/setup/global-teardown.ts'),
 
   /* Development server configuration */
-  webServer: {
-    command: 'echo "vLLM models should be started manually before running tests"',
-    port: 8500,
-    reuseExistingServer: true,
-    timeout: 5000,
-  },
+  // webServer: {
+  //   command: 'echo "vLLM models should be started manually before running tests"',
+  //   port: 8500,
+  //   reuseExistingServer: true,
+  //   timeout: 5000,
+  // },
 
   /* Test timeout */
   timeout: 120000, // 2 minutes per test (models can be slow)

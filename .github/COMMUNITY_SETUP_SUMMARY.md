@@ -41,6 +41,7 @@ This document summarizes the community infrastructure that has been added to vLL
 ### 1. Enable GitHub Discussions
 
 **In GitHub Repository Settings:**
+
 1. Go to **Settings → General**
 2. Scroll to **Features**
 3. Check **Discussions**
@@ -49,6 +50,7 @@ This document summarizes the community infrastructure that has been added to vLL
 ### 2. Create GitHub Milestones
 
 **Follow MILESTONES.md to create:**
+
 1. v0.2.0-alpha (Q2 2025)
 2. v0.3.0-beta (Q3 2025)
 3. v0.4.0-beta (Q4 2025)
@@ -56,6 +58,7 @@ This document summarizes the community infrastructure that has been added to vLL
 5. v1.0.0 (When Ready)
 
 **To create milestones:**
+
 1. Go to **Issues → Milestones**
 2. Click **New Milestone**
 3. Use title, description, and due date from MILESTONES.md
@@ -65,28 +68,33 @@ This document summarizes the community infrastructure that has been added to vLL
 **Recommended labels to create:**
 
 **Type:**
+
 - `bug` (red) - Something isn't working
 - `enhancement` (blue) - New feature or improvement
 - `documentation` (green) - Documentation improvements
 - `question` (purple) - Further information requested
 
 **Priority:**
+
 - `priority:critical` (dark red)
 - `priority:high` (orange)
 - `priority:medium` (yellow)
 - `priority:low` (light gray)
 
 **Status:**
+
 - `status:needs-info` (gray)
 - `status:confirmed` (green)
 - `status:in-progress` (blue)
 - `status:blocked` (red)
 
 **Difficulty:**
+
 - `good-first-issue` (green)
 - `help-wanted` (blue)
 
 **Area:**
+
 - `area:testing`
 - `area:scripts`
 - `area:docs`
@@ -118,6 +126,7 @@ git push origin main
 ### 5. Test the Setup
 
 **After pushing:**
+
 1. Go to **Issues → New Issue** - Verify templates appear
 2. Enable Discussions - Test discussion categories
 3. Create a test PR - Verify template loads
@@ -146,23 +155,27 @@ git push origin main
 ### For Users
 
 **Reporting Bugs:**
+
 1. Go to **Issues → New Issue**
 2. Choose **Bug Report** template
 3. Fill in all sections
 4. Submit
 
 **Requesting Features:**
+
 1. Go to **Issues → New Issue**
 2. Choose **Feature Request** template
 3. Describe use case and impact
 4. Submit
 
 **Asking Questions:**
+
 1. Check **Discussions** first
 2. If not answered, create **Question** issue
 3. Or start a discussion thread
 
 **Sharing Your Setup:**
+
 1. Go to **Discussions**
 2. Choose **Show and Tell** category
 3. Share your configuration and experience
@@ -170,12 +183,14 @@ git push origin main
 ### For Contributors
 
 **Finding Work:**
+
 1. Check current milestone in **Issues → Milestones**
 2. Look for `good-first-issue` or `help-wanted` labels
 3. Comment on issue to claim it
 4. Follow CONTRIBUTING.md guidelines
 
 **Submitting PRs:**
+
 1. Create feature branch
 2. Make changes
 3. Test thoroughly
@@ -186,12 +201,14 @@ git push origin main
 ### For Maintainers
 
 **Weekly Tasks:**
+
 - Triage new issues
 - Review PRs
 - Update milestone progress
 - Engage in discussions
 
 **Monthly Tasks:**
+
 - Review roadmap
 - Update milestones
 - Community engagement
@@ -206,18 +223,21 @@ git push origin main
 Track these to measure community health:
 
 **Engagement:**
+
 - Issue creation rate
 - Discussion activity
 - PR submissions
 - Community responses
 
 **Quality:**
+
 - Bug fix rate
 - Feature completion rate
 - Documentation updates
 - Test coverage
 
 **Growth:**
+
 - Stars and forks
 - Contributors
 - Active users
@@ -284,6 +304,7 @@ Your community infrastructure is complete and ready to use. The next steps are:
 ## 📞 Questions?
 
 If you have questions about this setup:
+
 - Review MAINTAINER_GUIDE.md
 - Check ROADMAP.md for project direction
 - See CONTRIBUTING.md for contribution guidelines

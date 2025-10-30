@@ -15,10 +15,12 @@ To track progress effectively, create these milestones in your GitHub repository
 ## Milestone Definitions
 
 ### v0.1.0-alpha (Current)
+
 **Status:** ✅ Released  
 **Focus:** Initial release with core functionality
 
 **Key Deliverables:**
+
 - Core E2E test suite
 - Cross-platform deployment scripts
 - Basic documentation
@@ -27,27 +29,39 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v0.2.0-alpha
-**Status:** 🚧 In Progress  
-**Target:** Q2 2025  
+
+**Status:** ✅ Released  
+**Released:** 2025-02-17  
 **Focus:** Documentation & Stability
 
 **Key Deliverables:**
-- Complete user guides
-- Complete reference documentation
-- Troubleshooting guides
-- Improved error messages
-- Expanded test coverage
 
-**GitHub Milestone:** Create with due date Q2 2025
+- ✅ Complete user guides
+- ✅ Complete reference documentation
+- ✅ Troubleshooting guides
+- ✅ Improved error messages
+- ✅ Expanded test coverage
+- ✅ Real-world validation by Sweep AI
+- ✅ Production-ready bootstrap confirmed
+
+**Release Highlights:**
+
+- Successful fresh-start deployment validation
+- 1B model testing completed
+- Chat endpoint verification confirmed
+- UTF-8 encoding standardization
+- Version consistency across all files
 
 ---
 
 ### v0.3.0-beta
+
 **Status:** 📋 Planned  
 **Target:** Q3 2025  
 **Focus:** Multi-Model Support
 
 **Key Deliverables:**
+
 - Multi-model test suite
 - Model-specific configurations
 - Performance benchmarking
@@ -59,11 +73,13 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v0.4.0-beta
+
 **Status:** 📋 Planned  
 **Target:** Q4 2025  
 **Focus:** Advanced Features
 
 **Key Deliverables:**
+
 - Multi-GPU support
 - Quantization helpers
 - Advanced Rider integration
@@ -75,11 +91,13 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v0.5.0-rc
+
 **Status:** 📋 Planned  
 **Target:** Q1 2026  
 **Focus:** Production Readiness
 
 **Key Deliverables:**
+
 - Security audit
 - Production deployment guide
 - Monitoring and alerting
@@ -91,11 +109,13 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v1.0.0
+
 **Status:** 🎯 Goal  
 **Target:** When Ready  
 **Focus:** General Availability
 
 **Key Deliverables:**
+
 - Stable API
 - Comprehensive documentation
 - Active community support
@@ -146,7 +166,7 @@ Use these labels in combination with milestones:
 ## Questions?
 
 - See [ROADMAP.md](ROADMAP.md) for detailed goals and timelines
-- Ask in [GitHub Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)
+- Ask in [GitHub Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues) (use `question` label)
 - Open an issue if you think a milestone needs adjustment
 
 ---

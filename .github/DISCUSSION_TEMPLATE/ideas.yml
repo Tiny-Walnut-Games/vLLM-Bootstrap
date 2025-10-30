@@ -1,15 +1,15 @@
-title: "[Idea] "
+title: '[Idea] '
 labels: [idea]
 body:
   - type: markdown
     attributes:
       value: |
         ## 💡 Share Your Idea
-        
+
         Have an idea for improving vLLM-Doctrine? Share it here for community discussion!
-        
+
         **Note:** If your idea is well-formed and ready for implementation, consider opening a [Feature Request](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues/new?template=feature_request.md) instead.
-        
+
   - type: textarea
     id: idea-description
     attributes:
@@ -18,7 +18,7 @@ body:
       placeholder: What if we could...
     validations:
       required: true
-      
+
   - type: textarea
     id: problem-solved
     attributes:
@@ -27,7 +27,7 @@ body:
       placeholder: Currently, users have to... This would make it easier to...
     validations:
       required: false
-      
+
   - type: textarea
     id: use-cases
     attributes:
@@ -38,7 +38,7 @@ body:
         - Use case 2
     validations:
       required: false
-      
+
   - type: textarea
     id: open-questions
     attributes:

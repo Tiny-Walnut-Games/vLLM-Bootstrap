@@ -2,49 +2,48 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   test:
     name: Test Suite
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [18.x, 20.x]
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      
+        uses: actions/checkout@v5
+
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-      
-      - name: Run linting
+
+      - name: Run TypeScript linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run format check
+        run: npm run format:check
+
+      - name: Run configuration validation tests
         run: |
-          # Check for common issues in shell scripts
-          if command -v shellcheck &> /dev/null; then
-            find scripts -name "*.sh" -exec shellcheck {} \;
-          else
-            echo "shellcheck not available, skipping shell script linting"
-          fi
-      
-      - name: Run tests
-        run: npm test
+          npx playwright install --with-deps chromium
+          npx playwright test tests/e2e/configuration-validation.spec.ts --reporter=html --reporter=json --reporter=junit
         env:
           CI: true
-      
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
@@ -52,23 +51,23 @@ jobs:
           name: test-results-node-${{ matrix.node-version }}
           path: test-reports/
           retention-days: 30
-      
+
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-node-${{ matrix.node-version }}
-          path: playwright-report/
+          path: test-reports/html/
           retention-days: 30
 
   validate-scripts:
     name: Validate Scripts
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      
+        uses: actions/checkout@v5
+
       - name: Validate shell scripts
         run: |
           echo "Checking shell scripts for syntax errors..."
@@ -78,7 +77,7 @@ jobs:
               bash -n "$script" || exit 1
             fi
           done
-      
+
       - name: Check script permissions
         run: |
           echo "Verifying executable permissions..."
@@ -91,22 +90,22 @@ jobs:
   validate-docs:
     name: Validate Documentation
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      
+        uses: actions/checkout@v5
+
       - name: Check for broken links in markdown
         uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: 'yes'
           config-file: '.github/markdown-link-check-config.json'
-          continue-on-error: true
-      
+        continue-on-error: true
+
       - name: Validate documentation structure
         run: |
           echo "Checking documentation structure..."
-          
+
           # Check required files exist
           required_files=(
             "README.md"
@@ -118,12 +117,12 @@ jobs:
             "docs/reference/known-issues.md"
             "docs/reference/testing.md"
           )
-          
+
           for file in "${required_files[@]}"; do
             if [ ! -f "$file" ]; then
               echo "Error: Required file missing: $file"
               exit 1
             fi
           done
-          
+
           echo "All required documentation files present ✓"
