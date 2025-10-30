@@ -66,8 +66,7 @@ test.describe('IDE Integration Validation', () => {
             messages: [
               {
                 role: 'system',
-                content:
-                  'You are a coding assistant. Explain code clearly and concisely.',
+                content: 'You are a coding assistant. Explain code clearly and concisely.',
               },
               {
                 role: 'user',
@@ -80,8 +79,7 @@ test.describe('IDE Integration Validation', () => {
           },
           validate: (content: string) => {
             return (
-              content.toLowerCase().includes('async') &&
-              content.toLowerCase().includes('http')
+              content.toLowerCase().includes('async') && content.toLowerCase().includes('http')
             );
           },
         },
@@ -112,17 +110,14 @@ test.describe('IDE Integration Validation', () => {
       ];
 
       for (const request of riderRequests) {
-        const response = await fetch(
-          `http://localhost:${port}/v1/chat/completions`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${AUTH_TOKEN}`,
-            },
-            body: JSON.stringify(request.payload),
+        const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${AUTH_TOKEN}`,
           },
-        );
+          body: JSON.stringify(request.payload),
+        });
 
         expect(response.ok, `${request.name} request failed`).toBe(true);
 
@@ -192,22 +187,19 @@ test.describe('IDE Integration Validation', () => {
       ];
 
       for (const scenario of completionScenarios) {
-        const response = await fetch(
-          `http://localhost:${port}/v1/chat/completions`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${AUTH_TOKEN}`,
-            },
-            body: JSON.stringify({
-              model: 'default',
-              messages: [{ role: 'user', content: scenario.prompt }],
-              max_tokens: 100,
-              temperature: 0.1, // Lower temperature for more predictable completions
-            }),
+        const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${AUTH_TOKEN}`,
           },
-        );
+          body: JSON.stringify({
+            model: 'default',
+            messages: [{ role: 'user', content: scenario.prompt }],
+            max_tokens: 100,
+            temperature: 0.1, // Lower temperature for more predictable completions
+          }),
+        });
 
         expect(response.ok, `${scenario.name} failed`).toBe(true);
 
@@ -300,37 +292,32 @@ test.describe('IDE Integration Validation', () => {
           messages: [
             {
               role: 'user',
-              content:
-                'Explain this error: "Cannot read property \'length\' of undefined"',
+              content: 'Explain this error: "Cannot read property \'length\' of undefined"',
             },
           ],
           validate: (content: string) => {
             return (
               content.toLowerCase().includes('undefined') &&
-              (content.toLowerCase().includes('null') ||
-                content.toLowerCase().includes('check'))
+              (content.toLowerCase().includes('null') || content.toLowerCase().includes('check'))
             );
           },
         },
       ];
 
       for (const request of vsRequests) {
-        const response = await fetch(
-          `http://localhost:${port}/v1/chat/completions`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${AUTH_TOKEN}`,
-            },
-            body: JSON.stringify({
-              model: 'default',
-              messages: request.messages,
-              max_tokens: 200,
-              temperature: 0.3,
-            }),
+        const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${AUTH_TOKEN}`,
           },
-        );
+          body: JSON.stringify({
+            model: 'default',
+            messages: request.messages,
+            max_tokens: 200,
+            temperature: 0.3,
+          }),
+        });
 
         expect(response.ok, `${request.name} request failed`).toBe(true);
 
@@ -380,28 +367,25 @@ test.describe('IDE Integration Validation', () => {
       const port = await launchModel('fast', 180000); // Use fast model for streaming
 
       // Test streaming endpoint (if supported by vLLM)
-      const response = await fetch(
-        `http://localhost:${port}/v1/chat/completions`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${AUTH_TOKEN}`,
-          },
-          body: JSON.stringify({
-            model: 'default',
-            messages: [
-              {
-                role: 'user',
-                content: 'Write a Python function to sort a list',
-              },
-            ],
-            max_tokens: 100,
-            temperature: 0.3,
-            stream: true,
-          }),
+      const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${AUTH_TOKEN}`,
         },
-      );
+        body: JSON.stringify({
+          model: 'default',
+          messages: [
+            {
+              role: 'user',
+              content: 'Write a Python function to sort a list',
+            },
+          ],
+          max_tokens: 100,
+          temperature: 0.3,
+          stream: true,
+        }),
+      });
 
       expect(response.ok, 'Streaming request failed').toBe(true);
 
@@ -494,22 +478,19 @@ test.describe('IDE Integration Validation', () => {
       const responses = [];
 
       for (const format of ideFormats) {
-        const response = await fetch(
-          `http://localhost:${port}/v1/chat/completions`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${AUTH_TOKEN}`,
-            },
-            body: JSON.stringify({
-              model: 'default',
-              messages: format.messages,
-              max_tokens: 150,
-              temperature: 0.2, // Low temperature for consistency
-            }),
+        const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${AUTH_TOKEN}`,
           },
-        );
+          body: JSON.stringify({
+            model: 'default',
+            messages: format.messages,
+            max_tokens: 150,
+            temperature: 0.2, // Low temperature for consistency
+          }),
+        });
 
         expect(response.ok, `${format.name} failed`).toBe(true);
 
@@ -588,18 +569,15 @@ test.describe('IDE Integration Validation', () => {
           ...headers,
         };
 
-        const response = await fetch(
-          `http://localhost:${port}/v1/chat/completions`,
-          {
-            method: 'POST',
-            headers: fetchHeaders,
-            body: JSON.stringify({
-              model: 'default',
-              messages: [{ role: 'user', content: 'Hello' }],
-              max_tokens: 20,
-            }),
-          },
-        );
+        const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
+          method: 'POST',
+          headers: fetchHeaders,
+          body: JSON.stringify({
+            model: 'default',
+            messages: [{ role: 'user', content: 'Hello' }],
+            max_tokens: 20,
+          }),
+        });
 
         // Local vLLM should accept all auth patterns (or ignore them)
         expect(response.ok, `Auth pattern ${index} failed`).toBe(true);

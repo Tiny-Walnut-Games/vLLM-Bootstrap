@@ -9,6 +9,7 @@ Quick reference for fixing GitHub Actions validation failures.
 ### Problem: "Unexpected input(s) 'continue-on-error'"
 
 **Symptom**:
+
 ```
 ##[warning]Unexpected input(s) 'continue-on-error', valid inputs are [...]
 ```
@@ -17,6 +18,7 @@ Quick reference for fixing GitHub Actions validation failures.
 Parameter placed as action `with:` input instead of step attribute
 
 **Fix**:
+
 ```diff
 - name: Check links
   uses: gaurav-nelson/github-action-markdown-link-check@v1
@@ -37,16 +39,19 @@ Parameter placed as action `with:` input instead of step attribute
 **Error**: `ERROR: X dead links found!`
 
 **Causes**:
+
 - External links no longer valid (404, 500, timeout)
 - Relative links pointing to non-existent files
 - Anchor links that don't match section headers
 
 **Solutions**:
+
 1. **External links**: Add to `.github/markdown-link-check-config.json` ignore patterns
 2. **Relative links**: Fix or remove broken references
 3. **Anchor links**: Ensure section headers match link text
 
 **Example Fix**:
+
 ```json
 {
   "ignorePatterns": [
@@ -67,28 +72,31 @@ Parameter placed as action `with:` input instead of step attribute
 **Error**: `Could not resolve action version` or `Unexpected input`
 
 **Root Causes**:
+
 - Action version doesn't exist
 - Invalid input parameter name
 - Missing required parameter
 
 **Solutions**:
+
 1. **Verify action exists**: Visit `https://github.com/{owner}/{action}/releases`
 2. **Check input parameters**: See action's `action.yml`
 3. **Use correct syntax**: Action inputs go in `with:`, step controls go outside
 
 **Example**:
+
 ```yaml
 # ❌ WRONG
 - uses: owner/action@v1
   with:
     input-name: value
-    timeout: 30  # ← Step control in wrong place
+    timeout: 30 # ← Step control in wrong place
 
 # ✅ CORRECT
 - uses: owner/action@v1
   with:
     input-name: value
-  timeout: 30  # ← Step control at right level
+  timeout: 30 # ← Step control at right level
 ```
 
 ---
@@ -98,11 +106,13 @@ Parameter placed as action `with:` input instead of step attribute
 **Error**: Files required by pipeline don't exist
 
 **Solutions**:
+
 1. Create missing files, or
 2. Remove references to future files, or
 3. Add to ignore list
 
 **Common Missing Files**:
+
 - `docs/guides/complete-setup.md` → Create or update reference in ci.yml
 - `wiki/SUMMARY.md` → Remove premature reference
 
@@ -111,18 +121,22 @@ Parameter placed as action `with:` input instead of step attribute
 ## 🎯 Validation Workflow Jobs
 
 ### Job: `validate-docs`
+
 **Purpose**: Ensure all markdown links are valid
 
 **Steps**:
+
 1. ✅ Check for broken links in markdown
 2. ✅ Validate documentation structure
 
 **Failure Points**:
+
 - Broken external URLs
 - Missing relative file references
 - Invalid anchor links
 
 **Quick Fix**:
+
 ```bash
 # Temporarily allow failures while fixing
 continue-on-error: true
@@ -139,10 +153,15 @@ continue-on-error: true
 **Purpose**: Control link validation behavior
 
 **Key Settings**:
+
 ```json
 {
-  "ignorePatterns": [/* Links to skip */],
-  "replacementPatterns": [/* URL transformations */],
+  "ignorePatterns": [
+    /* Links to skip */
+  ],
+  "replacementPatterns": [
+    /* URL transformations */
+  ],
   "timeout": "20s",
   "retryCount": 3,
   "aliveStatusCodes": [200, 206, 301, 302, 307, 308]
@@ -150,6 +169,7 @@ continue-on-error: true
 ```
 
 **When to Update**:
+
 - ✅ External link goes dead → Add to `ignorePatterns`
 - ✅ Different base URL needed → Update `replacementPatterns`
 - ✅ Timeouts occurring → Increase `timeout` value
@@ -199,6 +219,7 @@ ajv validate -s schema.json -d .github/workflows/ci.yml
 **Issue**: Feature not enabled in org/repo
 
 **Fix**:
+
 ```diff
 - [Ask a question](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)
 + [Ask a question](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues?labels=question)
@@ -211,6 +232,7 @@ ajv validate -s schema.json -d .github/workflows/ci.yml
 **Issue**: File referenced but doesn't exist
 
 **Fix**:
+
 ```diff
 - [See SUMMARY.md](SUMMARY.md)
 + **Status**: Documentation complete (GitBook version coming soon)
@@ -223,6 +245,7 @@ ajv validate -s schema.json -d .github/workflows/ci.yml
 **Issue**: Blog post archived/deleted
 
 **Fix**:
+
 ```diff
 In `.github/markdown-link-check-config.json`:
 {
@@ -239,25 +262,31 @@ In `.github/markdown-link-check-config.json`:
 ## 🚀 Prevention Strategies
 
 ### 1. Link Validation in CI/CD
+
 ✅ **Implemented**: GitHub Actions validates all links on PR
 
 **What it checks**:
+
 - External URLs return 2xx or redirect status
 - Relative links point to existing files
 - Anchors match actual section headers
 
 ### 2. Documentation Standards
+
 ✅ **Use**: GitHub Issues instead of Discussions
 ✅ **Avoid**: Linking to future unimplemented features
 ✅ **Test**: Verify all links work before commit
 
 ### 3. Configuration Management
+
 ✅ **Maintain**: `.github/markdown-link-check-config.json` for known bad links
 ✅ **Review**: Update ignore patterns quarterly
 ✅ **Document**: Why each pattern is ignored
 
 ### 4. Documentation Updates
+
 When adding new documentation:
+
 - [ ] All links are valid
 - [ ] External links have fallback text
 - [ ] No references to unimplemented features
@@ -268,16 +297,19 @@ When adding new documentation:
 ## 🔍 Debugging Steps
 
 ### Step 1: Check Workflow Logs
+
 ```
 GitHub → Actions → Latest run → validate-docs → Check links
 ```
 
 Look for:
+
 - Specific file name with broken links
 - URL that failed
 - HTTP status code
 
 ### Step 2: Verify Link Manually
+
 ```bash
 # Test in browser or with curl
 curl -I https://broken-link.com
@@ -289,11 +321,13 @@ curl -I https://broken-link.com
 ```
 
 ### Step 3: Determine Fix Type
+
 - **External link dead?** → Add to ignore patterns
 - **File doesn't exist?** → Create file or remove reference
 - **Anchor wrong?** → Fix anchor syntax or section header
 
 ### Step 4: Update & Test
+
 ```bash
 # Test locally
 markdown-link-check --config .github/markdown-link-check-config.json file.md
@@ -307,6 +341,7 @@ markdown-link-check --config .github/markdown-link-check-config.json file.md
 ## 📊 Validation Metrics
 
 **Pipeline Health**:
+
 ```
 ✅ Lint checks:        5 jobs in parallel (3-5 min)
 ✅ Link validation:    ~30 seconds per run
@@ -315,6 +350,7 @@ markdown-link-check --config .github/markdown-link-check-config.json file.md
 ```
 
 **Performance**:
+
 ```
 First run:    ~2-3 min (dependencies installed)
 Subsequent:   ~1-2 min (cached dependencies)
@@ -325,6 +361,7 @@ Subsequent:   ~1-2 min (cached dependencies)
 ## 💡 Best Practices
 
 ### DO ✅
+
 - ✅ Use relative links for internal docs
 - ✅ Add context to link text (not "click here")
 - ✅ Test links locally before pushing
@@ -332,6 +369,7 @@ Subsequent:   ~1-2 min (cached dependencies)
 - ✅ Keep external links current
 
 ### DON'T ❌
+
 - ❌ Link to unimplemented features
 - ❌ Use shortened URLs (expand in documentation)
 - ❌ Ignore link checker warnings
@@ -350,6 +388,7 @@ Subsequent:   ~1-2 min (cached dependencies)
 4. **Ask team**: Check slack/issues for known problems
 
 **Example Support Request**:
+
 ```
 "Link validation failing on README.md:
 https://example.com returns 500 error.

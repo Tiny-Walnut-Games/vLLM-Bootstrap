@@ -77,6 +77,7 @@
 ### 1️⃣ LINT WORKFLOW (`.github/workflows/lint.yml`)
 
 **Trigger Events**:
+
 - `push`: branches [main, develop]
 - `pull_request`: branches [main, develop]
 
@@ -97,26 +98,28 @@
 │
 └─ TypeScript (Type Check)
    └─ 5-10 sec / 45-90 sec (cold)
-   
+
 Total (parallel): 3-5 min (cold start)
 Total (warm): 1-2 min (cached)
 ```
 
 **Quality Gates**:
 
-| Job | Tool | Severity | Blocker | Continue |
-|-----|------|----------|---------|----------|
-| ESLint | typescript-eslint | warning | No | ✅ |
-| Prettier | prettier | info | No | ✅ |
-| ShellCheck | shellcheck | warning | No | ✅ |
-| MarkdownLint | markdownlint | warning | No | ✅ |
-| TypeScript | tsc | error | **YES** | ❌ |
+| Job          | Tool              | Severity | Blocker | Continue |
+| ------------ | ----------------- | -------- | ------- | -------- |
+| ESLint       | typescript-eslint | warning  | No      | ✅       |
+| Prettier     | prettier          | info     | No      | ✅       |
+| ShellCheck   | shellcheck        | warning  | No      | ✅       |
+| MarkdownLint | markdownlint      | warning  | No      | ✅       |
+| TypeScript   | tsc               | error    | **YES** | ❌       |
 
-**Failure Criteria**: 
+**Failure Criteria**:
+
 - ❌ Any TypeScript type error → Workflow fails (blocks merge)
 - ⚠️ ESLint/Prettier warnings → Workflow passes (informational)
 
 **Environment Variables**:
+
 ```yaml
 env:
   FALLBACK_AUTH_TOKEN: 'fallback-token-12345'
@@ -124,6 +127,7 @@ env:
 ```
 
 **Resource Usage**:
+
 - Runner: `ubuntu-latest`
 - Memory: 7 GB
 - CPU: 2 cores
@@ -134,6 +138,7 @@ env:
 ### 2️⃣ TEST WORKFLOWS (`.github/workflows/test-all-tiers.yml`)
 
 **Trigger Events**:
+
 - `push`: branches [main, develop]
 - `pull_request`: branches [main, develop]
 - Manual dispatch via GitHub UI
@@ -164,21 +169,24 @@ env:
 ```
 
 **Test Matrix**:
+
 ```yaml
 matrix:
   tier:
-    - 1b    # Fast: 1B model tests (always)
-    - 4b    # Medium: 4B model tests (main only)
-    - 7b    # Large: 7B model tests (main only)
-    - 15b   # XLarge: 15B model tests (main only)
+    - 1b # Fast: 1B model tests (always)
+    - 4b # Medium: 4B model tests (main only)
+    - 7b # Large: 7B model tests (main only)
+    - 15b # XLarge: 15B model tests (main only)
 ```
 
 **Failure Handling**:
+
 - `fail-fast: false` - Continue testing all tiers even if one fails
 - Results aggregated at workflow level
 - PR merge blocked if any test fails
 
 **Environment Variables**:
+
 ```yaml
 env:
   FALLBACK_AUTH_TOKEN: ${{ secrets.FALLBACK_AUTH_TOKEN || 'fallback-token-12345' }}
@@ -199,6 +207,7 @@ env:
 ### 3️⃣ RELEASE WORKFLOW (`.github/workflows/release.yml`)
 
 **Trigger Events**:
+
 - `push`: tags matching `v*` pattern
 - Manual dispatch (workflow_dispatch)
 
@@ -230,9 +239,9 @@ Job 5: Create Release
 ```
 
 **Release Process**:
+
 ```yaml
-steps:
-  1. Checkout repository
+steps: 1. Checkout repository
   2. Setup Node.js environment
   3. Install npm dependencies
   4. Build artifacts
@@ -243,11 +252,13 @@ steps:
 ```
 
 **Artifacts Generated**:
+
 - `dist/` - Compiled JavaScript
 - `types/` - TypeScript type definitions
 - `CHANGELOG.md` - Release notes
 
 **Release Information**:
+
 ```yaml
 Release Fields:
   - Tag: v0.2.0 (from git tag)
@@ -258,6 +269,7 @@ Release Fields:
 ```
 
 **Resource Usage**:
+
 - Runner: `ubuntu-latest`
 - Memory: 2 GB
 - Runtime: 5-10 minutes
@@ -270,25 +282,26 @@ Release Fields:
 ### 1. Cache Management
 
 **npm Dependencies**:
+
 ```
 First Run:
   package-lock.json → apt cache key
   └─ Download: 45 seconds
   └─ Store: ~/.npm cache
-  
+
 Subsequent Runs:
   Cache hit detected → Restore
   └─ Restore time: 5 seconds
-  
+
 Cache Invalidation:
   If: package-lock.json changes
   Then: Cache automatically invalidated
 ```
 
 **GitHub Actions Cache Strategy**:
+
 ```yaml
-Cache Keys (in priority order):
-  1. npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+Cache Keys (in priority order): 1. npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
   2. npm-${{ runner.os }}-
   3. npm-
 ```
@@ -296,6 +309,7 @@ Cache Keys (in priority order):
 ### 2. Artifact Storage
 
 **Build Artifacts**:
+
 ```
 Location: GitHub Actions storage
 Retention: 90 days (default)
@@ -304,6 +318,7 @@ Access: Downloadable from workflow run page
 ```
 
 **Test Reports**:
+
 ```
 Format: JSON + HTML
 Location: test-reports/ directory
@@ -318,10 +333,12 @@ Accessible: GitHub Actions UI
 ### Secrets Management
 
 **Stored Secrets**:
+
 - `FALLBACK_AUTH_TOKEN` - API authentication (optional)
 - `GITHUB_TOKEN` - Automatic (GitHub-managed)
 
 **Environment Scoping**:
+
 ```yaml
 # Repository Level
 secrets:
@@ -333,6 +350,7 @@ env:
 ```
 
 **Access Levels**:
+
 - Repository admins: Create/modify secrets
 - Workflows: Read-only access during execution
 - Logs: Secrets automatically masked
@@ -340,22 +358,24 @@ env:
 ### Branch Protection Rules
 
 **Main Branch**:
+
 ```
 Required status checks:
   ✅ lint (all jobs)
   ✅ test-1b
-  
+
 Require code review: Yes (1 reviewer)
 Require up-to-date branches: Yes
 Include administrators: No
 ```
 
 **Develop Branch**:
+
 ```
 Required status checks:
   ✅ lint
   ✅ test-1b
-  
+
 Require code review: No (optional)
 ```
 
@@ -366,6 +386,7 @@ Require code review: No (optional)
 ### Performance Metrics
 
 **Tracked Metrics**:
+
 ```
 1. Workflow Run Duration
    - Target: <5 min (lint), <30 min (full tests)
@@ -385,6 +406,7 @@ Require code review: No (optional)
 ```
 
 **Metrics Collection**:
+
 ```bash
 # View workflow run data
 curl -s https://api.github.com/repos/USERNAME/vLLM-Bootstrap/actions/runs \
@@ -420,6 +442,7 @@ curl -s https://api.github.com/repos/USERNAME/vLLM-Bootstrap/actions/caches \
 ### Scenario 1: Action Not Found
 
 **Error**:
+
 ```
 The workflow failed during "Prepare all required actions" because it could
 not resolve the action ludeeus/action-shellcheck@v1.1.0
@@ -428,12 +451,14 @@ not resolve the action ludeeus/action-shellcheck@v1.1.0
 **Root Cause**: Action version doesn't exist or is removed
 
 **Recovery**:
+
 1. Update action to valid version: `@v1.0.0` or `@v2.0.0`
 2. Or replace with native tool (our solution)
 3. Check GitHub Actions marketplace for current versions
 4. Commit fix and retry workflow
 
 **Prevention**:
+
 - Pin to major version only (`@v5` not `@v5.0.0`)
 - Test action versions locally before pushing
 - Monitor action deprecation notices
@@ -442,6 +467,7 @@ not resolve the action ludeeus/action-shellcheck@v1.1.0
 ### Scenario 2: Out of Memory
 
 **Error**:
+
 ```
 The operation was not allowed: insufficient memory
 ```
@@ -449,11 +475,13 @@ The operation was not allowed: insufficient memory
 **Root Cause**: Job memory limit exceeded
 
 **Recovery**:
+
 - Reduce test matrix (skip 15B tier in PR)
 - Run tests sequentially instead of parallel
 - Increase runner memory (upgrade to `ubuntu-latest` 16GB)
 
 **Prevention**:
+
 - Use conditional skipping for heavy tests
 - Monitor memory usage in workflow logs
 - Implement incremental testing
@@ -461,6 +489,7 @@ The operation was not allowed: insufficient memory
 ### Scenario 3: Cache Corruption
 
 **Error**:
+
 ```
 Failed to restore cache: corrupted data
 ```
@@ -468,6 +497,7 @@ Failed to restore cache: corrupted data
 **Root Cause**: Stored cache is invalid
 
 **Recovery**:
+
 ```bash
 # Clear all caches
 curl -X DELETE \
@@ -514,7 +544,7 @@ Deploy all changes behind feature flags:
   - ENABLE_NEW_LOGGING
   - ENABLE_NEW_API_ENDPOINT
   - USE_NEW_ALGORITHM
-  
+
 Toggle flags in production without redeployment
 ```
 
@@ -522,47 +552,51 @@ Toggle flags in production without redeployment
 
 ## 📈 Future Enhancements
 
-| Priority | Enhancement | Impact | Effort |
-|----------|------------|--------|--------|
-| HIGH | Add system package caching | 40 sec/run | 15 min |
-| HIGH | Incremental linting for PRs | 30-45% faster | 30 min |
-| MEDIUM | Slack notifications | Better visibility | 20 min |
-| MEDIUM | Performance alerts | Early warning | 45 min |
-| LOW | Deploy to staging | Pre-release testing | 2-3 hours |
-| LOW | Canary deployment | Gradual rollout | 4-5 hours |
+| Priority | Enhancement                 | Impact              | Effort    |
+| -------- | --------------------------- | ------------------- | --------- |
+| HIGH     | Add system package caching  | 40 sec/run          | 15 min    |
+| HIGH     | Incremental linting for PRs | 30-45% faster       | 30 min    |
+| MEDIUM   | Slack notifications         | Better visibility   | 20 min    |
+| MEDIUM   | Performance alerts          | Early warning       | 45 min    |
+| LOW      | Deploy to staging           | Pre-release testing | 2-3 hours |
+| LOW      | Canary deployment           | Gradual rollout     | 4-5 hours |
 
 ---
 
 ## 📚 Documentation Files
 
-| File | Purpose | Location |
-|------|---------|----------|
-| PIPELINE-ARCHITECTURE.md | This file (full system design) | .github/ |
-| WORKFLOW-FIXES.md | Action resolution errors & fixes | .github/ |
-| PIPELINE-OPTIMIZATION.md | Performance improvement guide | .github/ |
-| SECURITY_IMPROVEMENTS.md | Security vulnerability fixes | .github/ |
-| PIPELINE-VALIDATION.md | Pipeline validation & verification | .github/ |
+| File                     | Purpose                            | Location |
+| ------------------------ | ---------------------------------- | -------- |
+| PIPELINE-ARCHITECTURE.md | This file (full system design)     | .github/ |
+| WORKFLOW-FIXES.md        | Action resolution errors & fixes   | .github/ |
+| PIPELINE-OPTIMIZATION.md | Performance improvement guide      | .github/ |
+| SECURITY_IMPROVEMENTS.md | Security vulnerability fixes       | .github/ |
+| PIPELINE-VALIDATION.md   | Pipeline validation & verification | .github/ |
 
 ---
 
 ## ✅ Compliance & Best Practices
 
 **Infrastructure as Code** ✅
+
 - All workflows defined in YAML
 - Versioned in Git
 - Reviewable in PRs
 
 **Least Privilege Access** ✅
+
 - `GITHUB_TOKEN` limited to repository only
 - Secrets require manual approval
 - No hardcoded credentials
 
 **Audit Trail** ✅
+
 - All runs logged in GitHub Actions UI
 - Build artifacts preserved for 90 days
 - Workflow execution history available
 
 **Disaster Recovery** ✅
+
 - Cache auto-invalidation on dependency change
 - Fallback to fresh install if cache fails
 - No permanent state on runners
@@ -573,14 +607,14 @@ Toggle flags in production without redeployment
 
 **Overall Pipeline Health**: ✅ **EXCELLENT**
 
-| Component | Status | Last Check |
-|-----------|--------|------------|
-| Lint Workflow | ✅ | 2025-01-30 |
-| Test Workflows | ✅ | 2025-01-30 |
-| Release Workflow | ✅ | 2025-01-30 |
-| Caching | ✅ | 2025-01-30 |
-| Secrets Management | ✅ | 2025-01-30 |
-| Documentation | ✅ | 2025-01-30 |
+| Component          | Status | Last Check |
+| ------------------ | ------ | ---------- |
+| Lint Workflow      | ✅     | 2025-01-30 |
+| Test Workflows     | ✅     | 2025-01-30 |
+| Release Workflow   | ✅     | 2025-01-30 |
+| Caching            | ✅     | 2025-01-30 |
+| Secrets Management | ✅     | 2025-01-30 |
+| Documentation      | ✅     | 2025-01-30 |
 
 ---
 

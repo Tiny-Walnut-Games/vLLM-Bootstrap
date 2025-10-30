@@ -32,11 +32,5 @@
     "comma-dangle": ["error", "always-multiline"],
     "eol-last": ["error", "always"]
   },
-  "ignorePatterns": [
-    "dist",
-    "node_modules",
-    ".playwright",
-    "test-reports",
-    "*.config.js"
-  ]
+  "ignorePatterns": ["dist", "node_modules", ".playwright", "test-reports", "*.config.js"]
 }

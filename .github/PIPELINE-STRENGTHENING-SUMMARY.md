@@ -9,6 +9,7 @@
 ## 🎯 Objective
 
 Strengthen the vLLM-Bootstrap CI/CD pipeline by:
+
 1. Eliminating security vulnerabilities
 2. Standardizing GitHub Actions versions
 3. Improving secret management practices
@@ -23,11 +24,13 @@ Strengthen the vLLM-Bootstrap CI/CD pipeline by:
 **File**: `scripts/initial-bootstrap.sh`
 
 **Before** (Vulnerable):
+
 ```bash
 apt-get install -y $MISSING_DEPS  # ❌ Word splitting vulnerability
 ```
 
 **After** (Secure):
+
 ```bash
 declare -a VALIDATED_DEPS=()
 for pkg in $MISSING_DEPS; do
@@ -47,6 +50,7 @@ apt-get install -y "${VALIDATED_DEPS[@]}"  # ✅ Safe array expansion
 ### 2. **Security: Externalized Hardcoded Authentication Tokens**
 
 **17 Occurrences Updated** across:
+
 - Shell scripts (2)
 - TypeScript test files (7)
 - Workflows (2)
@@ -55,6 +59,7 @@ apt-get install -y "${VALIDATED_DEPS[@]}"  # ✅ Safe array expansion
 **Pattern Applied**:
 
 **TypeScript Files**:
+
 ```typescript
 // Before
 const AUTH_TOKEN = 'fallback-token-12345';
@@ -64,6 +69,7 @@ const AUTH_TOKEN = process.env.FALLBACK_AUTH_TOKEN ?? 'fallback-token-12345';
 ```
 
 **Shell Scripts**:
+
 ```bash
 # Before
 --token "fallback-token-12345"
@@ -74,6 +80,7 @@ FALLBACK_TOKEN="${FALLBACK_AUTH_TOKEN:-fallback-token-12345}"
 ```
 
 **GitHub Actions Workflows**:
+
 ```yaml
 # Before (hardcoded in curl commands)
 curl -H "Authorization: Bearer fallback-token-12345" http://localhost:8100/health
@@ -86,6 +93,7 @@ run: |
 ```
 
 **Benefits**:
+
 - ✅ Supports GitHub Secrets: `${{ secrets.FALLBACK_AUTH_TOKEN }}`
 - ✅ Different tokens per environment (dev/test/prod)
 - ✅ Maintains backward compatibility
@@ -98,6 +106,7 @@ run: |
 **File**: `.github/workflows/lint.yml` (line 70)
 
 **Change**:
+
 ```yaml
 # Before
 uses: actions/checkout@v4
@@ -113,6 +122,7 @@ uses: actions/checkout@v5
 ### 4. **Created Supporting Documentation**
 
 #### New Files:
+
 1. **`.github/SECURITY_IMPROVEMENTS.md`** (200+ lines)
    - Detailed security fixes
    - Vulnerability descriptions
@@ -136,34 +146,35 @@ uses: actions/checkout@v5
 
 ### Files Modified
 
-| File | Changes | Impact |
-|------|---------|--------|
-| `scripts/initial-bootstrap.sh` | 2 major edits | Security: Fixed command injection |
-| `tests/setup/global-setup.ts` | 1 edit | Security: Environment variable |
-| `tests/e2e/api-validation.spec.ts` | 1 edit | Security: Environment variable |
-| `tests/e2e/cli-chat-1b.spec.ts` | 1 edit | Security: Environment variable |
-| `tests/e2e/configuration-validation.spec.ts` | 1 edit | Security: Environment variable |
-| `tests/e2e/ide-integration.spec.ts` | 1 edit | Security: Environment variable |
-| `tests/e2e/new-user-journey.spec.ts` | 1 edit | Security: Environment variable |
-| `tests/e2e/rider-integration.spec.ts` | 1 edit | Security: Environment variable |
-| `tests/utils/model-utils.ts` | 1 edit | Security: Environment variable |
-| `tests/run-1b-tests-local.sh` | 1 edit | Security: Environment variable |
-| `.github/workflows/lint.yml` | 1 edit | Version: Updated to @v5 |
-| `.github/workflows/test-all-tiers.yml` | 2 major edits | Security: Environment variables in workflow |
+| File                                         | Changes       | Impact                                      |
+| -------------------------------------------- | ------------- | ------------------------------------------- |
+| `scripts/initial-bootstrap.sh`               | 2 major edits | Security: Fixed command injection           |
+| `tests/setup/global-setup.ts`                | 1 edit        | Security: Environment variable              |
+| `tests/e2e/api-validation.spec.ts`           | 1 edit        | Security: Environment variable              |
+| `tests/e2e/cli-chat-1b.spec.ts`              | 1 edit        | Security: Environment variable              |
+| `tests/e2e/configuration-validation.spec.ts` | 1 edit        | Security: Environment variable              |
+| `tests/e2e/ide-integration.spec.ts`          | 1 edit        | Security: Environment variable              |
+| `tests/e2e/new-user-journey.spec.ts`         | 1 edit        | Security: Environment variable              |
+| `tests/e2e/rider-integration.spec.ts`        | 1 edit        | Security: Environment variable              |
+| `tests/utils/model-utils.ts`                 | 1 edit        | Security: Environment variable              |
+| `tests/run-1b-tests-local.sh`                | 1 edit        | Security: Environment variable              |
+| `.github/workflows/lint.yml`                 | 1 edit        | Version: Updated to @v5                     |
+| `.github/workflows/test-all-tiers.yml`       | 2 major edits | Security: Environment variables in workflow |
 
 ### Files Created
 
-| File | Purpose |
-|------|---------|
-| `.github/SECURITY_IMPROVEMENTS.md` | Documentation of all security fixes |
-| `.github/PIPELINE-VALIDATION.md` | Pipeline architecture & validation guide |
-| `.env.example` | Environment variable template |
+| File                               | Purpose                                  |
+| ---------------------------------- | ---------------------------------------- |
+| `.github/SECURITY_IMPROVEMENTS.md` | Documentation of all security fixes      |
+| `.github/PIPELINE-VALIDATION.md`   | Pipeline architecture & validation guide |
+| `.env.example`                     | Environment variable template            |
 
 ---
 
 ## ✅ Quality Assurance Checklist
 
 ### Code Quality
+
 - [x] No shell script injection vulnerabilities
 - [x] All hardcoded secrets replaced with environment variables
 - [x] Proper quoting in all shell scripts
@@ -171,18 +182,21 @@ uses: actions/checkout@v5
 - [x] Audit logging implemented
 
 ### Testing & Validation
+
 - [x] All test files updated for environment variable support
 - [x] Backward compatibility maintained (default values)
 - [x] GitHub Actions versions consistent (v5)
 - [x] Environment variables properly scoped
 
 ### Documentation
+
 - [x] Security improvements documented
 - [x] Pipeline architecture documented
 - [x] Environment setup documented
 - [x] Troubleshooting guide provided
 
 ### Backward Compatibility
+
 - [x] All changes backward compatible
 - [x] Default values provided for all environment variables
 - [x] Existing workflows continue to work
@@ -193,6 +207,7 @@ uses: actions/checkout@v5
 ## 🚀 Release Readiness
 
 ### Pre-Release Verification
+
 ```bash
 # Local testing
 npm run lint          # ✅ ESLint
@@ -202,6 +217,7 @@ bash -n scripts/*.sh  # ✅ Shell syntax
 ```
 
 ### Deployment Steps
+
 1. ✅ Security fixes applied
 2. ✅ All tests passing
 3. ✅ Documentation complete
@@ -215,6 +231,7 @@ bash -n scripts/*.sh  # ✅ Shell syntax
 Before deploying to production:
 
 ### 1. **GitHub Secrets Configuration**
+
 ```bash
 # Add these secrets to your GitHub repository:
 FALLBACK_AUTH_TOKEN = (generate secure random token)
@@ -222,6 +239,7 @@ HF_TOKEN = (your HuggingFace token, if needed)
 ```
 
 ### 2. **Enable Secret Scanning**
+
 ```bash
 # In GitHub Settings > Security > Secret scanning:
 ✅ Enable secret scanning
@@ -229,12 +247,14 @@ HF_TOKEN = (your HuggingFace token, if needed)
 ```
 
 ### 3. **Update Workflows** (if using secrets)
+
 ```yaml
 env:
   FALLBACK_AUTH_TOKEN: ${{ secrets.FALLBACK_AUTH_TOKEN }}
 ```
 
 ### 4. **Rotate Token Regularly**
+
 - Update `FALLBACK_AUTH_TOKEN` quarterly
 - Change in GitHub secrets
 - No code changes required (uses environment variable)
@@ -244,17 +264,20 @@ env:
 ## 📈 Impact Analysis
 
 ### Security
+
 - **Vulnerabilities Fixed**: 2 (1 CRITICAL, 1 MEDIUM)
 - **Code Injection Prevention**: ✅ Yes
 - **Secret Management**: ✅ Improved
 - **Audit Trail**: ✅ Added
 
 ### Performance
+
 - **Pipeline Speed**: Unchanged (~25 min)
 - **Workflow Reliability**: ✅ Improved
 - **Test Coverage**: Maintained (111 test scenarios)
 
 ### Maintainability
+
 - **Code Quality**: ✅ Enhanced
 - **Documentation**: ✅ Comprehensive
 - **Configuration**: ✅ Centralized
@@ -264,6 +287,7 @@ env:
 ## 🔍 Verification Results
 
 ### All Security Checks Passing
+
 ```
 ✅ Shell script security
 ✅ Environment variable handling
@@ -273,6 +297,7 @@ env:
 ```
 
 ### All Workflow Checks Passing
+
 ```
 ✅ GitHub Actions versions consistent
 ✅ Environment variables properly scoped
@@ -285,6 +310,7 @@ env:
 ## 📝 Migration for Developers
 
 ### For Local Development
+
 ```bash
 # Copy environment template
 cp .env.example .env
@@ -297,6 +323,7 @@ npm test
 ```
 
 ### For CI/CD Configuration
+
 ```yaml
 # In .github/workflows/your-workflow.yml
 env:

@@ -27,12 +27,9 @@ async function globalSetup(_config: FullConfig) {
         console.log(`🔍 Checking for model on port ${port}...`);
 
         // Health check (no auth required)
-        const response = await page.request.get(
-          `http://localhost:${port}/health`,
-          {
-            timeout: 2000,
-          },
-        );
+        const response = await page.request.get(`http://localhost:${port}/health`, {
+          timeout: 2000,
+        });
 
         if (response.ok()) {
           console.log(`✅ Model found on port ${port}`);
@@ -40,14 +37,11 @@ async function globalSetup(_config: FullConfig) {
 
           // Get model info (with Bearer token for secure servers)
           try {
-            const modelsResponse = await page.request.get(
-              `http://localhost:${port}/v1/models`,
-              {
-                headers: {
-                  Authorization: `Bearer ${AUTH_TOKEN}`,
-                },
+            const modelsResponse = await page.request.get(`http://localhost:${port}/v1/models`, {
+              headers: {
+                Authorization: `Bearer ${AUTH_TOKEN}`,
               },
-            );
+            });
             if (modelsResponse.ok()) {
               const data = await modelsResponse.json();
               if (data.data && data.data.length > 0) {
@@ -76,9 +70,7 @@ async function globalSetup(_config: FullConfig) {
       console.log('Some API tests will be skipped without running models.');
     } else {
       console.log('');
-      console.log(
-        `✅ Found ${modelsFound} running model(s) - API tests will run`,
-      );
+      console.log(`✅ Found ${modelsFound} running model(s) - API tests will run`);
     }
 
     // Store model availability for tests

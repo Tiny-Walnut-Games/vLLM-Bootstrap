@@ -5,16 +5,19 @@
 ### 1. ShellCheck Action Version Error
 
 **Problem**: `ludeeus/action-shellcheck@v1.1.0` action was unavailable
+
 - **Error**: "Prepare all required actions" failed
 - **Root Cause**: Version v1.1.0 doesn't exist in the action registry
 - **Severity**: CRITICAL - Blocked entire lint workflow
 
 **Solution**: Replaced with native ShellCheck implementation
+
 - **File Modified**: `.github/workflows/lint.yml`
 - **Approach**: Native Ubuntu shellcheck tool (more reliable, no third-party dependencies)
 - **Benefit**: Faster execution, no action resolution delays
 
 **Before**:
+
 ```yaml
 - name: Run ShellCheck
   uses: ludeeus/action-shellcheck@v1.1.0
@@ -25,6 +28,7 @@
 ```
 
 **After**:
+
 ```yaml
 - name: Install ShellCheck
   run: |
@@ -42,6 +46,7 @@
 ```
 
 **Benefits**:
+
 - ✅ No external action dependency
 - ✅ Faster execution (native tool)
 - ✅ Identical functionality
@@ -54,16 +59,17 @@
 
 ### ✅ All Actions Verified
 
-| Workflow | Action | Version | Status |
-|----------|--------|---------|--------|
-| lint.yml | actions/checkout | v5 | ✅ Valid |
-| lint.yml | actions/setup-node | v5 | ✅ Valid |
-| lint.yml | nosborn/github-action-markdown-cli | v3.3.0 | ✅ Valid |
-| release.yml | softprops/action-gh-release | v2.0.0 | ✅ Valid |
-| test-all-tiers.yml | actions/checkout | v5 | ✅ Valid |
-| test-all-tiers.yml | actions/setup-node | v5 | ✅ Valid |
+| Workflow           | Action                             | Version | Status   |
+| ------------------ | ---------------------------------- | ------- | -------- |
+| lint.yml           | actions/checkout                   | v5      | ✅ Valid |
+| lint.yml           | actions/setup-node                 | v5      | ✅ Valid |
+| lint.yml           | nosborn/github-action-markdown-cli | v3.3.0  | ✅ Valid |
+| release.yml        | softprops/action-gh-release        | v2.0.0  | ✅ Valid |
+| test-all-tiers.yml | actions/checkout                   | v5      | ✅ Valid |
+| test-all-tiers.yml | actions/setup-node                 | v5      | ✅ Valid |
 
 **Native Implementations**:
+
 - ShellCheck: ✅ Native (no action required)
 
 ---
@@ -93,19 +99,20 @@
 
 ### Quality Gates
 
-| Gate | Tool | Purpose | Blocker |
-|------|------|---------|---------|
-| ESLint | TypeScript Linter | Code quality, patterns | ⚠️ Warning only |
-| Prettier | Code Formatter | Consistent formatting | ⚠️ Warning only |
-| ShellCheck | Shell Analyzer | Bash best practices | ⚠️ Warning only |
-| MarkdownLint | Markdown Linter | Docs consistency | ⚠️ Warning only |
-| TypeScript | Type Checker | Type safety | ✅ Blocking |
+| Gate         | Tool              | Purpose                | Blocker         |
+| ------------ | ----------------- | ---------------------- | --------------- |
+| ESLint       | TypeScript Linter | Code quality, patterns | ⚠️ Warning only |
+| Prettier     | Code Formatter    | Consistent formatting  | ⚠️ Warning only |
+| ShellCheck   | Shell Analyzer    | Bash best practices    | ⚠️ Warning only |
+| MarkdownLint | Markdown Linter   | Docs consistency       | ⚠️ Warning only |
+| TypeScript   | Type Checker      | Type safety            | ✅ Blocking     |
 
 ---
 
 ## 🛡️ Action Versioning Best Practices
 
 ### Rule 1: Use Major Version Tags Only
+
 ```yaml
 # ✅ RECOMMENDED: Major version (auto-updates patch/minor)
 uses: actions/checkout@v5
@@ -117,12 +124,14 @@ uses: actions/checkout@v5.0.0
 **Why?** Security patches are automatically applied without action updates.
 
 ### Rule 2: Verify Action Exists Before Using
+
 ```bash
 # Check action availability
 curl -s https://api.github.com/repos/OWNER/REPO/releases | jq '.[] | .tag_name'
 ```
 
 ### Rule 3: Prefer Native Tools Over Third-Party Actions
+
 ```yaml
 # ✅ RECOMMENDED: Native tool
 - run: shellcheck ./scripts/*.sh
@@ -131,17 +140,18 @@ curl -s https://api.github.com/repos/OWNER/REPO/releases | jq '.[] | .tag_name'
 - uses: someuser/shellcheck@v1.0.0
 ```
 
-**Why?** 
+**Why?**
+
 - Fewer dependencies = faster execution
 - No version resolution delays
 - Direct control over tool versions
 - Easier to debug
 
 ### Rule 4: Pin Unpopular Actions to Commit SHAs
+
 ```yaml
 # For unpopular or experimental actions
 uses: user/action@a1b2c3d4e5f6g7h8i9j0
-
 # Never use 'latest' or 'main'
 ```
 
@@ -152,24 +162,28 @@ uses: user/action@a1b2c3d4e5f6g7h8i9j0
 ### Current Optimizations in Place
 
 ✅ **Caching**
+
 ```yaml
 - uses: actions/setup-node@v5
   with:
     node-version: '20.x'
-    cache: 'npm'  # Cache npm dependencies
+    cache: 'npm' # Cache npm dependencies
 ```
 
 ✅ **Parallel Jobs**
+
 - ESLint, Prettier, ShellCheck run in parallel
 - Expected runtime: ~3-5 minutes for entire lint workflow
 
 ✅ **Conditional Error Handling**
+
 - Non-critical jobs use `continue-on-error: true`
 - TypeScript check blocks on failure
 
 ### Future Optimizations
 
 1. **Dependency Caching for System Packages**
+
 ```yaml
 - name: Cache apt packages
   uses: awalsh128/cache-apt-pkgs-action@v1
@@ -179,6 +193,7 @@ uses: user/action@a1b2c3d4e5f6g7h8i9j0
 ```
 
 2. **Incremental Linting**
+
 ```yaml
 - name: Lint only changed files
   run: |
@@ -186,6 +201,7 @@ uses: user/action@a1b2c3d4e5f6g7h8i9j0
 ```
 
 3. **Lint Results Summary**
+
 ```yaml
 - name: Upload lint results
   uses: actions/upload-artifact@v3
@@ -237,17 +253,20 @@ curl -s https://api.github.com/repos/actions/checkout/releases
 ## 📊 Workflow Statistics
 
 ### Lint Workflow
+
 - **Jobs**: 5 parallel jobs
 - **Total Runtime**: ~3-5 minutes
 - **Status Checks**: 5 critical quality gates
 - **Failure Criteria**: TypeScript type check failure only
 
 ### Test Workflow
+
 - **Jobs**: Multiple test tiers (1B/4B/7B/15B)
 - **Total Runtime**: 10-30 minutes depending on tier
 - **Environment Matrix**: Linux + macOS variations
 
 ### Release Workflow
+
 - **Triggers**: Manual + tag push
 - **Jobs**: Build, test, publish, release
 - **Total Runtime**: 5-10 minutes
@@ -295,12 +314,12 @@ grep -r "action@master" .github/workflows/
 
 ## 📝 Summary
 
-| Before | After |
-|--------|-------|
-| ❌ Broken shellcheck action | ✅ Native shellcheck tool |
-| ❌ Action resolution delays | ✅ Instant execution |
-| ❌ Third-party dependency | ✅ No external dependencies |
-| ❌ Hard to debug | ✅ Clear error messages |
+| Before                      | After                       |
+| --------------------------- | --------------------------- |
+| ❌ Broken shellcheck action | ✅ Native shellcheck tool   |
+| ❌ Action resolution delays | ✅ Instant execution        |
+| ❌ Third-party dependency   | ✅ No external dependencies |
+| ❌ Hard to debug            | ✅ Clear error messages     |
 
 **Status**: ✅ **WORKFLOW FIXED & READY FOR DEPLOYMENT**
 

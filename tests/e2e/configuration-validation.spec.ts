@@ -57,9 +57,7 @@ test.describe('Configuration Validation', () => {
     // Check for required sections
     const requiredSections = ['[1B]', '[4B]', '[7B]', '[15B]'];
     for (const section of requiredSections) {
-      expect(content.includes(section), `Missing section: ${section}`).toBe(
-        true,
-      );
+      expect(content.includes(section), `Missing section: ${section}`).toBe(true);
     }
 
     // Check for default models in each section
@@ -82,14 +80,8 @@ test.describe('Configuration Validation', () => {
 
     // Validate each section has a default model
     for (const section of requiredSections) {
-      expect(
-        sectionModels[section],
-        `No models found in ${section}`,
-      ).toBeDefined();
-      expect(
-        sectionModels[section].length,
-        `No default model in ${section}`,
-      ).toBeGreaterThan(0);
+      expect(sectionModels[section], `No models found in ${section}`).toBeDefined();
+      expect(sectionModels[section].length, `No default model in ${section}`).toBeGreaterThan(0);
 
       const defaultModel = sectionModels[section][0];
       expect(
@@ -134,9 +126,7 @@ test.describe('Configuration Validation', () => {
         const range1 = ranges[i];
         const range2 = ranges[j];
 
-        const overlap = !(
-          range1.end < range2.start || range2.end < range1.start
-        );
+        const overlap = !(range1.end < range2.start || range2.end < range1.start);
         expect(
           overlap,
           `Port ranges overlap: ${JSON.stringify(range1)} and ${JSON.stringify(range2)}`,
@@ -147,9 +137,7 @@ test.describe('Configuration Validation', () => {
 
   test('should validate chat-templates.conf structure', async () => {
     const templatesConfPath = './chat-templates.conf';
-    expect(existsSync(templatesConfPath), 'chat-templates.conf not found').toBe(
-      true,
-    );
+    expect(existsSync(templatesConfPath), 'chat-templates.conf not found').toBe(true);
 
     const content = readFileSync(templatesConfPath, 'utf8');
 
@@ -210,9 +198,7 @@ test.describe('Configuration Validation', () => {
     // Check Python installation
     try {
       const pythonVersion = execSync('python3 --version', { encoding: 'utf8' });
-      expect(pythonVersion.includes('Python 3'), 'Python 3 not found').toBe(
-        true,
-      );
+      expect(pythonVersion.includes('Python 3'), 'Python 3 not found').toBe(true);
       // eslint-disable-next-line no-console
       console.log(`✅ Found ${pythonVersion.trim()}`);
     } catch (error) {
@@ -225,9 +211,7 @@ test.describe('Configuration Validation', () => {
       // eslint-disable-next-line no-console
       console.log('✅ Virtual environment found');
     } else {
-      console.warn(
-        '⚠️ Virtual environment not found - run ./initial-bootstrap.sh',
-      );
+      console.warn('⚠️ Virtual environment not found - run ./initial-bootstrap.sh');
     }
 
     // Check CUDA availability (optional)
@@ -242,20 +226,16 @@ test.describe('Configuration Validation', () => {
     // Check required Python packages (if venv exists)
     if (existsSync(venvPath)) {
       try {
-        const packages = execSync(
-          `source ${venvPath}/bin/activate && pip list`,
-          {
-            encoding: 'utf8',
-            shell: '/bin/bash',
-          },
-        );
+        const packages = execSync(`source ${venvPath}/bin/activate && pip list`, {
+          encoding: 'utf8',
+          shell: '/bin/bash',
+        });
 
         const requiredPackages = ['vllm', 'torch', 'huggingface-hub'];
         for (const pkg of requiredPackages) {
-          expect(
-            packages.toLowerCase().includes(pkg),
-            `Required package not found: ${pkg}`,
-          ).toBe(true);
+          expect(packages.toLowerCase().includes(pkg), `Required package not found: ${pkg}`).toBe(
+            true,
+          );
         }
         // eslint-disable-next-line no-console
         console.log('✅ All required Python packages found');
@@ -288,8 +268,7 @@ test.describe('Configuration Validation', () => {
     const portsConf = readFileSync('./ports.conf', 'utf8');
 
     // Extract tiers from models.conf
-    const modelTiers =
-      modelsConf.match(/\[(\w+)\]/g)?.map((m) => m.slice(1, -1)) || [];
+    const modelTiers = modelsConf.match(/\[(\w+)\]/g)?.map((m) => m.slice(1, -1)) || [];
 
     // Extract tiers from ports.conf
     const portTiers = [];
@@ -308,10 +287,9 @@ test.describe('Configuration Validation', () => {
     expect(portTiers.length, 'No port tiers found').toBeGreaterThan(0);
 
     for (const tier of modelTiers) {
-      expect(
-        portTiers.includes(tier),
-        `Model tier ${tier} has no corresponding port range`,
-      ).toBe(true);
+      expect(portTiers.includes(tier), `Model tier ${tier} has no corresponding port range`).toBe(
+        true,
+      );
     }
 
     for (const tier of portTiers) {
@@ -323,11 +301,7 @@ test.describe('Configuration Validation', () => {
   });
 
   test('should validate script version consistency', async () => {
-    const scriptFiles = [
-      './initial-bootstrap.sh',
-      './daily-bootstrap.sh',
-      './test-connection.sh',
-    ];
+    const scriptFiles = ['./initial-bootstrap.sh', './daily-bootstrap.sh', './test-connection.sh'];
 
     const versions = [];
 
@@ -342,52 +316,50 @@ test.describe('Configuration Validation', () => {
       }
     }
 
-    expect(
-      versions.length,
-      'No version information found in scripts',
-    ).toBeGreaterThan(0);
+    expect(versions.length, 'No version information found in scripts').toBeGreaterThan(0);
 
     // All versions should be the same
     const firstVersion = versions[0].version;
     for (const { file, version } of versions) {
-      expect(
-        version,
-        `Version mismatch in ${file}: expected ${firstVersion}, got ${version}`,
-      ).toBe(firstVersion);
+      expect(version, `Version mismatch in ${file}: expected ${firstVersion}, got ${version}`).toBe(
+        firstVersion,
+      );
     }
 
     // eslint-disable-next-line no-console
     console.log(`✅ All scripts are version ${firstVersion}`);
   });
 
-  test('should validate chat template application', async () => {
+  test('should validate chat template application', async (_fixtures, testInfo) => {
+    // Skip this test in CI (requires GPU for model)
+    if (process.env.CI) {
+      testInfo.skip();
+    }
+
     // Test that chat templates are actually being applied
+    // This test is skipped in CI and runs locally only
     const port = await launchModel('fast', 180000);
 
     // Make a request and check that it completes successfully
-    const response = await fetch(
-      `http://localhost:${port}/v1/chat/completions`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${AUTH_TOKEN}`,
-        },
-        body: JSON.stringify({
-          model: 'default',
-          messages: [
-            { role: 'system', content: 'You are a helpful assistant.' },
-            {
-              role: 'user',
-              content:
-                'Say "Template working" if you can understand this message structure.',
-            },
-          ],
-          max_tokens: 10,
-          temperature: 0.1,
-        }),
+    const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${AUTH_TOKEN}`,
       },
-    );
+      body: JSON.stringify({
+        model: 'default',
+        messages: [
+          { role: 'system', content: 'You are a helpful assistant.' },
+          {
+            role: 'user',
+            content: 'Say "Template working" if you can understand this message structure.',
+          },
+        ],
+        max_tokens: 10,
+        temperature: 0.1,
+      }),
+    });
 
     expect(response.ok, 'Chat template test failed').toBe(true);
 
@@ -418,10 +390,7 @@ test.describe('Configuration Validation', () => {
     }
 
     const content = choice.message.content;
-    expect(
-      content.trim().length,
-      'Very short response from template test',
-    ).toBeGreaterThan(0);
+    expect(content.trim().length, 'Very short response from template test').toBeGreaterThan(0);
 
     // eslint-disable-next-line no-console
     console.log(`✅ Chat template working - Response: ${content.trim()}`);

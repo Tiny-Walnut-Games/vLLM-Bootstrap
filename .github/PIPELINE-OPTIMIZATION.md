@@ -4,12 +4,12 @@
 
 ### Execution Times
 
-| Workflow | Current | Target | Status |
-|----------|---------|--------|--------|
-| Lint | 3-5 min | 2-3 min | 🟡 Good |
-| Test (1B) | 5-10 min | 5-8 min | ✅ Good |
+| Workflow   | Current   | Target    | Status  |
+| ---------- | --------- | --------- | ------- |
+| Lint       | 3-5 min   | 2-3 min   | 🟡 Good |
+| Test (1B)  | 5-10 min  | 5-8 min   | ✅ Good |
 | Test (4B+) | 15-30 min | 10-20 min | 🟡 Good |
-| Release | 5-10 min | 3-5 min | 🟡 Good |
+| Release    | 5-10 min  | 3-5 min   | 🟡 Good |
 
 ---
 
@@ -23,15 +23,17 @@
 - uses: actions/setup-node@v5
   with:
     node-version: '20.x'
-    cache: 'npm'  # Automatically caches node_modules
+    cache: 'npm' # Automatically caches node_modules
 ```
 
 **Performance Impact**:
+
 - First run: ~45 seconds (install dependencies)
 - Subsequent runs: ~5 seconds (restored from cache)
 - **Savings**: ~40 seconds per workflow run
 
 **Cache Behavior**:
+
 - Cache key: `npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}`
 - Restored if: `package-lock.json` unchanged
 - Cleared if: Dependency changes detected
@@ -51,6 +53,7 @@ Speedup: 4-5x faster ⚡
 ```
 
 **Jobs Running in Parallel**:
+
 - ESLint (TypeScript)
 - Prettier (Formatting)
 - ShellCheck (Bash)
@@ -64,6 +67,7 @@ Speedup: 4-5x faster ⚡
 Only lint files that changed in the PR:
 
 **Implementation**:
+
 ```yaml
 - name: Lint Changed Files
   if: github.event_name == 'pull_request'
@@ -72,12 +76,12 @@ Only lint files that changed in the PR:
     CHANGED_FILES=$(git diff --name-only --diff-filter=ACM \
       ${{ github.event.pull_request.base.sha }} \
       ${{ github.sha }} -- '*.ts' '*.js')
-    
+
     if [ -z "$CHANGED_FILES" ]; then
       echo "No TypeScript/JavaScript files changed"
       exit 0
     fi
-    
+
     # Run ESLint only on changed files
     npx eslint $CHANGED_FILES
 
@@ -87,6 +91,7 @@ Only lint files that changed in the PR:
 ```
 
 **Expected Savings**:
+
 - PR with 5 changed files: 45% faster
 - PR with 10 changed files: 30% faster
 - Full scan on main: 0% overhead (unchanged)
@@ -98,6 +103,7 @@ Only lint files that changed in the PR:
 Cache `apt-get` packages like ShellCheck:
 
 **Updated lint.yml ShellCheck Job**:
+
 ```yaml
 shellcheck:
   name: ShellCheck
@@ -122,6 +128,7 @@ shellcheck:
 ```
 
 **Performance Impact**:
+
 - First run: 30-45 seconds (download ShellCheck)
 - Subsequent runs: 2-5 seconds (restore from cache)
 - **Savings**: ~40 seconds per workflow
@@ -133,6 +140,7 @@ shellcheck:
 Cache compiled TypeScript to speed up test runs:
 
 **Implementation**:
+
 ```yaml
 test-1b:
   name: Test 1B Tier
@@ -171,6 +179,7 @@ test-1b:
 ```
 
 **Performance Impact**:
+
 - First run: Normal build time
 - Subsequent runs: Skip rebuild if code unchanged
 - **Savings**: 1-3 minutes per test run
@@ -184,8 +193,8 @@ Skip certain jobs based on what changed:
 ```yaml
 lint-docs:
   name: Documentation Lint
-  if: contains(github.event.head_commit.modified, 'docs/') || 
-       contains(github.event.head_commit.modified, '*.md')
+  if: contains(github.event.head_commit.modified, 'docs/') ||
+    contains(github.event.head_commit.modified, '*.md')
   runs-on: ubuntu-latest
   steps:
     # ... markdown linting steps
@@ -201,6 +210,7 @@ skip-on-docs-only:
 ```
 
 **Expected Savings**:
+
 - Docs-only PRs: 5-10 minutes (skip test run)
 - Configuration-only PRs: 3-5 minutes (skip full test suite)
 
@@ -228,13 +238,14 @@ test-matrix:
         - tier: 15b
           timeout: 30
           skip: ${{ github.event_name == 'pull_request' }}
-    fail-fast: true  # Stop all jobs if one fails
+    fail-fast: true # Stop all jobs if one fails
 
   steps:
     # ... test steps
 ```
 
 **Benefits**:
+
 - Fail-fast stops wasting time on known failures
 - PR tests only run 1B tier (fast feedback)
 - Full matrix on main branch only
@@ -277,12 +288,14 @@ Total (PR):          5-10 min  (50% faster)
 ## 🔧 Implementation Checklist
 
 ### Phase 1: Quick Wins (15 minutes)
+
 - [ ] Add system package caching (ShellCheck)
   - File: `.github/workflows/lint.yml`
   - Add `awalsh128/cache-apt-pkgs-action@v1` step
   - Expected savings: 40 seconds
 
 ### Phase 2: Medium Effort (30 minutes)
+
 - [ ] Implement incremental linting
   - File: `.github/workflows/lint.yml`
   - Add git diff logic to ESLint step
@@ -294,6 +307,7 @@ Total (PR):          5-10 min  (50% faster)
   - Expected savings: 1-3 minutes per test run
 
 ### Phase 3: Advanced (45 minutes)
+
 - [ ] Implement conditional job skipping
   - Files: All workflows
   - Add `if:` conditions based on changed files
@@ -326,12 +340,14 @@ Total (PR):          5-10 min  (50% faster)
 **Edit**: `.github/workflows/lint.yml` (eslint step)
 
 Replace:
+
 ```yaml
 - name: Run ESLint
   run: npx eslint . --ext .ts,.js
 ```
 
 With:
+
 ```yaml
 - name: Run ESLint
   run: |
@@ -352,6 +368,7 @@ With:
 ### Step 3: Monitor Performance
 
 **Commands**:
+
 ```bash
 # View workflow execution times
 curl -s https://api.github.com/repos/USERNAME/vLLM-Bootstrap/actions/runs \
@@ -372,11 +389,11 @@ Add workflow summary to `README.md`:
 ## CI/CD Pipeline Status
 
 | Workflow | Status | Avg Time | Cache Hit |
-|----------|--------|----------|-----------|
-| Lint | ✅ | ~3min | 95% |
-| Test 1B | ✅ | ~5min | 90% |
-| Test 4B+ | ✅ | ~15min | 85% |
-| Release | ✅ | ~5min | 100% |
+| -------- | ------ | -------- | --------- |
+| Lint     | ✅     | ~3min    | 95%       |
+| Test 1B  | ✅     | ~5min    | 90%       |
+| Test 4B+ | ✅     | ~15min   | 85%       |
+| Release  | ✅     | ~5min    | 100%      |
 
 [View all runs →](https://github.com/USERNAME/vLLM-Bootstrap/actions)
 ```
@@ -388,6 +405,7 @@ Add workflow summary to `README.md`:
 ### Problem: Cache Not Restoring
 
 **Solution**:
+
 ```bash
 # Clear cache if corrupted
 curl -X DELETE \
@@ -399,6 +417,7 @@ curl -X DELETE \
 ### Problem: Jobs Taking Longer Than Expected
 
 **Debug Steps**:
+
 1. Check GitHub Actions UI for timing breakdown
 2. Enable debug logging: Add to workflow `env: DEBUG: true`
 3. Monitor system resources: Check GitHub runner status
@@ -416,7 +435,7 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    timeout-minutes: 15  # Explicit timeout
+    timeout-minutes: 15 # Explicit timeout
 ```
 
 ---
