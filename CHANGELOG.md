@@ -28,6 +28,7 @@ All core functionality has been tested in a production scenario: a completely ne
 ### Added
 
 #### Release Validation
+
 - **Real-world testing by Sweep AI**: Confirms system works for completely new users
   - 1B model deployment validated
   - Bootstrap chain verified from start to finish
@@ -35,6 +36,7 @@ All core functionality has been tested in a production scenario: a completely ne
   - Terminal CLI chat requests working correctly
 
 #### Version Stability
+
 - **Unified version numbering** across all files (0.2.0-alpha)
 - **Corrected package.json encoding** from UTF-16 to UTF-8 for npm/Git compatibility
 - **Enhanced release documentation** with clear validation results
@@ -49,6 +51,7 @@ All core functionality has been tested in a production scenario: a completely ne
 ### Deployment Status
 
 **Tested & Confirmed Scenarios:**
+
 - ✅ Fresh WSL Ubuntu installation
 - ✅ First-time user setup with initial-bootstrap.sh
 - ✅ 1B model deployment (fast role)
@@ -60,6 +63,7 @@ All core functionality has been tested in a production scenario: a completely ne
 ### Documentation
 
 All comprehensive guides remain available:
+
 - **docs/guides/complete-setup.md**: 400+ line setup guide
 - **docs/reference/known-issues.md**: Known limitations and workarounds
 - **CONTRIBUTING.md**: Community testing guidelines
@@ -69,6 +73,7 @@ All comprehensive guides remain available:
 ### Next Steps
 
 The project is now stable for:
+
 - Community beta testing across different hardware configurations
 - IDE integration (Rider AI Assistant, VS Code, Cursor, etc.)
 - Feedback collection for v0.3.0 features
@@ -86,6 +91,7 @@ Core functionality is complete and well-documented, but real-world validation is
 ### Added
 
 #### Documentation
+
 - **docs/reference/known-issues.md**: Comprehensive documentation of known limitations and workarounds
   - WSL C: drive preference issue and solutions
   - Chat template compatibility notes
@@ -100,13 +106,14 @@ Core functionality is complete and well-documented, but real-world validation is
   - Code style guidelines
 
 #### Project Status
+
 - **Alpha status badges**: Updated README with honest alpha status
 - **Tester recruitment section**: Clear call for community testing
 - **Version alignment**: Unified version to 0.1.0-alpha across all files
 
 ### Changed
 
-- **README.md**: 
+- **README.md**:
   - Updated badges to reflect alpha status
   - Fixed repository URLs (Tiny-Walnut-Games/vLLM-Bootstrap)
   - Added prominent "ALPHA STATUS - TESTERS WANTED" section
@@ -125,6 +132,7 @@ Core functionality is complete and well-documented, but real-world validation is
 ### Testing Needed
 
 We need community validation on:
+
 - [ ] 4GB, 6GB, 12GB, 24GB+ VRAM GPUs
 - [ ] AMD GPUs with ROCm
 - [ ] Windows 10/11 various builds

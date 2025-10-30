@@ -16,6 +16,7 @@ vLLM-Bootstrap helps you run Large Language Models locally on your machine. Chat
 **Current Status**: CLI chat working and tested (zero-to-chat in 30 minutes)
 
 **What Works**:
+
 - ✅ WSL/Linux setup
 - ✅ Model launching (1B, 4B, 7B, 15B tiers)
 - ✅ CLI chat via curl
@@ -23,6 +24,7 @@ vLLM-Bootstrap helps you run Large Language Models locally on your machine. Chat
 - ✅ Automated testing (1B tier validated)
 
 **Not Yet Implemented**:
+
 - ❌ IDE integration (requires chat templates)
 - ❌ Chat UI interface
 
@@ -93,6 +95,7 @@ curl http://localhost:8500/v1/chat/completions \
 ## System Requirements
 
 **Minimum (Tested)**:
+
 - Windows 10/11 with WSL2, or Ubuntu Linux
 - NVIDIA GPU with 8GB VRAM (RTX 2060, GTX 1080 Ti)
 - 16GB system RAM
@@ -105,7 +108,7 @@ curl http://localhost:8500/v1/chat/completions \
 ## Model Tiers
 
 | Tier     | Size | Model          | Port | VRAM    | Use Case          |
-|----------|------|----------------|------|---------|-------------------|
+| -------- | ---- | -------------- | ---- | ------- | ----------------- |
 | **fast** | 1B   | Llama-3.2-1B   | 8100 | 2-3GB   | Quick responses   |
 | **edit** | 4B   | Phi-3.5-mini   | 8300 | 4-5GB   | Code editing      |
 | **qa**   | 7B   | Mistral-7B     | 8500 | 7-8GB   | General chat      |
@@ -130,6 +133,7 @@ npm run test:1b
 ```
 
 **Testing Status**:
+
 - ✅ 1B tier (local hardware, tested on RTX 2060)
 - ✅ OpenAI API compatibility
 - ✅ WSL setup workflow
@@ -144,12 +148,14 @@ npm run test:1b
 **Next Milestone**: IDE integration (chat templates)
 
 **What's Proven**:
+
 - Installation workflow (reproducible)
 - Model launching (all tiers)
 - CLI chat (tested and working)
 - OpenAI API compatibility (validated)
 
 **In Development**:
+
 - Chat templates for IDE integration
 - Rider/VS Code chat support
 - Performance optimizations
@@ -161,6 +167,7 @@ npm run test:1b
 We welcome contributions!
 
 **Ways to help**:
+
 - Test on your hardware configuration
 - Report bugs with detailed info
 - Suggest models that work well
@@ -168,6 +175,7 @@ We welcome contributions!
 - Share your use cases
 
 **Links**:
+
 - [Contributing Guide](CONTRIBUTING.md)
 - [GitHub Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)
 - [Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)
@@ -176,13 +184,13 @@ We welcome contributions!
 
 ## Comparison with Alternatives
 
-| Feature              | vLLM-Bootstrap | Ollama             | LM Studio     |
-|----------------------|----------------|--------------------|---------------|
-| **OpenAI API**       | ✅ Yes          | ❌ Different format | ⚠️ Partial    |
-| **CLI-first**        | ✅ Yes          | ✅ Yes              | ❌ GUI-focused |
-| **IDE integration**  | 🚧 In progress | ❌ No               | ⚠️ Limited    |
+| Feature              | vLLM-Bootstrap | Ollama              | LM Studio      |
+| -------------------- | -------------- | ------------------- | -------------- |
+| **OpenAI API**       | ✅ Yes         | ❌ Different format | ⚠️ Partial     |
+| **CLI-first**        | ✅ Yes         | ✅ Yes              | ❌ GUI-focused |
+| **IDE integration**  | 🚧 In progress | ❌ No               | ⚠️ Limited     |
 | **Setup complexity** | ⚠️ Medium      | ✅ Simple           | ✅ Simple      |
-| **Open source**      | ✅ Yes (MIT)    | ✅ Yes              | ❌ Commercial  |
+| **Open source**      | ✅ Yes (MIT)   | ✅ Yes              | ❌ Commercial  |
 
 **Choose vLLM-Bootstrap if**: You want OpenAI API compatibility for development tools  
 **Choose Ollama if**: You want simplest setup and don't need OpenAI API format  
@@ -194,9 +202,10 @@ We welcome contributions!
 
 This project follows **Scrollkeeper Doctrine**:
 
-> *"I do not celebrate what is claimed. I celebrate what is proven."*
+> _"I do not celebrate what is claimed. I celebrate what is proven."_
 
 **Principles**:
+
 - Only document features that pass tests
 - Ensure reproducibility from zero context
 - No aspirational language or false celebration

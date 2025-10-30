@@ -1,16 +1,13 @@
 /**
  * Model Utilities for vLLM-Doctrine Tests
- * 
+ *
  * Provides helper functions for managing model lifecycle, API testing,
  * and validating OpenAI compatibility.
  */
 import { exec, execSync } from 'node:child_process';
-import { promisify } from 'node:util';
 // Note: Using globalThis fetch if available, otherwise will need to install node-fetch
 // @ts-ignore
 const fetch = globalThis.fetch || require('node-fetch');
-
-const execAsync = promisify(exec);
 
 // Authentication token for fallback server (matches fallback server config)
 const AUTH_TOKEN = 'fallback-token-12345';
@@ -35,9 +32,9 @@ export const MODEL_TIERS: ModelTier[] = [
     models: [
       'meta-llama/Llama-3.2-1B',
       'Qwen/Qwen2.5-0.5B-Instruct',
-      'HuggingFaceTB/SmolLM2-1.7B-Instruct'
+      'HuggingFaceTB/SmolLM2-1.7B-Instruct',
     ],
-    expectedTemplate: 'llama3'
+    expectedTemplate: 'llama3',
   },
   {
     name: 'Edit (4B)',
@@ -45,12 +42,8 @@ export const MODEL_TIERS: ModelTier[] = [
     tier: '4B',
     portStart: 8300,
     portEnd: 8499,
-    models: [
-      'microsoft/phi-3.5-mini-instruct',
-      'google/gemma-3-4b',
-      'cerebras/Cerebras-GPT-2.7B'
-    ],
-    expectedTemplate: 'phi3'
+    models: ['microsoft/phi-3.5-mini-instruct', 'google/gemma-3-4b', 'cerebras/Cerebras-GPT-2.7B'],
+    expectedTemplate: 'phi3',
   },
   {
     name: 'QA (7B)',
@@ -61,9 +54,9 @@ export const MODEL_TIERS: ModelTier[] = [
     models: [
       'mistralai/Mistral-7B-Instruct-v0.3',
       'teknium/OpenHermes-2.5-Mistral-7B',
-      'MaziyarPanahi/WizardLM-2-7B-GGUF'
+      'MaziyarPanahi/WizardLM-2-7B-GGUF',
     ],
-    expectedTemplate: 'mistral'
+    expectedTemplate: 'mistral',
   },
   {
     name: 'Plan (15B)',
@@ -74,10 +67,10 @@ export const MODEL_TIERS: ModelTier[] = [
     models: [
       'bigcode/starcoder2-15b',
       'ServiceNow-AI/Apriel-1.5-15b-Thinker',
-      'mistralai/Codestral-15B'
+      'mistralai/Codestral-15B',
     ],
-    expectedTemplate: 'starcoder'
-  }
+    expectedTemplate: 'starcoder',
+  },
 ];
 
 /**
@@ -88,8 +81,8 @@ async function checkPortHealth(port: number): Promise<boolean> {
     const response = await fetch(`http://localhost:${port}/health`, {
       timeout: 5000,
       headers: {
-        'Authorization': `Bearer ${AUTH_TOKEN}`
-      }
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+      },
     });
     return response.ok;
   } catch (error) {
@@ -118,7 +111,7 @@ async function findAvailablePort(portStart: number, portEnd: number): Promise<nu
 async function cleanupExistingProcesses(): Promise<void> {
   try {
     execSync('pkill -f "vllm.entrypoints.openai.api_server" || true', { stdio: 'pipe' });
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.warn(`Failed to kill existing processes: ${errorMessage}`);
@@ -131,17 +124,17 @@ async function cleanupExistingProcesses(): Promise<void> {
  */
 export async function launchModel(role: ModelTier['role'], timeout = 120000): Promise<number> {
   console.log(`🚀 Launching ${role} model...`);
-  
+
   await cleanupExistingProcesses();
-  
+
   // Launch the model
   exec(`source ~/torch-env/bin/activate && ./daily-bootstrap.sh ${role}`);
-  
-  const tier = MODEL_TIERS.find(t => t.role === role);
+
+  const tier = MODEL_TIERS.find((t) => t.role === role);
   if (!tier) {
     throw new Error(`Unknown role: ${role}`);
   }
-  
+
   // Wait for the model to become available
   const startTime = Date.now();
   while (Date.now() - startTime < timeout) {
@@ -150,10 +143,10 @@ export async function launchModel(role: ModelTier['role'], timeout = 120000): Pr
       console.log(`✅ Model ${role} ready on port ${port}`);
       return port;
     }
-    
-    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
   }
-  
+
   throw new Error(`Timeout waiting for ${role} model to start`);
 }
 
@@ -164,7 +157,7 @@ export async function stopAllModels(): Promise<void> {
   let stopSuccess = false;
   try {
     execSync('pkill -f "vllm.entrypoints.openai.api_server" || true', { stdio: 'pipe' });
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     stopSuccess = true;
     console.log('✅ All models stopped');
   } catch (error) {
@@ -173,7 +166,7 @@ export async function stopAllModels(): Promise<void> {
     console.warn(`Failed to stop models: ${errorMessage}`);
     stopSuccess = false;
   }
-  
+
   if (!stopSuccess) {
     console.warn('⚠️ Some models may still be running');
   }
@@ -187,8 +180,8 @@ export async function isPortAvailable(port: number): Promise<boolean> {
     const response = await fetch(`http://localhost:${port}/health`, {
       timeout: 3000,
       headers: {
-        'Authorization': `Bearer ${AUTH_TOKEN}`
-      }
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+      },
     });
     return response.ok;
   } catch (error) {
@@ -216,29 +209,31 @@ export async function testOpenAICompatibility(port: number): Promise<{
     chat: false,
     modelList: undefined as string[] | undefined,
     chatResponse: undefined as string | undefined,
-    errors: [] as string[]
+    errors: [] as string[],
   };
-  
+
   const baseUrl = `http://localhost:${port}`;
-  
+
   // Test health endpoint
   try {
     const response = await fetch(`${baseUrl}/health`, {
       headers: {
-        'Authorization': `Bearer ${AUTH_TOKEN}`
-      }
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+      },
     });
     results.health = response.ok;
   } catch (error) {
-    results.errors.push(`Health check failed: ${error instanceof Error ? error.message : String(error)}`);
+    results.errors.push(
+      `Health check failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
-  
+
   // Test models endpoint
   try {
     const response = await fetch(`${baseUrl}/v1/models`, {
       headers: {
-        'Authorization': `Bearer ${AUTH_TOKEN}`
-      }
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+      },
     });
     if (response.ok) {
       const data = await response.json();
@@ -246,36 +241,38 @@ export async function testOpenAICompatibility(port: number): Promise<{
       results.modelList = data.data?.map((m: any) => m.id) || [];
     }
   } catch (error) {
-    results.errors.push(`Models endpoint failed: ${error instanceof Error ? error.message : String(error)}`);
+    results.errors.push(
+      `Models endpoint failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
-  
+
   // Test chat completion
   try {
     const response = await fetch(`${baseUrl}/v1/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${AUTH_TOKEN}`
+        Authorization: `Bearer ${AUTH_TOKEN}`,
       },
       body: JSON.stringify({
         model: 'default',
-        messages: [
-          { role: 'user', content: 'Say "Hello" and nothing else.' }
-        ],
+        messages: [{ role: 'user', content: 'Say "Hello" and nothing else.' }],
         max_tokens: 10,
-        temperature: 0.1
-      })
+        temperature: 0.1,
+      }),
     });
-    
+
     if (response.ok) {
       const data = await response.json();
       results.chat = true;
       results.chatResponse = data.choices?.[0]?.message?.content || '';
     }
   } catch (error) {
-    results.errors.push(`Chat completion failed: ${error instanceof Error ? error.message : String(error)}`);
+    results.errors.push(
+      `Chat completion failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
-  
+
   return results;
 }
 
@@ -286,22 +283,22 @@ async function makeChatRequest(
   baseUrl: string,
   messages: Array<{ role: string; content: string }>,
   maxTokens: number,
-  temperature: number
+  temperature: number,
 ): Promise<string> {
   const response = await fetch(baseUrl, {
     method: 'POST',
-    headers: { 
+    headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${AUTH_TOKEN}`
+      Authorization: `Bearer ${AUTH_TOKEN}`,
     },
     body: JSON.stringify({
       model: 'default',
       messages,
       max_tokens: maxTokens,
-      temperature
-    })
+      temperature,
+    }),
   });
-  
+
   if (response.ok) {
     const data = await response.json();
     return data.choices?.[0]?.message?.content || '';
@@ -318,11 +315,13 @@ async function testCodeGeneration(baseUrl: string): Promise<boolean> {
       baseUrl,
       [{ role: 'user', content: 'Write a Python function to calculate factorial' }],
       100,
-      0.3
+      0.3,
     );
     return content.includes('def') && content.includes('factorial');
   } catch (error) {
-    throw new Error(`Code generation test failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Code generation test failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -335,11 +334,13 @@ async function testCodeCompletion(baseUrl: string): Promise<boolean> {
       baseUrl,
       [{ role: 'user', content: 'Complete this Python code: def hello_world():' }],
       50,
-      0.1
+      0.1,
     );
     return content.includes('print') || content.includes('return');
   } catch (error) {
-    throw new Error(`Code completion test failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Code completion test failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -352,14 +353,16 @@ async function testSystemMessages(baseUrl: string): Promise<boolean> {
       baseUrl,
       [
         { role: 'system', content: 'You are a helpful coding assistant working in an IDE.' },
-        { role: 'user', content: 'Explain what this does: print("hello")' }
+        { role: 'user', content: 'Explain what this does: print("hello")' },
       ],
       80,
-      0.2
+      0.2,
     );
     return content.length > 10;
   } catch (error) {
-    throw new Error(`System message test failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `System message test failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -373,14 +376,16 @@ async function testMultiTurn(baseUrl: string): Promise<boolean> {
       [
         { role: 'user', content: 'Write a simple loop in Python' },
         { role: 'assistant', content: 'for i in range(5):\n    print(i)' },
-        { role: 'user', content: 'Add error handling to this loop' }
+        { role: 'user', content: 'Add error handling to this loop' },
       ],
       100,
-      0.3
+      0.3,
     );
     return content.includes('try') || content.includes('except');
   } catch (error) {
-    throw new Error(`Multi-turn test failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Multi-turn test failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -399,35 +404,35 @@ export async function testIDEIntegration(port: number): Promise<{
     codeCompletion: false,
     systemMessages: false,
     multiTurn: false,
-    errors: [] as string[]
+    errors: [] as string[],
   };
-  
+
   const baseUrl = `http://localhost:${port}/v1/chat/completions`;
-  
+
   // Run all tests and collect results
   try {
     results.codeGeneration = await testCodeGeneration(baseUrl);
   } catch (error) {
     results.errors.push(error instanceof Error ? error.message : String(error));
   }
-  
+
   try {
     results.codeCompletion = await testCodeCompletion(baseUrl);
   } catch (error) {
     results.errors.push(error instanceof Error ? error.message : String(error));
   }
-  
+
   try {
     results.systemMessages = await testSystemMessages(baseUrl);
   } catch (error) {
     results.errors.push(error instanceof Error ? error.message : String(error));
   }
-  
+
   try {
     results.multiTurn = await testMultiTurn(baseUrl);
   } catch (error) {
     results.errors.push(error instanceof Error ? error.message : String(error));
   }
-  
+
   return results;
 }

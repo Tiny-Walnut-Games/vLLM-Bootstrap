@@ -1,6 +1,6 @@
 /**
  * Global Setup for vLLM-Doctrine Tests
- * 
+ *
  * This setup ensures that the testing environment is properly configured
  * and that required models can be launched for testing.
  */
@@ -10,11 +10,17 @@ import { existsSync, mkdirSync } from 'node:fs';
 
 function detectWSLEnvironment(): boolean {
   try {
-    const isWSL = !!(process.env.WSL_DISTRO_NAME || 
-               (existsSync('/proc/version') && 
-                execSync('cat /proc/version', { encoding: 'utf8' }).includes('WSL')));
-    
-    console.log(isWSL ? '✅ WSL environment detected' : 'ℹ️ Not running in WSL - some tests may need adaptation');
+    const isWSL = !!(
+      process.env.WSL_DISTRO_NAME ||
+      (existsSync('/proc/version') &&
+        execSync('cat /proc/version', { encoding: 'utf8' }).includes('WSL'))
+    );
+
+    console.log(
+      isWSL
+        ? '✅ WSL environment detected'
+        : 'ℹ️ Not running in WSL - some tests may need adaptation',
+    );
     return isWSL;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -26,19 +32,19 @@ function detectWSLEnvironment(): boolean {
 function verifyRequiredFiles(): void {
   const requiredFiles = [
     './initial-bootstrap.sh',
-    './daily-bootstrap.sh', 
+    './daily-bootstrap.sh',
     './test-connection.sh',
     './models.conf',
     './ports.conf',
-    './chat-templates.conf'
+    './chat-templates.conf',
   ];
-  
-  const missingFiles = requiredFiles.filter(file => !existsSync(file));
+
+  const missingFiles = requiredFiles.filter((file) => !existsSync(file));
   if (missingFiles.length > 0) {
     console.error('❌ Missing required files:', missingFiles);
     throw new Error('Setup incomplete - run ./initial-bootstrap.sh first');
   }
-  
+
   console.log('✅ All required configuration files found');
 }
 
@@ -81,20 +87,20 @@ function verifyHuggingFaceAuth(): boolean {
   }
 }
 
-async function globalSetup(config: FullConfig) {
+async function globalSetup(_config: FullConfig) {
   console.log('🏗️ Setting up vLLM-Doctrine test environment...');
-  
+
   // Create test results directory
   if (!existsSync('test-results')) {
     mkdirSync('test-results', { recursive: true });
   }
-  
+
   detectWSLEnvironment();
   verifyRequiredFiles();
   checkPythonEnvironment();
   checkGPUAvailability();
   verifyHuggingFaceAuth();
-  
+
   console.log('🎯 Test environment ready!');
 }
 

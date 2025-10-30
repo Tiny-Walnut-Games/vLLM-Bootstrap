@@ -39,11 +39,13 @@ The project includes GitHub Actions workflows. To use them:
 **Location**: `.github/workflows/test-all-tiers.yml`
 
 **Triggers**:
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` or `develop`
 - Daily schedule at 2 AM UTC
 
 **What it does**:
+
 1. **Linux (Canonical)**: Tests all 4 tiers sequentially
    - 1B tier: ~3 minutes
    - 4B tier: ~5 minutes
@@ -53,7 +55,8 @@ The project includes GitHub Actions workflows. To use them:
 3. Uploads artifacts for analysis
 4. Provides summary in PR comments
 
-**GPU Requirements**: 
+**GPU Requirements**:
+
 - Minimum: 12GB VRAM (for 7B tier)
 - Recommended: 16GB+ VRAM (for 15B tier)
 - Instance type: NVIDIA A100 (40GB) or similar
@@ -69,11 +72,12 @@ The project includes GitHub Actions workflows. To use them:
    - Docker installed
 
 2. **Setup**:
+
    ```bash
    # On your GPU machine
    curl -o actions-runner-linux-x64-2.310.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.310.0/actions-runner-linux-x64-2.310.0.tar.gz
    tar xzf ./actions-runner-linux-x64-2.310.0.tar.gz
-   
+
    # Follow GitHub's configuration wizard
    ./config.sh --url https://github.com/YOUR_REPO --token YOUR_TOKEN
    ./svc.sh install
@@ -88,6 +92,7 @@ Lambda Labs provides on-demand GPU instances perfect for CI/CD.
 
 1. **Create account** at lambda.com
 2. **API setup**:
+
    ```bash
    # Store in GitHub Secrets
    LAMBDA_API_KEY=<your-api-key>
@@ -108,6 +113,7 @@ Lambda Labs provides on-demand GPU instances perfect for CI/CD.
 ### Option 3: Paperspace (Alternative)
 
 Similar to Lambda Labs:
+
 - Creates ephemeral GPU instances
 - SSH access
 - Suitable for automated testing
@@ -165,6 +171,7 @@ npx playwright test --debug
 **Purpose**: Validate core customer experience on consumer hardware
 
 **Scenarios**:
+
 - ✅ Health endpoint check
 - ✅ Model listing
 - ✅ Greeting test (3 words)
@@ -181,6 +188,7 @@ npx playwright test --debug
 **Purpose**: Comprehensive validation of OpenAI API compatibility
 
 **Coverage**:
+
 - Model launch and port assignment
 - Health checks
 - Model listing endpoint
@@ -213,12 +221,14 @@ CHAT_REQUEST_TIMEOUT=30
 ### Issue: "Timeout waiting for model to start"
 
 **Possible causes**:
+
 1. Insufficient GPU VRAM
 2. Model download issues
 3. Network connectivity
 4. HuggingFace token required
 
 **Solutions**:
+
 ```bash
 # Check GPU memory
 nvidia-smi
@@ -236,6 +246,7 @@ tail -50 ~/.config/llm-doctrine/logs/*.log
 ### Issue: "CUDA out of memory"
 
 **Solutions**:
+
 1. Reduce `gpu_memory_utilization` in daily-bootstrap.sh
 2. Use smaller model variant
 3. Use CPU fallback mode
@@ -250,6 +261,7 @@ CUDA_VISIBLE_DEVICES="" python3 -m vllm.entrypoints.openai.api_server \
 ### Issue: "Connection refused" on localhost:PORT
 
 **Check**:
+
 ```bash
 # Port in use?
 lsof -i :8100
@@ -264,17 +276,20 @@ wsl curl http://localhost:8100/health
 ## Multi-OS Support Roadmap
 
 ### Linux ✅ (Done)
+
 - **Status**: Canonical, fully tested
 - **GPU**: NVIDIA CUDA 12.1
 - **Instances**: Lambda Labs A100, self-hosted
 
 ### Windows (Planned)
+
 - **Status**: In progress
 - **Method**: WSL2 + GPU passthrough
 - **Instances**: Azure GPU VMs, self-hosted
 - **Workflow**: `.github/workflows/test-windows.yml` (TBD)
 
 ### macOS (Planned)
+
 - **Status**: Future
 - **Method**: Apple Silicon MPS acceleration
 - **Limitation**: No discrete GPU support (M-series only)
@@ -283,13 +298,13 @@ wsl curl http://localhost:8100/health
 ## Performance Expectations
 
 | Tier | Model        | Size  | Time to Ready | Time per Chat |
-|------|--------------|-------|---------------|---------------|
+| ---- | ------------ | ----- | ------------- | ------------- |
 | 1B   | Qwen2.5-0.5B | ~1GB  | 30-60s        | <1s           |
 | 4B   | SmolLM2-1.7B | ~3GB  | 60-120s       | 2-3s          |
 | 7B   | Mistral-7B   | ~14GB | 120-180s      | 5-10s         |
 | 15B  | StarCoder2   | ~30GB | 180-300s      | 15-30s        |
 
-*Times are approximate for A100 40GB. RTX 2060 6GB: 1B only (~30-60s startup)*
+_Times are approximate for A100 40GB. RTX 2060 6GB: 1B only (~30-60s startup)_
 
 ## Contributing Tests
 

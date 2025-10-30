@@ -11,6 +11,7 @@ Thank you for your interest in contributing! This project is in **alpha status**
 We need testing on various configurations:
 
 #### Hardware We Need Tested:
+
 - [ ] 4GB VRAM GPUs (RTX 3050, GTX 1650, etc.)
 - [ ] 6GB VRAM GPUs (RTX 2060, GTX 1660 Ti, etc.)
 - [ ] 12GB VRAM GPUs (RTX 3060 12GB, RTX 4070, etc.)
@@ -20,6 +21,7 @@ We need testing on various configurations:
 - [ ] CPU-only mode (not recommended, but curious!)
 
 #### Software Configurations:
+
 - [ ] Windows 10 (various builds)
 - [ ] Windows 11 (various builds)
 - [ ] Different WSL distributions (Ubuntu 20.04, 24.04, Debian, etc.)
@@ -31,11 +33,13 @@ We need testing on various configurations:
 Found a bug? Please report it!
 
 **Before reporting:**
+
 1. Check [Known Issues](docs/reference/known-issues.md) to see if it's already documented
 2. Run `./validate-config.sh` to gather diagnostic info
 3. Check logs in `./logs/` directory
 
 **When reporting, include:**
+
 - Hardware specs (GPU model, VRAM, RAM)
 - Windows version: `winver` output
 - WSL version: `wsl --list --verbose`
@@ -50,6 +54,7 @@ Found a bug? Please report it!
 Know a great model that fits our criteria? Suggest it!
 
 **Model Requirements:**
+
 - ✅ Hosted on HuggingFace
 - ✅ No waitlist or special approval required
 - ✅ Works with vLLM (no exotic architectures)
@@ -58,6 +63,7 @@ Know a great model that fits our criteria? Suggest it!
 - ✅ Permissive license (MIT, Apache 2.0, etc.)
 
 **How to suggest:**
+
 1. Test the model yourself first
 2. Document which chat template works
 3. Note VRAM requirements
@@ -68,6 +74,7 @@ Know a great model that fits our criteria? Suggest it!
 Found something confusing? Help us clarify!
 
 **Documentation needs:**
+
 - Clearer installation steps
 - More troubleshooting scenarios
 - Screenshots/videos of setup process
@@ -79,6 +86,7 @@ Found something confusing? Help us clarify!
 This is a big one! We have 12 default models but limited testing.
 
 **How to help:**
+
 1. Launch a model: `./daily-bootstrap.sh qa`
 2. Test with `./test-connection.sh 8500`
 3. Try in Rider/your IDE
@@ -128,6 +136,7 @@ npm run test:journey
 ### Code Style
 
 **Bash Scripts:**
+
 - Use 4-space indentation
 - Add comments for complex logic
 - Use descriptive variable names
@@ -135,6 +144,7 @@ npm run test:journey
 - Test on Ubuntu 22.04 WSL2
 
 **TypeScript Tests:**
+
 - Follow existing Playwright patterns
 - Add descriptive test names
 - Include error messages in assertions
@@ -185,6 +195,7 @@ Before submitting PR, verify:
 ## 🎨 What We're Looking For
 
 ### High Priority:
+
 - **Hardware validation** - Test on different GPUs
 - **Bug fixes** - Especially for edge cases
 - **Chat template corrections** - Fix models that don't respond correctly
@@ -192,12 +203,14 @@ Before submitting PR, verify:
 - **IDE integration guides** - VS Code, Cursor, etc.
 
 ### Medium Priority:
+
 - **Model suggestions** - New models that fit our criteria
 - **Performance optimizations** - Faster startup, better VRAM usage
 - **Error message improvements** - Clearer, more actionable
 - **Logging enhancements** - Better debugging info
 
 ### Lower Priority (But Welcome!):
+
 - **New features** - Discuss in issue first
 - **Alternative deployment methods** - Docker, systemd, etc.
 - **Web UI** - Management interface
@@ -229,6 +242,7 @@ To keep the project focused and maintainable:
 ### Response Times:
 
 This is a side project, so please be patient:
+
 - Issues: Typically responded to within 2-3 days
 - PRs: Reviewed within a week
 - Complex changes: May take longer for thorough review
@@ -238,6 +252,7 @@ This is a side project, so please be patient:
 ## 🏆 Recognition
 
 Contributors will be:
+
 - Listed in CHANGELOG.md for their contributions
 - Credited in release notes
 - Added to README.md contributors section (if significant contribution)
@@ -247,12 +262,14 @@ Contributors will be:
 ## 📚 Resources
 
 ### Helpful Links:
+
 - [vLLM Documentation](https://docs.vllm.ai/)
 - [HuggingFace Model Hub](https://huggingface.co/models)
 - [WSL Documentation](https://learn.microsoft.com/en-us/windows/wsl/)
 - [Playwright Testing](https://playwright.dev/)
 
 ### Project Documentation:
+
 - [README.md](README.md) - Quick start guide
 - [Complete Setup Guide](docs/guides/complete-setup.md) - Comprehensive setup guide
 - [Known Issues](docs/reference/known-issues.md) - Known problems and workarounds
@@ -264,18 +281,21 @@ Contributors will be:
 ## 🤝 Code of Conduct
 
 ### Be Respectful:
+
 - This is a community project
 - Be patient with beginners
 - Provide constructive feedback
 - Assume good intentions
 
 ### Be Helpful:
+
 - Share your knowledge
 - Document your findings
 - Help others troubleshoot
 - Celebrate successes
 
 ### Be Honest:
+
 - Report real test results (good or bad)
 - Admit when you don't know something
 - Ask for help when stuck

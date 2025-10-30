@@ -25,10 +25,7 @@
           "outputFile": "test-reports/results.json"
         }
       ],
-      [
-        "line",
-        null
-      ]
+      ["line", null]
     ],
     "reportSlowTests": {
       "max": 5,
@@ -45,9 +42,7 @@
         "name": "api-tests",
         "testDir": "C:/Users/jerio/RiderProjects/vLLM-Bootstrap/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "/.*\\.(test|spec)\\.ts/"
-        ],
+        "testMatch": ["/.*\\.(test|spec)\\.ts/"],
         "timeout": 120000
       }
     ],

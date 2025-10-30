@@ -12,14 +12,14 @@ Your CI/CD pipeline had **6 issues** preventing workflow execution. All have bee
 
 ### Issue Breakdown
 
-| Priority | Issue | Status | Impact |
-|----------|-------|--------|--------|
+| Priority    | Issue                                      | Status   | Impact                                      |
+| ----------- | ------------------------------------------ | -------- | ------------------------------------------- |
 | 🔴 CRITICAL | Missing `requirements.txt` for pip caching | ✅ FIXED | Workflows failed at dependency installation |
-| 🔴 CRITICAL | Missing `pyproject.toml` | ✅ FIXED | Alternative Python config missing |
-| 🟡 HIGH | Missing TypeScript config | ✅ FIXED | Type checking would fail silently |
-| 🟡 HIGH | Missing ESLint config | ✅ FIXED | Linting would skip without error |
-| 🟡 HIGH | Missing Prettier config | ✅ FIXED | Format checking would skip |
-| 🟡 MEDIUM | Wrong test report path in ci.yml | ✅ FIXED | HTML reports weren't uploaded |
+| 🔴 CRITICAL | Missing `pyproject.toml`                   | ✅ FIXED | Alternative Python config missing           |
+| 🟡 HIGH     | Missing TypeScript config                  | ✅ FIXED | Type checking would fail silently           |
+| 🟡 HIGH     | Missing ESLint config                      | ✅ FIXED | Linting would skip without error            |
+| 🟡 HIGH     | Missing Prettier config                    | ✅ FIXED | Format checking would skip                  |
+| 🟡 MEDIUM   | Wrong test report path in ci.yml           | ✅ FIXED | HTML reports weren't uploaded               |
 
 ---
 
@@ -28,29 +28,34 @@ Your CI/CD pipeline had **6 issues** preventing workflow execution. All have bee
 ### Issue #1: Missing `requirements.txt` (BLOCKING)
 
 **Error Message**:
+
 ```
-Error: No file in /home/runner/work/vLLM-Bootstrap/vLLM-Bootstrap 
+Error: No file in /home/runner/work/vLLM-Bootstrap/vLLM-Bootstrap
 matched to [**/requirements.txt or **/pyproject.toml]
 ```
 
 **Root Cause**:
+
 - Workflows used `cache: 'pip'` in `actions/setup-python@v5`
 - GitHub Actions requires dependency file to cache pip packages
 - No Python dependency file existed in repository
 
 **Solution Applied**:
 ✅ Created `requirements.txt` with all Python dependencies:
+
 - PyTorch (with CUDA 12.1 support)
 - vLLM
 - HuggingFace Hub
 - Testing utilities (pytest, pytest-asyncio)
 
 **Files Modified**:
+
 - ✅ Created: `requirements.txt`
 - ✅ Modified: `test-linux-practical.yml` (added `cache-dependency-path`)
 - ✅ Modified: `test-all-tiers.yml` (added `cache-dependency-path`)
 
 **Verification**:
+
 ```bash
 # Workflows can now cache pip dependencies
 pip install -r requirements.txt
@@ -61,18 +66,21 @@ pip install -r requirements.txt
 ### Issue #2: Missing TypeScript Configuration
 
 **Problem**:
+
 - Workflow runs `tsc --noEmit` in `lint.yml:113`
 - No `tsconfig.json` exists
 - Type checking would fail
 
 **Solution Applied**:
 ✅ Created `tsconfig.json`:
+
 - Target: ES2020
 - Strict mode enabled
 - Source maps & declarations enabled
 - Proper include/exclude patterns
 
 **Files Modified**:
+
 - ✅ Created: `tsconfig.json`
 
 ---
@@ -80,18 +88,21 @@ pip install -r requirements.txt
 ### Issue #3: Missing ESLint Configuration
 
 **Problem**:
+
 - Workflow checks for ESLint config: `lint.yml:30-31`
 - No `.eslintrc.json` exists
 - Linting would be silently skipped
 
 **Solution Applied**:
 ✅ Created `.eslintrc.json`:
+
 - TypeScript support via `@typescript-eslint`
 - Strict rules for code quality
 - Proper indentation (2 spaces)
 - Semicolon enforcement
 
 **Files Modified**:
+
 - ✅ Created: `.eslintrc.json`
 - ✅ Updated: `package.json` - added ESLint dev dependencies
 
@@ -100,18 +111,21 @@ pip install -r requirements.txt
 ### Issue #4: Missing Prettier Configuration
 
 **Problem**:
+
 - Workflow checks for Prettier config: `lint.yml:57`
 - No `.prettierrc` exists
 - Format checking would be skipped
 
 **Solution Applied**:
 ✅ Created `.prettierrc`:
+
 - Single quotes preferred
 - Print width: 100 characters
 - Trailing commas in multiline objects
 - 2-space indentation
 
 **Files Modified**:
+
 - ✅ Created: `.prettierrc`
 - ✅ Updated: `package.json` - added Prettier dev dependencies
 
@@ -120,12 +134,14 @@ pip install -r requirements.txt
 ### Issue #5: Wrong Test Report Upload Path
 
 **Problem**:
+
 - `ci.yml:61` tried to upload from `playwright-report/`
 - Actual report path is `test-reports/html/`
 - HTML reports weren't being captured
 
 **Solution Applied**:
 ✅ Fixed path in `ci.yml`:
+
 ```yaml
 # BEFORE
 path: playwright-report/
@@ -135,6 +151,7 @@ path: test-reports/html/
 ```
 
 **Files Modified**:
+
 - ✅ Modified: `.github/workflows/ci.yml` (line 61)
 
 ---
@@ -142,12 +159,14 @@ path: test-reports/html/
 ### Issue #6: Missing npm Scripts
 
 **Problem**:
+
 - Workflows execute `npm run lint`, `npm run format:check`, `npm run type-check`
 - These scripts weren't defined in package.json
 - Developers couldn't run quality checks locally
 
 **Solution Applied**:
 ✅ Added missing npm scripts to `package.json`:
+
 ```json
 "lint": "eslint . --ext .ts,.js",
 "lint:fix": "eslint . --ext .ts,.js --fix",
@@ -157,6 +176,7 @@ path: test-reports/html/
 ```
 
 **Files Modified**:
+
 - ✅ Updated: `package.json` - added 5 new npm scripts
 - ✅ Updated: `package.json` - added dev dependencies
 
@@ -165,21 +185,25 @@ path: test-reports/html/
 ## Files Created
 
 ### 1. `requirements.txt`
+
 - Python dependency pinning
 - Ensures reproducible environments
 - Enables pip caching in CI/CD
 
 ### 2. `tsconfig.json`
+
 - TypeScript compilation configuration
 - Enables `tsc --noEmit` checks
 - Strict mode for type safety
 
 ### 3. `.eslintrc.json`
+
 - ESLint rule configuration
 - TypeScript plugin support
 - Code quality standards
 
 ### 4. `.prettierrc`
+
 - Code formatting standards
 - Consistent styling across codebase
 
@@ -188,12 +212,14 @@ path: test-reports/html/
 ## Files Modified
 
 ### 1. `.github/workflows/ci.yml`
+
 ```diff
 - path: playwright-report/
 + path: test-reports/html/
 ```
 
 ### 2. `.github/workflows/test-linux-practical.yml`
+
 ```diff
   - name: Setup Python 3.11
     uses: actions/setup-python@v5
@@ -204,6 +230,7 @@ path: test-reports/html/
 ```
 
 ### 3. `.github/workflows/test-all-tiers.yml`
+
 ```diff
   - name: Setup Python
     uses: actions/setup-python@v5
@@ -214,6 +241,7 @@ path: test-reports/html/
 ```
 
 ### 4. `package.json`
+
 - Added 5 new npm scripts
 - Added 5 new dev dependencies:
   - `@typescript-eslint/eslint-plugin`
@@ -227,30 +255,35 @@ path: test-reports/html/
 ## Verification Steps
 
 ### Step 1: Install Dependencies
+
 ```bash
 npm ci
 npm install --save-dev
 ```
 
 ### Step 2: Run Type Checking
+
 ```bash
 npm run type-check
 # Should complete successfully with no errors
 ```
 
 ### Step 3: Run Linting
+
 ```bash
 npm run lint
 # Should check all .ts and .js files
 ```
 
 ### Step 4: Run Format Check
+
 ```bash
 npm run format:check
 # Should verify code formatting
 ```
 
 ### Step 5: Run Tests
+
 ```bash
 npm test
 # Should run Playwright tests
@@ -261,6 +294,7 @@ npm test
 ## Pipeline Health Check
 
 ### Workflow Status
+
 - ✅ `ci.yml` - Ready to execute
 - ✅ `test-linux-practical.yml` - Ready (requires GPU runner)
 - ✅ `test-all-tiers.yml` - Ready (requires GPU runner)
@@ -268,11 +302,13 @@ npm test
 - ✅ `release.yml` - Ready to execute
 
 ### Dependency Caching
+
 - ✅ Python dependencies cached via `requirements.txt`
 - ✅ npm dependencies cached via `package-lock.json`
 - ✅ Playwright browsers cached
 
 ### Quality Gates
+
 - ✅ TypeScript type checking enabled
 - ✅ ESLint linting enabled
 - ✅ Prettier formatting checks enabled
@@ -285,6 +321,7 @@ npm test
 ## Local Development Setup
 
 ### One-Time Setup
+
 ```bash
 # Install all dependencies
 npm ci
@@ -294,6 +331,7 @@ npm run install-playwright
 ```
 
 ### Before Committing
+
 ```bash
 # Type check
 npm run type-check
@@ -309,7 +347,9 @@ npm run test
 ```
 
 ### Pre-commit Hook (Recommended)
+
 Create `.git/hooks/pre-commit`:
+
 ```bash
 #!/bin/bash
 npm run type-check || exit 1
@@ -358,6 +398,7 @@ npm run format:check || exit 1
 ## Troubleshooting
 
 ### Issue: "tsc --noEmit" fails
+
 ```bash
 # Solution: Ensure TypeScript is installed
 npm install --save-dev typescript
@@ -367,6 +408,7 @@ npm run type-check
 ```
 
 ### Issue: ESLint finds no files to lint
+
 ```bash
 # Solution: Verify .eslintrc.json exists
 ls -la .eslintrc.json
@@ -376,6 +418,7 @@ ls -la tests/e2e/*.ts
 ```
 
 ### Issue: Pip cache not working
+
 ```bash
 # Solution: Verify requirements.txt exists
 ls -la requirements.txt
@@ -385,6 +428,7 @@ pip install -r requirements.txt
 ```
 
 ### Issue: GitHub Actions skips step
+
 ```bash
 # Check step conditions
 grep "if:" .github/workflows/ci.yml
@@ -398,12 +442,14 @@ find . -name ".eslintrc.json" -o -name ".prettierrc"
 ## Performance Impact
 
 ### Build Time
+
 - **Type Checking**: ~5-10 seconds
 - **Linting**: ~5-10 seconds
 - **Format Check**: ~3-5 seconds
 - **Test Suite**: ~20-40 seconds (1B tier), 5+ minutes (full GPU tiers)
 
 ### Caching Benefits
+
 - **Python Cache**: Saves ~30-45 seconds per run
 - **npm Cache**: Saves ~20-30 seconds per run
 - **Playwright Cache**: Saves ~5 minutes (browser download)
@@ -413,6 +459,7 @@ find . -name ".eslintrc.json" -o -name ".prettierrc"
 ## Next Steps
 
 1. ✅ **Commit these changes**
+
    ```bash
    git add requirements.txt tsconfig.json .eslintrc.json .prettierrc
    git add .github/workflows/
@@ -421,6 +468,7 @@ find . -name ".eslintrc.json" -o -name ".prettierrc"
    ```
 
 2. ✅ **Test locally**
+
    ```bash
    npm ci
    npm run type-check
@@ -443,6 +491,7 @@ find . -name ".eslintrc.json" -o -name ".prettierrc"
 ## Conclusion
 
 Your CI/CD pipeline is now **production-ready** with:
+
 - ✅ Complete dependency management
 - ✅ Proper caching configuration
 - ✅ Full quality gate coverage

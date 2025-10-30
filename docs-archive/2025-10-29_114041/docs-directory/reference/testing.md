@@ -35,12 +35,12 @@ This guide helps you test the complete new user journey for vLLM-Doctrine, ident
    # Follow the complete new user process
    ./initial-bootstrap.sh
    # Provide HF token when prompted
-   
+
    ./validate-config.sh
-   
+
    source ~/torch-env/bin/activate
    ./daily-bootstrap.sh fast  # Start with small model
-   
+
    # In another terminal
    ./test-connection.sh 8100
    ```
@@ -61,10 +61,10 @@ This guide helps you test the complete new user journey for vLLM-Doctrine, ident
    ```bash
    # Journey testing (without models)
    npm run test:journey
-   
-   # API testing (requires running models)  
+
+   # API testing (requires running models)
    npm run test:rider
-   
+
    # All tests
    npm test
    ```
@@ -190,22 +190,22 @@ curl -X POST http://localhost:8100/v1/chat/completions \
 
 ### Hardware Performance Matrix
 
-| Hardware | 1B Models | 4B Models | 7B Models | 15B Models |
-|----------|-----------|-----------|-----------|------------|
-| **4GB VRAM** | ⚠️ CPU fallback | ❌ OOM likely | ❌ OOM | ❌ OOM |
-| **6GB VRAM** | ✅ Good | ⚠️ Slow | ❌ OOM | ❌ OOM |
-| **8GB VRAM** | ✅ Excellent | ✅ Good | ⚠️ Slow | ❌ OOM |
-| **12GB VRAM** | ✅ Excellent | ✅ Excellent | ✅ Good | ⚠️ Possible |
-| **16GB+ VRAM** | ✅ Excellent | ✅ Excellent | ✅ Excellent | ✅ Good |
+| Hardware       | 1B Models       | 4B Models     | 7B Models    | 15B Models  |
+| -------------- | --------------- | ------------- | ------------ | ----------- |
+| **4GB VRAM**   | ⚠️ CPU fallback | ❌ OOM likely | ❌ OOM       | ❌ OOM      |
+| **6GB VRAM**   | ✅ Good         | ⚠️ Slow       | ❌ OOM       | ❌ OOM      |
+| **8GB VRAM**   | ✅ Excellent    | ✅ Good       | ⚠️ Slow      | ❌ OOM      |
+| **12GB VRAM**  | ✅ Excellent    | ✅ Excellent  | ✅ Good      | ⚠️ Possible |
+| **16GB+ VRAM** | ✅ Excellent    | ✅ Excellent  | ✅ Excellent | ✅ Good     |
 
 ### Expected Response Times
 
-| Model Tier | Cold Start | Warm Response |
-|------------|------------|---------------|
-| **1B (fast)** | 30-60s | 0.5-2s |
-| **4B (edit)** | 1-2min | 1-3s |
-| **7B (qa)** | 2-3min | 2-5s |
-| **15B (plan)** | 3-5min | 5-15s |
+| Model Tier     | Cold Start | Warm Response |
+| -------------- | ---------- | ------------- |
+| **1B (fast)**  | 30-60s     | 0.5-2s        |
+| **4B (edit)**  | 1-2min     | 1-3s          |
+| **7B (qa)**    | 2-3min     | 2-5s          |
+| **15B (plan)** | 3-5min     | 5-15s         |
 
 ## 🛠️ Debugging Tools
 
@@ -254,14 +254,14 @@ A successful test should achieve:
 ✅ **Model Launch:** At least one model starts and responds to API calls  
 ✅ **API Compliance:** Responses match OpenAI format  
 ✅ **Rider Integration:** Can connect and get responses in IDE  
-✅ **Performance:** Responses within expected time ranges  
+✅ **Performance:** Responses within expected time ranges
 
 ## 🎉 Next Steps After Testing
 
 Once you've identified and documented issues:
 
 1. **Update Documentation:** Fix any inaccurate setup instructions
-2. **Improve Error Messages:** Add better guidance for common failures  
+2. **Improve Error Messages:** Add better guidance for common failures
 3. **Add Automation:** Create scripts for common fixes
 4. **Test More Scenarios:** Different hardware configurations, network setups
 5. **Create Troubleshooting Guide:** Document all discovered solutions
@@ -271,7 +271,7 @@ Once you've identified and documented issues:
 When reporting problems found during testing:
 
 1. **Environment Details:** OS, GPU, VRAM, Python version
-2. **Reproduction Steps:** Exact commands that led to issue  
+2. **Reproduction Steps:** Exact commands that led to issue
 3. **Error Messages:** Full error output and log excerpts
 4. **Expected vs Actual:** What should have happened vs what did
 5. **Workaround:** Any temporary fixes discovered

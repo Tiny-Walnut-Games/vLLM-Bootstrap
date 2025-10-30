@@ -25,11 +25,11 @@ cd ~/.config/llm-doctrine
 
 ### Model Tiers
 
-| Tier | Command | Port | Model | VRAM |
-|------|---------|------|-------|------|
-| **fast** | `./daily-bootstrap.sh fast` | 8100 | Llama-3.2-1B | 2-3GB |
-| **edit** | `./daily-bootstrap.sh edit` | 8300 | Phi-3.5-mini | 4-5GB |
-| **qa** | `./daily-bootstrap.sh qa` | 8500 | Mistral-7B | 7-8GB |
+| Tier     | Command                     | Port | Model          | VRAM    |
+| -------- | --------------------------- | ---- | -------------- | ------- |
+| **fast** | `./daily-bootstrap.sh fast` | 8100 | Llama-3.2-1B   | 2-3GB   |
+| **edit** | `./daily-bootstrap.sh edit` | 8300 | Phi-3.5-mini   | 4-5GB   |
+| **qa**   | `./daily-bootstrap.sh qa`   | 8500 | Mistral-7B     | 7-8GB   |
 | **plan** | `./daily-bootstrap.sh plan` | 8700 | StarCoder2-15B | 14-16GB |
 
 ### What Happens When You Launch
@@ -65,16 +65,19 @@ curl http://localhost:8500/v1/chat/completions \
 ```
 
 **Response**:
+
 ```json
 {
   "id": "cmpl-abc123",
   "object": "chat.completion",
-  "choices": [{
-    "message": {
-      "role": "assistant",
-      "content": "Hello! I'm a helpful AI assistant..."
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "Hello! I'm a helpful AI assistant..."
+      }
     }
-  }]
+  ]
 }
 ```
 
@@ -94,6 +97,7 @@ curl -s http://localhost:8500/v1/chat/completions \
 ```
 
 **Output**:
+
 ```
 2 + 2 equals 4.
 ```
@@ -116,6 +120,7 @@ curl -s http://localhost:8500/v1/chat/completions \
 ```
 
 **Output**:
+
 ```
 Your favorite color is blue.
 ```
@@ -135,6 +140,7 @@ curl -s http://localhost:8500/v1/chat/completions \
 ```
 
 **max_tokens limits response length**:
+
 - 50-100: Short, concise answers
 - 200-500: Detailed explanations
 - 1000+: Long-form content
@@ -154,6 +160,7 @@ curl -s http://localhost:8500/v1/chat/completions \
 ```
 
 **Temperature values**:
+
 - 0.0-0.3: Focused, deterministic (good for code)
 - 0.5-0.7: Balanced (default)
 - 0.8-1.0: Creative, varied (good for stories)
@@ -169,6 +176,7 @@ curl http://localhost:8500/health
 ```
 
 **Response if running**:
+
 ```
 OK
 ```
@@ -180,6 +188,7 @@ curl http://localhost:8500/v1/models
 ```
 
 **Response**:
+
 ```json
 {
   "object": "list",
@@ -200,6 +209,7 @@ curl http://localhost:8500/v1/models
 ```
 
 **Comprehensive check**:
+
 - ✅ Health endpoint
 - ✅ Model listing
 - ✅ Chat completion test
@@ -211,9 +221,11 @@ curl http://localhost:8500/v1/models
 ### Stop a Model
 
 In the terminal where model is running:
+
 1. Press `Ctrl+C`
 
 **Or** find and kill the process:
+
 ```bash
 # Find process ID
 ps aux | grep vllm
@@ -227,6 +239,7 @@ kill <PID>
 Open separate terminals for each:
 
 **Terminal 1**:
+
 ```bash
 source ~/torch-env/bin/activate
 cd ~/.config/llm-doctrine
@@ -234,6 +247,7 @@ cd ~/.config/llm-doctrine
 ```
 
 **Terminal 2**:
+
 ```bash
 source ~/torch-env/bin/activate
 cd ~/.config/llm-doctrine
@@ -241,6 +255,7 @@ cd ~/.config/llm-doctrine
 ```
 
 Now you can chat with either:
+
 ```bash
 # Chat with fast tier
 curl http://localhost:8100/v1/chat/completions ...
@@ -301,6 +316,7 @@ watch -n 2 nvidia-smi
 ```
 
 **What to watch**:
+
 - **GPU Memory-Usage**: Should be 70-90% of VRAM for model tier
 - **GPU-Util**: Spikes to 80-100% during inference
 - **Temperature**: Should stay under 85°C
@@ -417,9 +433,11 @@ curl -s http://localhost:8500/v1/chat/completions \
 ## Troubleshooting
 
 ### "Connection refused"
+
 **Cause**: Model isn't running or wrong port
 
 **Fix**:
+
 ```bash
 # Check if model is running
 curl http://localhost:8500/health
@@ -429,17 +447,21 @@ ps aux | grep vllm
 ```
 
 ### Slow Responses
+
 **Cause**: CPU mode, insufficient VRAM, or large model
 
 **Fix**:
+
 - Check GPU is being used: `nvidia-smi`
 - Try smaller model tier
 - Reduce `max_tokens`
 
 ### JSON Parse Errors
+
 **Cause**: Invalid JSON in request
 
 **Fix**:
+
 - Use proper escaping for quotes: `'\''` for single quote in bash
 - Validate JSON: `echo '{"key": "value"}' | jq .`
 - Use files for complex requests

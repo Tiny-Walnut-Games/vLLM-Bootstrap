@@ -9,6 +9,7 @@
 ## Before You Start
 
 ### What You Need
+
 - Windows 10/11 (with admin rights) or Ubuntu Linux
 - NVIDIA GPU with 8GB+ VRAM (RTX 2060, GTX 1080 Ti, or better)
 - 16GB system RAM
@@ -16,6 +17,7 @@
 - Internet connection (for downloads)
 
 ### Time Estimate
+
 - First-time setup: **30-45 minutes**
 - Launching models after setup: **2-5 minutes**
 
@@ -36,12 +38,14 @@ wsl --install -d Ubuntu
 ```
 
 **Expected output**:
+
 ```
 Installing: Ubuntu
 Ubuntu has been installed.
 ```
 
 If WSL is already installed:
+
 ```powershell
 wsl --update
 ```
@@ -53,6 +57,7 @@ If prompted, restart your computer.
 ### 1.4 Launch WSL
 
 After restart, open Ubuntu:
+
 - Press Windows key → Type "Ubuntu" → Press Enter
 
 **OR**
@@ -72,6 +77,7 @@ First launch prompts for username and password.
 5. Press Enter
 
 **Success looks like**:
+
 ```
 Installation successful!
 username@computername:~$
@@ -149,6 +155,7 @@ cd ~/.config/llm-doctrine
 ```
 
 **This installs**:
+
 - System dependencies (Python, CUDA, tmux, netcat)
 - Python virtual environment at `~/torch-env`
 - PyTorch with CUDA support
@@ -157,6 +164,7 @@ cd ~/.config/llm-doctrine
 ### 4.2 Provide HuggingFace Token
 
 When prompted:
+
 ```
 Do you want to configure HuggingFace authentication now? (y/n)
 ```
@@ -172,6 +180,7 @@ Do you want to configure HuggingFace authentication now? (y/n)
 ☕ **Grab a coffee!** This downloads several GB of packages.
 
 **Success looks like**:
+
 ```
 ✅ Installation complete!
 📝 Configuration files created
@@ -179,6 +188,7 @@ Do you want to configure HuggingFace authentication now? (y/n)
 ```
 
 **🎯 After installation**, these helper scripts are automatically created for you:
+
 - `daily-bootstrap.sh` - Launches models by tier
 - `test-connection.sh` - Tests if a model is running
 - Configuration files in `~/.config/llm-doctrine/`
@@ -209,6 +219,7 @@ cd ~/.config/llm-doctrine
 **First time**: Model downloads from HuggingFace (several GB)
 
 **You'll see**:
+
 ```
 🚀 Launching qa (mistralai/Mistral-7B-Instruct-v0.3) on port 8500
 📝 Logs: ./logs/qa_8500.log
@@ -216,6 +227,7 @@ cd ~/.config/llm-doctrine
 ```
 
 **Wait for**:
+
 ```
 INFO: Application startup complete.
 ```
@@ -231,6 +243,7 @@ INFO: Application startup complete.
 **Keep the model running** in the first terminal.
 
 Open a second WSL terminal:
+
 - Windows: Open another Ubuntu window
 - Linux: Open another terminal tab
 
@@ -243,6 +256,7 @@ source ~/torch-env/bin/activate
 ```
 
 **Expected output**:
+
 ```
 🔍 Testing vLLM server on port 8500...
 
@@ -280,6 +294,7 @@ curl http://localhost:8500/v1/chat/completions \
 ```
 
 **You'll get a JSON response**:
+
 ```json
 {
   "id": "cmpl-...",
@@ -324,6 +339,7 @@ curl http://localhost:8500/v1/chat/completions \
 ## 🎉 You're Done!
 
 You now have:
+
 - ✅ WSL configured (Windows) or Linux ready
 - ✅ vLLM-Bootstrap installed
 - ✅ Mistral-7B model running on port 8500
@@ -334,16 +350,19 @@ You now have:
 ## Next Steps
 
 ### Learn More
+
 - **[CLI Usage Guide](CLI-Usage)** - Advanced curl commands, multi-turn chat
 - **[Model Configuration](Model-Configuration)** - Try different models, manage VRAM
 - **[Testing Guide](Testing-Guide)** - Run automated tests to validate installation
 
 ### Troubleshooting
+
 - Model won't load? → [Troubleshooting: Model Loading](Troubleshooting#model-wont-load)
 - Connection refused? → [Troubleshooting: Connection Issues](Troubleshooting#connection-refused)
 - Out of memory? → [Troubleshooting: VRAM Issues](Troubleshooting#out-of-vram)
 
 ### Try Different Models
+
 ```bash
 cd ~/.config/llm-doctrine
 
@@ -359,20 +378,26 @@ cd ~/.config/llm-doctrine
 ## Common First-Time Issues
 
 ### "Command not found: ./scripts/initial-bootstrap.sh"
+
 **Fix**: You're not in the right directory
+
 ```bash
 cd ~/.config/llm-doctrine
 ls -la scripts/  # Should show initial-bootstrap.sh
 ```
 
 ### "Permission denied"
+
 **Fix**: Scripts aren't executable
+
 ```bash
 chmod +x scripts/*.sh
 ```
 
 ### "HuggingFace authentication failed"
+
 **Fix**: Invalid or expired token
+
 ```bash
 # Log in again
 source ~/torch-env/bin/activate
@@ -381,6 +406,7 @@ huggingface-cli login
 ```
 
 ### Model download is slow
+
 **Normal**: First download can take 10-30 minutes for 7B models (3-7 GB)
 **Subsequent launches** are much faster (30-60 seconds)
 

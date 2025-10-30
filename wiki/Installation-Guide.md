@@ -11,12 +11,14 @@ For a quicker guide, see: [Getting Started](Getting-Started)
 ### Hardware Requirements
 
 **Minimum (Tested)**:
+
 - NVIDIA GPU: RTX 2060, GTX 1080 Ti, or equivalent
 - VRAM: 8GB (for 7B models)
 - System RAM: 16GB
 - Storage: 50GB free
 
 **Recommended**:
+
 - NVIDIA GPU: RTX 3060, RTX 4060, or better
 - VRAM: 12GB+ (for multiple models or larger ones)
 - System RAM: 32GB
@@ -27,15 +29,18 @@ For a quicker guide, see: [Getting Started](Getting-Started)
 ### Software Requirements
 
 **Windows**:
+
 - Windows 10 version 2004+ or Windows 11
 - WSL 2 enabled
 - PowerShell 5.1+ (built-in)
 
 **Linux**:
+
 - Ubuntu 20.04, 22.04, or 24.04
 - Other distros may work but are untested
 
 **Both**:
+
 - Internet connection (for downloads)
 - Admin/sudo privileges (for installation)
 
@@ -67,11 +72,13 @@ wsl --install -d Ubuntu
 ```
 
 **What this does**:
+
 - Enables WSL 2 feature
 - Downloads Ubuntu
 - Installs Ubuntu as default distribution
 
 **Expected output**:
+
 ```
 Installing: Virtual Machine Platform
 Installing: Windows Subsystem for Linux
@@ -82,6 +89,7 @@ Ubuntu has been installed.
 #### 1.3 Restart Computer
 
 If prompted:
+
 ```
 Please restart your computer to complete installation
 ```
@@ -97,11 +105,13 @@ wsl --version
 ```
 
 **Should show**:
+
 ```
 WSL version: 2.x.x.x
 ```
 
 If it shows WSL version 1, upgrade:
+
 ```powershell
 wsl --set-default-version 2
 ```
@@ -109,17 +119,21 @@ wsl --set-default-version 2
 #### 1.5 Launch Ubuntu
 
 **Method 1**: Start menu
+
 - Press Windows key → Type "Ubuntu" → Press Enter
 
 **Method 2**: Windows Terminal
+
 - Open Terminal → Dropdown menu → "Ubuntu"
 
 **Method 3**: Direct command
+
 - Press Win+R → Type `wsl` → Enter
 
 #### 1.6 First Launch Setup
 
 **Username prompt**:
+
 ```
 Enter new UNIX username:
 ```
@@ -129,6 +143,7 @@ Enter new UNIX username:
 - Example: `john` or `jdoe`
 
 **Password prompt**:
+
 ```
 New password:
 ```
@@ -141,6 +156,7 @@ New password:
 4. Press Enter
 
 **Success**:
+
 ```
 Installation successful!
 username@hostname:~$
@@ -180,7 +196,7 @@ Some models (Llama, Gemma, Phi) require authentication to download. HuggingFace 
 2. Click "New token"
 3. Token details:
    - **Name**: `vllm-bootstrap` (or your choice)
-   - **Type**: Select **"Read"** 
+   - **Type**: Select **"Read"**
    - **Repositories**: "All"
 4. Click "Generate token"
 5. **Copy the token** (looks like `hf_AbCdEfGhIjKlMnOpQrStUvWxYz0123456789`)
@@ -219,6 +235,7 @@ git clone https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap.git .
 **Note the `.` at the end** - it clones into current directory, not a subdirectory.
 
 **Expected output**:
+
 ```
 Cloning into '.'...
 Receiving objects: 100% (XXX/XXX), done.
@@ -235,6 +252,7 @@ If git doesn't work:
 5. Copy all files to `~/.config/llm-doctrine/`
 
 **Via Windows Explorer**:
+
 1. Open: `\\wsl.localhost\Ubuntu\home\USERNAME\.config\llm-doctrine\`
 2. Drag and drop files here
 
@@ -245,6 +263,7 @@ ls -la ~/.config/llm-doctrine/scripts/
 ```
 
 **Should see**:
+
 ```
 initial-bootstrap.sh
 daily-bootstrap.sh
@@ -261,6 +280,7 @@ chmod +x ~/.config/llm-doctrine/scripts/*.sh
 **What this does**: Marks shell scripts as runnable programs
 
 **Verify**:
+
 ```bash
 ls -l ~/.config/llm-doctrine/scripts/initial-bootstrap.sh
 ```
@@ -279,6 +299,7 @@ cd ~/.config/llm-doctrine
 ```
 
 **What this script does**:
+
 1. Checks system requirements
 2. Installs system dependencies (Python, CUDA, tmux)
 3. Creates Python virtual environment (`~/torch-env`)
@@ -290,6 +311,7 @@ cd ~/.config/llm-doctrine
 #### 4.2 Installation Phases
 
 **Phase 1: System Dependencies** (2-5 min)
+
 ```
 📦 Installing system dependencies...
   ✓ python3
@@ -300,18 +322,21 @@ cd ~/.config/llm-doctrine
 ```
 
 **Phase 2: Python Environment** (5-10 min)
+
 ```
 🐍 Creating Python virtual environment...
   ✓ Virtual environment created at ~/torch-env
 ```
 
 **Phase 3: PyTorch** (5-15 min)
+
 ```
 🔥 Installing PyTorch with CUDA 12.1...
   Downloading: pytorch-2.x.x+cu121
 ```
 
 **Phase 4: vLLM** (3-8 min)
+
 ```
 🚀 Installing vLLM...
   ✓ vllm
@@ -320,6 +345,7 @@ cd ~/.config/llm-doctrine
 ```
 
 **Phase 5: Configuration**
+
 ```
 🔐 HuggingFace Authentication Setup
 Do you want to configure HuggingFace authentication now? (y/n)
@@ -330,6 +356,7 @@ Do you want to configure HuggingFace authentication now? (y/n)
 When prompted:
 
 **Prompt**:
+
 ```
 Do you want to configure HuggingFace authentication now? (y/n)
 ```
@@ -337,6 +364,7 @@ Do you want to configure HuggingFace authentication now? (y/n)
 **Response**: Type `y` and press Enter
 
 **Token prompt**:
+
 ```
 Please paste your HuggingFace token:
 ```
@@ -345,6 +373,7 @@ Please paste your HuggingFace token:
 2. Press Enter
 
 **Verification**:
+
 ```
 ✅ HuggingFace authentication successful
    Logged in as: your-username
@@ -365,6 +394,7 @@ If you see this, authentication worked.
 #### 4.5 Installation Complete
 
 **Success message**:
+
 ```
 ✅ Installation complete!
 
@@ -396,6 +426,7 @@ python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
 ```
 
 **Expected output**:
+
 ```
 CUDA available: True
 ```
@@ -409,6 +440,7 @@ python -c "import vllm; print(f'vLLM version: {vllm.__version__}')"
 ```
 
 **Expected output**:
+
 ```
 vLLM version: 0.x.x
 ```
@@ -420,11 +452,13 @@ huggingface-cli whoami
 ```
 
 **Expected output**:
+
 ```
 username: your-username
 ```
 
 If this shows an error, re-run:
+
 ```bash
 huggingface-cli login
 # Paste token again
@@ -445,6 +479,7 @@ source ~/torch-env/bin/activate
 **You'll see**: `(torch-env)` appear in your prompt
 
 **To automate** (optional):
+
 ```bash
 echo "source ~/torch-env/bin/activate" >> ~/.bashrc
 ```
@@ -540,6 +575,7 @@ rm -rf ~/.cache/huggingface
 ### Uninstall WSL (Windows)
 
 **PowerShell as admin**:
+
 ```powershell
 wsl --unregister Ubuntu
 ```
@@ -555,6 +591,7 @@ wsl --unregister Ubuntu
 **Cause**: Package list needs updating
 
 **Fix**:
+
 ```bash
 sudo apt update
 sudo apt install python3 python3-venv python3-pip
@@ -565,6 +602,7 @@ sudo apt install python3 python3-venv python3-pip
 **Cause**: NVIDIA drivers not installed or outdated
 
 **Fix** (WSL):
+
 1. Install latest NVIDIA drivers on Windows (not inside WSL)
 2. Download from: https://www.nvidia.com/download/index.aspx
 3. Restart Windows
@@ -575,6 +613,7 @@ sudo apt install python3 python3-venv python3-pip
 **Cause**: Insufficient storage
 
 **Fix**:
+
 ```bash
 # Check available space
 df -h ~
@@ -591,9 +630,11 @@ You need at least 30GB free for installation, 50GB for comfortable usage.
 **Cause**: Invalid token or insufficient permissions
 
 **Fix**:
+
 1. Generate new token at https://huggingface.co/settings/tokens
 2. Ensure type is **"Read"**
 3. Try again:
+
 ```bash
 source ~/torch-env/bin/activate
 huggingface-cli login
@@ -604,6 +645,7 @@ huggingface-cli login
 **Cause**: File permissions not set
 
 **Fix**:
+
 ```bash
 chmod +x ~/.config/llm-doctrine/scripts/*.sh
 ```

@@ -25,6 +25,7 @@ echo $VIRTUAL_ENV
 **Expected**: `/home/username/torch-env`
 
 **If empty**: Activate it:
+
 ```bash
 source ~/torch-env/bin/activate
 ```
@@ -55,6 +56,7 @@ Error: Failed to load model
 #### 1. Insufficient VRAM
 
 **Check**:
+
 ```bash
 nvidia-smi
 ```
@@ -62,6 +64,7 @@ nvidia-smi
 Look at "Memory-Usage" - is it already near 100%?
 
 **Fix**:
+
 - Kill other GPU processes
 - Try smaller model: `./scripts/daily-bootstrap.sh fast`
 - Restart computer to clear GPU memory
@@ -69,6 +72,7 @@ Look at "Memory-Usage" - is it already near 100%?
 #### 2. HuggingFace Authentication Failed
 
 **Check**:
+
 ```bash
 huggingface-cli whoami
 ```
@@ -76,6 +80,7 @@ huggingface-cli whoami
 **Expected**: Your username
 
 **If fails**:
+
 ```bash
 huggingface-cli login
 # Paste your token (starts with hf_...)
@@ -88,6 +93,7 @@ Get token from: https://huggingface.co/settings/tokens
 **Symptom**: Long wait on first launch
 
 **This is normal!** Models are several GB:
+
 - 1B models: ~1-2GB download
 - 7B models: ~7GB download
 - 15B models: ~15GB download
@@ -97,11 +103,13 @@ Get token from: https://huggingface.co/settings/tokens
 #### 4. Python Environment Not Active
 
 **Check**:
+
 ```bash
 echo $VIRTUAL_ENV
 ```
 
 **Fix**:
+
 ```bash
 source ~/torch-env/bin/activate
 ```
@@ -109,6 +117,7 @@ source ~/torch-env/bin/activate
 #### 5. Port Already in Use
 
 **Check**:
+
 ```bash
 lsof -i :8500
 # or
@@ -116,6 +125,7 @@ netstat -tulpn | grep 8500
 ```
 
 **Fix**:
+
 ```bash
 # Kill the process
 kill <PID>
@@ -142,6 +152,7 @@ curl: (7) Failed to connect to localhost port 8500: Connection refused
 **Check**: Do you see the model terminal showing logs?
 
 **Fix**: Launch model first:
+
 ```bash
 source ~/torch-env/bin/activate
 cd ~/.config/llm-doctrine
@@ -155,6 +166,7 @@ cd ~/.config/llm-doctrine
 **Check**: What port did model launch on?
 
 Model logs show:
+
 ```
 🚀 Launching qa on port 8500
 ```
@@ -164,11 +176,13 @@ Model logs show:
 #### 3. Model Crashed
 
 **Check logs**:
+
 ```bash
 tail -f ~/.config/llm-doctrine/logs/qa_8500.log
 ```
 
 **Common crashes**:
+
 - Out of memory (VRAM) → Use smaller model
 - CUDA error → Restart computer, update drivers
 
@@ -188,12 +202,14 @@ OutOfMemoryError: Tried to allocate 8.5 GB
 #### 1. Model Too Large for GPU
 
 **Your VRAM vs. Model requirements**:
+
 - 6GB VRAM → max 1B models
 - 8GB VRAM → max 7B models (one at a time)
 - 12GB VRAM → 7B models comfortably
 - 16GB+ VRAM → 15B models or multiple smaller models
 
 **Fix**: Use smaller model tier:
+
 ```bash
 ./scripts/daily-bootstrap.sh fast  # 1B, needs ~2-3GB
 ```
@@ -201,6 +217,7 @@ OutOfMemoryError: Tried to allocate 8.5 GB
 #### 2. Multiple Models Running
 
 **Check**:
+
 ```bash
 nvidia-smi
 ```
@@ -235,6 +252,7 @@ False
 #### 1. NVIDIA Drivers Not Installed (Windows Host)
 
 **Check** (in Windows, not WSL):
+
 ```powershell
 nvidia-smi
 ```
@@ -246,6 +264,7 @@ nvidia-smi
 #### 2. WSL Not Updated
 
 **In Windows PowerShell (Admin)**:
+
 ```powershell
 wsl --update
 wsl --shutdown
@@ -256,6 +275,7 @@ Reopen WSL and try again.
 #### 3. Wrong PyTorch Version
 
 **Check**:
+
 ```bash
 source ~/torch-env/bin/activate
 python -c "import torch; print(torch.__version__)"
@@ -264,6 +284,7 @@ python -c "import torch; print(torch.__version__)"
 **Should show**: `2.x.x+cu121` (note the `+cu121` for CUDA)
 
 **If not**:
+
 ```bash
 pip install --upgrade torch --index-url https://download.pytorch.org/whl/cu121
 ```
@@ -273,11 +294,13 @@ pip install --upgrade torch --index-url https://download.pytorch.org/whl/cu121
 #### NVIDIA Drivers Not Installed
 
 **Check**:
+
 ```bash
 nvidia-smi
 ```
 
 **If fails**:
+
 ```bash
 # Ubuntu
 sudo ubuntu-drivers autoinstall
@@ -285,6 +308,7 @@ sudo reboot
 ```
 
 After reboot, verify:
+
 ```bash
 nvidia-smi
 ```
@@ -302,6 +326,7 @@ Model takes 30+ seconds per response
 #### 1. CPU Mode (No CUDA)
 
 **Check**:
+
 ```bash
 python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
 ```
@@ -313,6 +338,7 @@ python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
 #### 2. Model Too Large for Your Hardware
 
 **Try smaller model**:
+
 ```bash
 ./scripts/daily-bootstrap.sh fast  # Much faster
 ```
@@ -351,12 +377,14 @@ chmod +x ~/.config/llm-doctrine/scripts/*.sh
 ### Login Fails
 
 **Symptom**:
+
 ```
 huggingface-cli login
 Error: Invalid token
 ```
 
 **Fix**:
+
 1. Generate new token: https://huggingface.co/settings/tokens
 2. Type: **"Read"**
 3. Copy token (starts with `hf_...`)
@@ -370,6 +398,7 @@ Error: Invalid token
 **Symptom**: Download at 0% for several minutes
 
 **Causes**:
+
 - Slow internet → Wait (models are several GB)
 - Authentication issue → Run `huggingface-cli login` again
 - Disk space full → Check: `df -h ~`
@@ -389,6 +418,7 @@ Some models (Llama 3, Gemma) require acceptance of terms:
 ### WSL Command Not Found
 
 **Symptom** (in PowerShell):
+
 ```
 wsl : The term 'wsl' is not recognized
 ```
@@ -396,6 +426,7 @@ wsl : The term 'wsl' is not recognized
 **Cause**: WSL not installed
 
 **Fix**:
+
 ```powershell
 # In PowerShell as Administrator
 wsl --install
@@ -406,11 +437,13 @@ Restart computer after installation.
 ### Can't Access WSL Files from Windows
 
 **Use**:
+
 ```
 \\wsl.localhost\Ubuntu\home\username\
 ```
 
 **Not**:
+
 ```
 C:\Users\username\AppData\Local\...
 ```
@@ -420,6 +453,7 @@ C:\Users\username\AppData\Local\...
 **Symptom**: Can't access `localhost:8500` from Windows
 
 **Fix 1**: Use WSL IP directly:
+
 ```bash
 # In WSL, get IP
 hostname -I
@@ -428,6 +462,7 @@ hostname -I
 Use that IP from Windows: `http://<WSL_IP>:8500`
 
 **Fix 2**: Restart WSL:
+
 ```powershell
 # In PowerShell
 wsl --shutdown
@@ -450,6 +485,7 @@ Reopen WSL, launch model again.
 **Cause**: Dependencies not installed
 
 **Fix**:
+
 ```bash
 cd ~/vLLM-Bootstrap
 npm install
@@ -461,6 +497,7 @@ npx playwright install
 **Cause**: Slow system or insufficient VRAM
 
 **Fix**:
+
 - Use 1B tier only: `npm run test:1b`
 - Skip large models: `export SKIP_LARGE_MODELS=true`
 - Check GPU availability: `nvidia-smi`
@@ -472,11 +509,13 @@ npx playwright install
 ### "Config file not found"
 
 **Symptom**:
+
 ```
 Error: models.conf not found
 ```
 
 **Fix**: Run initial bootstrap:
+
 ```bash
 cd ~/.config/llm-doctrine
 ./scripts/initial-bootstrap.sh
@@ -485,6 +524,7 @@ cd ~/.config/llm-doctrine
 ### Wrong Model Loaded
 
 **Check which model is configured**:
+
 ```bash
 cat ~/.config/llm-doctrine/models.conf
 ```
@@ -492,6 +532,7 @@ cat ~/.config/llm-doctrine/models.conf
 Look for `default` line under your tier.
 
 **To change**: Edit the file:
+
 ```bash
 nano ~/.config/llm-doctrine/models.conf
 ```
@@ -511,6 +552,7 @@ df -h ~
 ### Models Take Too Much Space
 
 **Each model**:
+
 - 1B: ~1-2GB
 - 4B: ~4GB
 - 7B: ~7GB
@@ -519,6 +561,7 @@ df -h ~
 **Location**: `~/.cache/huggingface/hub/`
 
 **To free space**: Delete unused models
+
 ```bash
 rm -rf ~/.cache/huggingface/hub/models--<model-name>
 ```
@@ -532,11 +575,13 @@ rm -rf ~/.cache/huggingface/hub/models--<model-name>
 ### Faster Responses
 
 1. **Use smaller models**:
+
    ```bash
    ./scripts/daily-bootstrap.sh fast
    ```
 
 2. **Limit response length**:
+
    ```bash
    curl ... -d '{"max_tokens": 100, ...}'
    ```
@@ -549,6 +594,7 @@ rm -rf ~/.cache/huggingface/hub/models--<model-name>
 ### Better Quality
 
 1. **Use larger models**:
+
    ```bash
    ./scripts/daily-bootstrap.sh qa  # 7B
    # or
@@ -556,6 +602,7 @@ rm -rf ~/.cache/huggingface/hub/models--<model-name>
    ```
 
 2. **More tokens**:
+
    ```bash
    curl ... -d '{"max_tokens": 500, ...}'
    ```
@@ -614,6 +661,7 @@ Some VPNs break WSL2 networking. Disconnect VPN or use WSL IP directly.
 ### Model Responses Are Repetitive
 
 Try:
+
 - Increase `temperature` (0.7-0.9)
 - Add `top_p` parameter: `"top_p": 0.9`
 - Use different model

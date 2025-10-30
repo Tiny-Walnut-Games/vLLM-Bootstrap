@@ -4,23 +4,26 @@
 
 **Documentation Version**: 2025-10-29  
 **Project Version**: 0.2.0-alpha  
-**Doctrine Alignment**: Scrollkeeper Compliant  
+**Doctrine Alignment**: Scrollkeeper Compliant
 
 ---
 
 ## 📚 Documentation Structure
 
 ### Getting Started (New Users)
+
 1. **[Home](Home.md)** - Project overview and quick start
 2. **[Getting Started](Getting-Started.md)** - Zero to CLI chat in 30 minutes
 3. **[Installation Guide](Installation-Guide.md)** - Detailed setup walkthrough
 
 ### Using vLLM-Bootstrap
+
 4. **[CLI Usage](CLI-Usage.md)** - Chat with models via command line
 5. **[Model Configuration](Model-Configuration.md)** - Configure and manage models
 6. **[Testing Guide](Testing-Guide.md)** - Validate your installation
 
 ### Getting Help
+
 7. **[Troubleshooting](Troubleshooting.md)** - Common problems and solutions
 8. **[FAQ](FAQ.md)** - Frequently asked questions
 
@@ -29,6 +32,7 @@
 ## 🎯 What This Documentation Covers
 
 ### ✅ Proven and Documented
+
 - WSL installation and setup (Windows)
 - Python environment creation
 - Model launching via scripts
@@ -38,6 +42,7 @@
 - Health checks and validation
 
 ### ❌ Not Yet Implemented
+
 - IDE chat templates (model-specific)
 - Rider/VS Code integration
 - Multi-turn IDE conversations
@@ -69,23 +74,26 @@ This documentation follows **Scrollkeeper Doctrine**:
 **...change or configure models** → [Model Configuration](Model-Configuration.md)  
 **...test my installation** → [Testing Guide](Testing-Guide.md)  
 **...solve a problem** → [Troubleshooting](Troubleshooting.md)  
-**...find quick answers** → [FAQ](FAQ.md)  
+**...find quick answers** → [FAQ](FAQ.md)
 
 ---
 
 ## 📊 Documentation Formats
 
 ### GitHub Wiki
+
 Primary documentation hosted on GitHub Wiki for easy community editing and access.
 
 **URL**: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/wiki
 
 ### GitBook (Future)
+
 Same content formatted for GitBook publication.
 
 **Structure**: See [SUMMARY.md](SUMMARY.md)
 
 ### Markdown Files
+
 All documentation available as standalone markdown files in `wiki/` directory for offline reading.
 
 ---
@@ -93,12 +101,15 @@ All documentation available as standalone markdown files in `wiki/` directory fo
 ## 📝 Documentation Maintenance
 
 ### Versioning
+
 - Documentation version tracks major updates
 - Aligned with `doctrine-version` in scripts
 - Archived when major rewrites occur
 
 ### Archive
+
 Previous documentation versions archived in:
+
 ```
 docs-archive/YYYY-MM-DD_HHMMSS/
 ```
@@ -106,7 +117,9 @@ docs-archive/YYYY-MM-DD_HHMMSS/
 Current archive: `docs-archive/2025-10-29_114041/`
 
 ### Updates
+
 Documentation is updated when:
+
 - New features pass tests
 - User feedback identifies confusion
 - Bugs are fixed and require doc changes
@@ -123,6 +136,7 @@ Found an error? Want to improve clarity?
 3. **Suggestions**: Open GitHub Discussion
 
 **Guidelines**:
+
 - Write in imperative, direct style
 - Include code examples with expected output
 - Add verification steps for each instruction
@@ -134,6 +148,7 @@ Found an error? Want to improve clarity?
 ## 🔄 Migration from Old Docs
 
 ### What Changed?
+
 - Removed aspirational claims (IDE integration "complete")
 - Focused on proven capabilities (CLI chat works)
 - Clearer separation of setup vs. usage vs. testing
@@ -141,9 +156,11 @@ Found an error? Want to improve clarity?
 - Better accessibility (clearer structure, no jargon)
 
 ### Old Documentation
+
 Archived in: `docs-archive/2025-10-29_114041/`
 
 **Includes**:
+
 - Previous README.md
 - Old docs/ directory structure
 - Historical guides and references
@@ -153,13 +170,16 @@ Archived in: `docs-archive/2025-10-29_114041/`
 ## 📞 Getting Help
 
 **Documentation issues**:
+
 - GitHub Issues: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues
 - Label: `documentation`
 
 **Questions**:
+
 - GitHub Discussions: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions
 
 **Bug reports** (not doc-related):
+
 - GitHub Issues: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues
 - Label: `bug`
 

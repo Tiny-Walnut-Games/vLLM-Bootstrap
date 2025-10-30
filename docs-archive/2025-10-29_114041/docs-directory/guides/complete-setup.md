@@ -76,7 +76,7 @@ Some models (Llama, Gemma, etc.) require authentication to download.
 3. Name it (e.g., "vllm-doctrine")
 4. Select **"Read"** access (sufficient for downloading models)
 5. Click "Generate token"
-6. **Copy the token** (starts with "hf_...")
+6. **Copy the token** (starts with "hf\_...")
 7. **Keep this handy** for the installation step
 
 💡 **Tip**: Save the token in a password manager for future use
@@ -249,12 +249,12 @@ In the **"Third-party AI providers"** section:
 
 **Click "+ Add"** or configure existing entry:
 
-| Field | Value |
-|-------|-------|
-| **Provider** | Select "OpenAI Compatible" or "Custom" |
-| **Name** | `Local vLLM QA` (or your preferred name) |
-| **URL** | `http://localhost:8500/v1` |
-| **API Key** | Leave blank or enter any text (not validated) |
+| Field        | Value                                         |
+| ------------ | --------------------------------------------- |
+| **Provider** | Select "OpenAI Compatible" or "Custom"        |
+| **Name**     | `Local vLLM QA` (or your preferred name)      |
+| **URL**      | `http://localhost:8500/v1`                    |
+| **API Key**  | Leave blank or enter any text (not validated) |
 
 ⚠️ **Important**: Use the port where your model is running (8500 for `qa` role)
 
@@ -328,10 +328,10 @@ source ~/torch-env/bin/activate
 
 **Add each to Rider:**
 
-| Name | URL | Use Case |
-|------|-----|----------|
-| Local Edit | `http://localhost:8300/v1` | Quick code edits |
-| Local QA | `http://localhost:8500/v1` | General chat |
+| Name       | URL                        | Use Case              |
+| ---------- | -------------------------- | --------------------- |
+| Local Edit | `http://localhost:8300/v1` | Quick code edits      |
+| Local QA   | `http://localhost:8500/v1` | General chat          |
 | Local Plan | `http://localhost:8700/v1` | Architecture planning |
 
 Switch between them in the AI Assistant dropdown!
@@ -400,12 +400,12 @@ tmux kill-session -t llm-qa
 
 ### Port Ranges Reference
 
-| Tier | Port Range | Default Model | VRAM Usage |
-|------|------------|---------------|------------|
-| 1B (fast) | 8100-8299 | Llama-3.2-1B | ~2GB |
-| 4B (edit) | 8300-8499 | Phi-3.5-mini | ~4GB |
-| 7B (qa) | 8500-8699 | Mistral-7B | ~6GB |
-| 15B (plan) | 8700-8899 | StarCoder2-15B | ~12GB |
+| Tier       | Port Range | Default Model  | VRAM Usage |
+| ---------- | ---------- | -------------- | ---------- |
+| 1B (fast)  | 8100-8299  | Llama-3.2-1B   | ~2GB       |
+| 4B (edit)  | 8300-8499  | Phi-3.5-mini   | ~4GB       |
+| 7B (qa)    | 8500-8699  | Mistral-7B     | ~6GB       |
+| 15B (plan) | 8700-8899  | StarCoder2-15B | ~12GB      |
 
 ---
 

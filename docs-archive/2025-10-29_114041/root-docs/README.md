@@ -164,12 +164,12 @@ source ~/torch-env/bin/activate
 
 ### Model Roles
 
-| Role | Tier | Default Model | Use Case | Port Range |
-|------|------|---------------|----------|------------|
-| **fast** | 1B | Llama-3.2-1B | Autocomplete, boilerplate | 8100-8299 |
-| **edit** | 4B | Phi-3.5-mini | Light editing, refactoring | 8300-8499 |
-| **qa** | 7B | Mistral-7B | General assistant, Q&A | 8500-8699 |
-| **plan** | 15B | StarCoder2-15B | Deep planning, architecture | 8700-8899 |
+| Role     | Tier | Default Model  | Use Case                    | Port Range |
+| -------- | ---- | -------------- | --------------------------- | ---------- |
+| **fast** | 1B   | Llama-3.2-1B   | Autocomplete, boilerplate   | 8100-8299  |
+| **edit** | 4B   | Phi-3.5-mini   | Light editing, refactoring  | 8300-8499  |
+| **qa**   | 7B   | Mistral-7B     | General assistant, Q&A      | 8500-8699  |
+| **plan** | 15B  | StarCoder2-15B | Deep planning, architecture | 8700-8899  |
 
 ### Testing & Validation
 
@@ -340,14 +340,14 @@ wsl hostname -I
 
 ## 🧪 Testing Status
 
-| Component | Implementation | Testing | Status |
-|-----------|---------------|---------|--------|
-| Core Bootstrap | ✅ Complete | ⚠️ Pending | Production Ready |
-| HF Authentication | ✅ Complete | ⚠️ Pending | Needs Validation |
-| Chat Templates | ✅ Complete | ⚠️ Pending | Needs Model Testing |
-| Connection Testing | ✅ Complete | ✅ Tested | Production Ready |
-| Config Validation | ✅ Complete | ✅ Tested | Production Ready |
-| Documentation | ✅ Complete | ✅ Reviewed | Production Ready |
+| Component          | Implementation | Testing     | Status              |
+| ------------------ | -------------- | ----------- | ------------------- |
+| Core Bootstrap     | ✅ Complete    | ⚠️ Pending  | Production Ready    |
+| HF Authentication  | ✅ Complete    | ⚠️ Pending  | Needs Validation    |
+| Chat Templates     | ✅ Complete    | ⚠️ Pending  | Needs Model Testing |
+| Connection Testing | ✅ Complete    | ✅ Tested   | Production Ready    |
+| Config Validation  | ✅ Complete    | ✅ Tested   | Production Ready    |
+| Documentation      | ✅ Complete    | ✅ Reviewed | Production Ready    |
 
 **Overall Status**: Production Ready - Testing Phase
 
@@ -421,6 +421,7 @@ SOFTWARE.
 ### Reporting Bugs
 
 When reporting issues, please include:
+
 - Output from `./validate-config.sh`
 - Relevant log excerpts from `./logs/`
 - Hardware specs (GPU model, VRAM, RAM)

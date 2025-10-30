@@ -26,6 +26,7 @@ Yes. MIT licensed, completely free and open source.
 ### Can I use this commercially?
 
 Yes, but check individual model licenses:
+
 - Most models (Mistral, Llama) allow commercial use
 - Some (Gemma, certain others) have restrictions
 - Check model card on HuggingFace
@@ -36,9 +37,10 @@ Yes, but check individual model licenses:
 
 ### Can I run this without a GPU?
 
-Yes, but it's **10-20x slower**. 
+Yes, but it's **10-20x slower**.
 
 CPU mode example:
+
 - GPU: 2-4 seconds per response
 - CPU: 30-60 seconds per response
 
@@ -52,6 +54,7 @@ CPU mode example:
 ### What GPUs are supported?
 
 **NVIDIA GPUs only** (requires CUDA):
+
 - RTX 2060, 3060, 4060, 4070, 4090
 - GTX 1080 Ti, 1660 Ti
 - Any NVIDIA GPU with 6GB+ VRAM
@@ -61,6 +64,7 @@ CPU mode example:
 ### Can I use this on a laptop?
 
 Yes, if it has:
+
 - NVIDIA GPU with 8GB+ VRAM
 - 16GB+ system RAM
 - 50GB+ free storage
@@ -82,12 +86,13 @@ No. WSL is only for Windows users. Native Linux users can run scripts directly.
 ### Which Linux distributions are supported?
 
 **Tested**: Ubuntu 20.04, 22.04, 24.04  
-**Should work**: Debian, Pop!_OS, Linux Mint  
+**Should work**: Debian, Pop!\_OS, Linux Mint  
 **Untested**: Fedora, Arch, openSUSE (may require adjustments)
 
 ### Can I install on macOS?
 
 Scripts are designed for Linux. macOS users would need to:
+
 - Install dependencies manually
 - Adapt scripts (replace `apt` with `brew`, etc.)
 - Note: vLLM doesn't support macOS GPUs (Metal)
@@ -103,6 +108,7 @@ Scripts are designed for Linux. macOS users would need to:
 ### How long does installation take?
 
 **First time**: 30-60 minutes
+
 - 10-20 min: Downloading dependencies
 - 5-10 min: Installing Python packages
 - 10-30 min: Downloading first model
@@ -116,22 +122,24 @@ Scripts are designed for Linux. macOS users would need to:
 ### Which model should I start with?
 
 **QA tier (7B)**: Best balance of speed and capability
+
 ```bash
 ./scripts/daily-bootstrap.sh qa
 ```
 
 ### What's the difference between tiers?
 
-| Tier | Size | Speed | Quality | Use Case |
-|------|------|-------|---------|----------|
-| **fast** | 1B | ⚡⚡⚡ | ⭐ | Quick tasks |
-| **edit** | 4B | ⚡⚡ | ⭐⭐ | Code editing |
-| **qa** | 7B | ⚡ | ⭐⭐⭐ | General chat |
-| **plan** | 15B | 🐌 | ⭐⭐⭐⭐ | Complex reasoning |
+| Tier     | Size | Speed  | Quality  | Use Case          |
+| -------- | ---- | ------ | -------- | ----------------- |
+| **fast** | 1B   | ⚡⚡⚡ | ⭐       | Quick tasks       |
+| **edit** | 4B   | ⚡⚡   | ⭐⭐     | Code editing      |
+| **qa**   | 7B   | ⚡     | ⭐⭐⭐   | General chat      |
+| **plan** | 15B  | 🐌     | ⭐⭐⭐⭐ | Complex reasoning |
 
 ### Can I use models not listed in models.conf?
 
 Technically yes, but requires manual configuration:
+
 1. Find model on HuggingFace
 2. Edit `models.conf`
 3. Add model identifier
@@ -142,6 +150,7 @@ Technically yes, but requires manual configuration:
 ### How do I switch models?
 
 Edit `~/.config/llm-doctrine/models.conf`:
+
 - Swap `default` and `alt1` lines
 - Save file
 - Relaunch model tier
@@ -153,6 +162,7 @@ See: [Model Configuration Guide](Model-Configuration#switching-models)
 Models don't "learn" from your conversations. Each chat starts fresh.
 
 To get better responses:
+
 - Use larger models
 - Write clearer prompts
 - Provide more context in messages
@@ -166,12 +176,14 @@ To get better responses:
 Not directly. Current version is CLI-only via curl commands.
 
 **Workarounds**:
+
 - Use a web UI tool that connects to OpenAI-compatible APIs
 - Wait for future IDE integration
 
 ### Can I use this with ChatGPT-style apps?
 
 If the app supports "OpenAI-compatible" endpoints, yes:
+
 1. Set URL to `http://localhost:8500/v1`
 2. API key: Leave blank or use "dummy"
 3. Model: Use the full model name (e.g., `mistralai/Mistral-7B-Instruct-v0.3`)
@@ -179,9 +191,11 @@ If the app supports "OpenAI-compatible" endpoints, yes:
 ### How do I stop a model?
 
 **In the terminal where it's running**:
+
 - Press `Ctrl+C`
 
 **From another terminal**:
+
 ```bash
 # Find process
 ps aux | grep vllm
@@ -193,6 +207,7 @@ kill <PID>
 ### Can I run multiple models at once?
 
 **Yes, if you have 16GB+ VRAM**:
+
 1. Open separate terminals
 2. Launch different tiers (different ports)
 3. Chat with each on their respective ports
@@ -208,6 +223,7 @@ See: [CLI Usage: Multi-Turn Conversations](CLI-Usage#multi-turn-conversation)
 ### Are my chats private?
 
 **Yes**. Everything runs locally:
+
 - No data sent to cloud
 - No internet connection needed (after setup)
 - No telemetry or tracking
@@ -219,6 +235,7 @@ See: [CLI Usage: Multi-Turn Conversations](CLI-Usage#multi-turn-conversation)
 ### Why are responses slow?
 
 Common causes:
+
 1. **CPU mode** (no GPU) → Check: `nvidia-smi`
 2. **Large model** → Try: `./scripts/daily-bootstrap.sh fast`
 3. **Long responses** → Limit: `"max_tokens": 100`
@@ -226,11 +243,13 @@ Common causes:
 ### How many tokens per second can I expect?
 
 **GPU mode** (8GB VRAM, RTX 3060):
+
 - 1B models: 100-150 tokens/sec
 - 7B models: 30-50 tokens/sec
 - 15B models: 15-25 tokens/sec
 
 **CPU mode**:
+
 - 1B models: 5-10 tokens/sec
 - 7B models: 1-3 tokens/sec
 
@@ -238,6 +257,7 @@ Common causes:
 
 **Hardware**: Better GPU = faster  
 **Software**:
+
 - Use smaller models
 - Reduce `max_tokens`
 - Quantization (future feature)
@@ -260,6 +280,7 @@ Common causes:
 ### What is an OpenAI-compatible API?
 
 vLLM mimics OpenAI's API format:
+
 - Same endpoints (`/v1/chat/completions`)
 - Same request structure
 - Same response format
@@ -269,6 +290,7 @@ vLLM mimics OpenAI's API format:
 ### What are chat templates?
 
 Formats that structure messages for models. Each model expects different formats:
+
 - Llama: `<|begin_of_text|>...`
 - Mistral: `[INST]...[/INST]`
 - Phi: `<|user|>...<|assistant|>`
@@ -280,6 +302,7 @@ Formats that structure messages for models. Each model expects different formats
 Current version is designed for **personal development use**.
 
 **For production**:
+
 - Review model licenses (some restrict commercial use)
 - Add authentication (currently none)
 - Implement rate limiting
@@ -300,6 +323,7 @@ See: [ROADMAP.md](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/blob/main/
 See: [Troubleshooting: Model Won't Load](Troubleshooting#model-wont-load)
 
 **Quick checks**:
+
 1. Activate environment: `source ~/torch-env/bin/activate`
 2. Check VRAM: `nvidia-smi`
 3. Check auth: `huggingface-cli whoami`
@@ -334,6 +358,7 @@ cd ~/.config/llm-doctrine
 ### How can I help?
 
 Ways to contribute:
+
 1. **Test on your hardware** and report results
 2. **Submit bug reports** with detailed info
 3. **Suggest models** that work well
@@ -345,6 +370,7 @@ Ways to contribute:
 **GitHub Issues**: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues
 
 **Include**:
+
 - System info (GPU, VRAM, OS)
 - Steps to reproduce
 - Error messages
@@ -353,6 +379,7 @@ Ways to contribute:
 ### Can I add support for my favorite model?
 
 Yes! Submit a pull request:
+
 1. Add model to appropriate tier in `models.conf`
 2. Test it works
 3. Document VRAM requirements
@@ -367,12 +394,14 @@ See: [CONTRIBUTING.md](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/blob/
 ### How is this different from Ollama?
 
 **vLLM-Bootstrap**:
+
 - Focuses on OpenAI API compatibility
 - Designed for IDE integration
 - Tier-based model organization
 - Requires more setup
 
 **Ollama**:
+
 - Simpler installation
 - Built-in CLI chat interface
 - Different API format
@@ -422,6 +451,7 @@ MIT License - free for personal and commercial use.
 ### What about the models?
 
 Each model has its own license:
+
 - **Mistral**: Apache 2.0 (commercial use OK)
 - **Llama**: Llama 3 license (mostly permissive)
 - **Phi**: Microsoft Research License (more restrictive)

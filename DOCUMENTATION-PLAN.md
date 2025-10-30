@@ -1,15 +1,17 @@
 # vLLM-Bootstrap Documentation Plan
+
 ## Customer-Facing Documentation for GitHub Wiki & GitBook
 
 **Plan Date**: 2025-10-29  
 **Status**: Ready for Implementation  
-**Alignment**: Scrollkeeper Doctrine  
+**Alignment**: Scrollkeeper Doctrine
 
 ---
 
 ## 🎯 Guiding Principles
 
 ### Scrollkeeper Doctrine Compliance
+
 1. **No Premature Celebration**: Only document what passes tests
 2. **Mental Model Verification**: Align docs with actual implementation
 3. **Zero-to-Completion**: New user can follow and succeed without prior context
@@ -17,7 +19,9 @@
 5. **Truth Over Aspiration**: Current status, not future plans
 
 ### Current Project Status
+
 **What Works (Proven by Tests)**:
+
 - ✅ WSL installation and setup
 - ✅ Python environment creation
 - ✅ vLLM model launching via `initial-bootstrap.sh` and `daily-bootstrap.sh`
@@ -27,6 +31,7 @@
 - ✅ Health checks and connection validation
 
 **What Doesn't Exist Yet**:
+
 - ❌ IDE chat templates (model-specific, unverified)
 - ❌ Rider/VS Code chat integration (depends on templates)
 - ❌ Multi-turn IDE conversations (requires templates)
@@ -40,6 +45,7 @@
 ### Part 1: GitHub Wiki (Public, Customer-Facing)
 
 #### Home Page
+
 - **Filename**: `Home.md`
 - **Purpose**: Landing page, project overview
 - **Content**:
@@ -49,6 +55,7 @@
   - Quick navigation to other pages
 
 #### Getting Started
+
 - **Filename**: `Getting-Started.md`
 - **Purpose**: Zero-to-CLI-chat in 30 minutes
 - **Content**:
@@ -59,6 +66,7 @@
   - Testing CLI chat with curl
 
 #### Installation Guide
+
 - **Filename**: `Installation-Guide.md`
 - **Purpose**: Detailed installation walkthrough
 - **Content**:
@@ -70,6 +78,7 @@
   - Troubleshooting common issues
 
 #### Model Configuration
+
 - **Filename**: `Model-Configuration.md`
 - **Purpose**: Understanding and configuring models
 - **Content**:
@@ -80,6 +89,7 @@
   - Model preloading
 
 #### CLI Usage
+
 - **Filename**: `CLI-Usage.md`
 - **Purpose**: Using models via command line
 - **Content**:
@@ -90,6 +100,7 @@
   - Stopping models
 
 #### Testing Your Installation
+
 - **Filename**: `Testing-Guide.md`
 - **Purpose**: Validate installation with test suite
 - **Content**:
@@ -99,6 +110,7 @@
   - Troubleshooting test failures
 
 #### Troubleshooting
+
 - **Filename**: `Troubleshooting.md`
 - **Purpose**: Common issues and solutions
 - **Content**:
@@ -109,6 +121,7 @@
   - Authentication errors
 
 #### FAQ
+
 - **Filename**: `FAQ.md`
 - **Purpose**: Frequently asked questions
 - **Content**:
@@ -123,6 +136,7 @@
 ### Part 2: GitBook Structure (Same Content, Different Format)
 
 #### Book Structure
+
 ```
 vLLM-Bootstrap/
 ├── Introduction
@@ -160,6 +174,7 @@ vLLM-Bootstrap/
 ## 📝 Content Guidelines
 
 ### Writing Style
+
 - **Imperative, direct instructions**: "Run this command" not "You should run"
 - **Short sentences**: Max 20 words per sentence
 - **Code-first examples**: Show, then explain
@@ -167,6 +182,7 @@ vLLM-Bootstrap/
 - **No jargon without definition**
 
 ### Code Block Standards
+
 ```bash
 # Always include:
 # 1. Prompt indicator ($ for user, # for comment)
@@ -179,13 +195,16 @@ $ ./daily-bootstrap.sh qa
 ```
 
 ### Verification Points
+
 Every major step includes:
+
 1. **Command to run**
 2. **Expected output**
 3. **How to verify success**
 4. **What to do if it fails**
 
 ### Screenshots/Diagrams
+
 - **Diagrams**: ASCII art or mermaid.js (text-based)
 - **No screenshots**: Breaks accessibility, hard to maintain
 - **Alternative**: Detailed text descriptions of UI steps
@@ -195,17 +214,20 @@ Every major step includes:
 ## 🚀 Implementation Order
 
     ### Phase 1: Core Documentation (Week 1)
+
 1. `Home.md` - Landing page
 2. `Getting-Started.md` - Zero to CLI chat
 3. `Installation-Guide.md` - Detailed setup
 4. `CLI-Usage.md` - Using the system
 
-    ### Phase 2: Advanced Topics (Week 2)
+   ### Phase 2: Advanced Topics (Week 2)
+
 5. `Model-Configuration.md` - Model management
 6. `Testing-Guide.md` - Test suite usage
 7. `Troubleshooting.md` - Problem solving
 
-    ### Phase 3: Reference & Polish (Week 3)
+   ### Phase 3: Reference & Polish (Week 3)
+
 8. `FAQ.md` - Common questions
 9. GitBook conversion
 10. Internal review and validation
@@ -215,6 +237,7 @@ Every major step includes:
 ## ✅ Success Criteria
 
 ### For Each Document
+
 - [ ] A new user with NO context can follow it
 - [ ] Every command is copy-pasteable
 - [ ] Every claim is verified by tests
@@ -223,6 +246,7 @@ Every major step includes:
 - [ ] Accessible to neurodivergent readers (clear structure, no ambiguity)
 
 ### For Overall Documentation
+
 - [ ] User can go from zero to CLI chat in 30 minutes
 - [ ] Every documented feature has passing tests
 - [ ] No false celebrations or unverified claims
@@ -235,17 +259,20 @@ Every major step includes:
 ## 📋 Documentation Maintenance
 
 ### Update Triggers
+
 - New feature passes tests → Update docs
 - Test coverage expands → Update capabilities
 - Bug fixed → Update troubleshooting
 - User reports confusion → Improve clarity
 
 ### Version Alignment
+
 - Documentation version matches `doctrine-version` in scripts
 - Changelog tracks doc updates
 - Archive old docs before major rewrites
 
 ### Community Feedback
+
 - GitHub Issues for doc improvements
 - Discussion board for questions
 - Pull requests for corrections
@@ -263,4 +290,4 @@ Every major step includes:
 
 ---
 
-*This plan adheres to Scrollkeeper Doctrine: celebrating only what is proven, ensuring reproducibility, and honoring the mental model of users navigating from zero context.*
+_This plan adheres to Scrollkeeper Doctrine: celebrating only what is proven, ensuring reproducibility, and honoring the mental model of users navigating from zero context._

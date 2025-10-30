@@ -25,13 +25,6 @@
     "declaration": true,
     "listFiles": false
   },
-  "include": [
-    "tests/**/*.ts",
-    "playwright.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".playwright"
-  ]
+  "include": ["tests/**/*.ts", "playwright.config.ts"],
+  "exclude": ["node_modules", "dist", ".playwright"]
 }

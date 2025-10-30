@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Playwright configuration for vLLM-Doctrine E2E tests
- * 
+ *
  * These tests validate the complete new user journey from
  * initial setup through successful Rider integration.
  */
@@ -20,7 +20,7 @@ export default defineConfig({
   reporter: [
     ['html', { outputFolder: 'test-reports/html' }],
     ['json', { outputFile: 'test-reports/results.json' }],
-    ['line']
+    ['line'],
   ],
   /* Shared settings for all the projects below. */
   use: {

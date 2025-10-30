@@ -11,7 +11,7 @@
 ### Core Pages
 
 | Page                | File                          | Purpose                | Size    |
-|---------------------|-------------------------------|------------------------|---------|
+| ------------------- | ----------------------------- | ---------------------- | ------- |
 | **Home**            | `wiki/Home.md`                | Landing page, overview | 3.4 KB  |
 | **Getting Started** | `wiki/Getting-Started.md`     | Zero-to-chat guide     | 10.2 KB |
 | **Installation**    | `wiki/Installation-Guide.md`  | Detailed setup         | 14.8 KB |
@@ -24,7 +24,7 @@
 ### Supporting Files
 
 | File              | Purpose                   |
-|-------------------|---------------------------|
+| ----------------- | ------------------------- |
 | `wiki/README.md`  | Wiki index and navigation |
 | `wiki/SUMMARY.md` | GitBook table of contents |
 
@@ -37,6 +37,7 @@
 **Location**: `docs-archive/2025-10-29_114041/`
 
 **Contents**:
+
 - Previous README.md
 - Old docs/ directory (guides, references)
 - Historical implementation summaries
@@ -51,7 +52,7 @@
 ## 📋 Planning Documents
 
 | Document                    | Location                                   | Purpose                         |
-|-----------------------------|--------------------------------------------|---------------------------------|
+| --------------------------- | ------------------------------------------ | ------------------------------- |
 | **Documentation Plan**      | `DOCUMENTATION-PLAN.md`                    | Strategy, structure, guidelines |
 | **Implementation Complete** | `DOCUMENTATION-IMPLEMENTATION-COMPLETE.md` | Delivery summary                |
 | **Documentation Index**     | `DOCUMENTATION-INDEX.md`                   | This file                       |
@@ -61,26 +62,31 @@
 ## 🚀 Quick Navigation
 
 ### I'm a new user, where do I start?
+
 1. Read: `README.md` (project overview)
 2. Follow: `wiki/Getting-Started.md` (30-min guide)
 3. Reference: `wiki/CLI-Usage.md` (how to use)
 
 ### I want to understand the documentation structure
+
 1. Read: `DOCUMENTATION-PLAN.md` (strategy)
 2. Review: `wiki/README.md` (structure overview)
 3. Check: `DOCUMENTATION-IMPLEMENTATION-COMPLETE.md` (what was delivered)
 
 ### I need help troubleshooting
+
 1. Check: `wiki/Troubleshooting.md` (common problems)
 2. Search: `wiki/FAQ.md` (quick answers)
 3. Refer: `wiki/Installation-Guide.md` (setup issues)
 
 ### I want to publish the wiki
+
 1. Review: `wiki/` directory (all files)
 2. Use: `wiki/SUMMARY.md` (GitBook navigation)
 3. Upload to: GitHub Wiki or GitBook
 
 ### I want to see what changed
+
 1. Compare: `README.md` (new) vs. `docs-archive/2025-10-29_114041/root-docs/README.md` (old)
 2. Review: `docs-archive/2025-10-29_114041/ARCHIVE-INDEX.md` (reasons for changes)
 3. Read: `DOCUMENTATION-IMPLEMENTATION-COMPLETE.md` (Scrollkeeper compliance)
@@ -92,7 +98,7 @@
 This documentation follows **Scrollkeeper Doctrine**:
 
 1. **No Premature Celebration** - Only documented features that pass tests
-2. **Mental Model Verification** - Docs align with actual implementation  
+2. **Mental Model Verification** - Docs align with actual implementation
 3. **Zero-to-Completion** - New users can follow without prior context
 4. **Accessibility** - Clear for neurodivergent navigation
 5. **Truth Over Aspiration** - Current status, not future plans
@@ -102,6 +108,7 @@ This documentation follows **Scrollkeeper Doctrine**:
 ## 📊 What's Documented
 
 ### ✅ Proven and Documented
+
 - WSL installation workflow
 - Python environment setup
 - Model launching (all tiers)
@@ -111,6 +118,7 @@ This documentation follows **Scrollkeeper Doctrine**:
 - Configuration management
 
 ### ❌ Not Yet Implemented (Not Documented)
+
 - IDE chat integration (requires templates)
 - Rider/VS Code chat support
 - Chat UI interface
@@ -120,8 +128,8 @@ This documentation follows **Scrollkeeper Doctrine**:
 
 ## 🔄 Documentation Status
 
-| Component   | Status     | Notes                             |
-|-------------|------------|-----------------------------------|
+| Component   | Status      | Notes                             |
+| ----------- | ----------- | --------------------------------- |
 | Archive     | ✅ Complete | `docs-archive/2025-10-29_114041/` |
 | Planning    | ✅ Complete | `DOCUMENTATION-PLAN.md`           |
 | Core Docs   | ✅ Complete | `wiki/` (8 pages)                 |
@@ -134,6 +142,7 @@ This documentation follows **Scrollkeeper Doctrine**:
 ## 📝 File Locations
 
 ### Root Directory
+
 ```
 C:/Users/jerio/RiderProjects/vLLM-Bootstrap/
 ├── README.md                              ← Updated main README
@@ -214,12 +223,14 @@ glow CLI-Usage.md        # Terminal markdown viewer
 ### Want to Improve?
 
 **Priorities**:
+
 - Clarify confusing sections (based on user feedback)
 - Add examples for common use cases
 - Improve troubleshooting coverage
 - Test instructions with fresh setup
 
 **Guidelines**:
+
 - Follow Scrollkeeper principles
 - Test before documenting
 - Include expected outputs
@@ -230,15 +241,18 @@ glow CLI-Usage.md        # Terminal markdown viewer
 ## 📞 Getting Help
 
 **Documentation issues**:
+
 - GitHub Issues: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues
 - Label: `documentation`
 
 **Questions about using vLLM-Bootstrap**:
+
 - Read: `wiki/FAQ.md`
 - Search: `wiki/Troubleshooting.md`
 - Ask: GitHub Discussions
 
 **Report bugs** (not doc-related):
+
 - GitHub Issues with `bug` label
 
 ---
@@ -248,6 +262,7 @@ glow CLI-Usage.md        # Terminal markdown viewer
 **Documentation Status**: ✅ Complete and production-ready
 
 **What You Have**:
+
 - 8 comprehensive customer-facing pages
 - Archive of previous documentation
 - Planning documents for context
@@ -255,6 +270,7 @@ glow CLI-Usage.md        # Terminal markdown viewer
 - Scrollkeeper-compliant content
 
 **Next Steps**:
+
 1. Review documentation in `wiki/` directory
 2. Test with a fresh user (zero-context validation)
 3. Publish to GitHub Wiki

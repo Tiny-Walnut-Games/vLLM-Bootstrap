@@ -10,9 +10,11 @@
 ## 🎉 Recent Breakthrough Achievements (October 2025)
 
 ### 🚀 **Consumer Hardware Revolution**
+
 We've successfully transformed vLLM-Bootstrap from a developer tool requiring manual configuration into a user-friendly system that works out-of-the-box on consumer hardware.
 
 #### 🏆 **Major Breakthroughs:**
+
 1. **🔓 Authentication Barrier Elimination**
    - Replaced gated models with open-access alternatives
    - Zero HuggingFace approval requirements
@@ -39,6 +41,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
    - OpenAI-compatible API server confirmation
 
 #### 📊 **Impact:**
+
 - **User Base Expansion:** From developers with high-end GPUs to anyone with consumer hardware
 - **Setup Time:** From manual configuration to single-command deployment
 - **Success Rate:** From authentication failures to immediate access
@@ -59,6 +62,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 ## 📍 Current Status: Alpha (v0.2.0-alpha)
 
 ### ✅ Completed (Major Achievements)
+
 - [x] Core E2E test suite with Playwright
 - [x] New user journey tests
 - [x] Rider AI Assistant integration tests
@@ -76,6 +80,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 - [x] OpenAI-compatible API server validation
 
 ### 🚧 In Progress
+
 - [ ] Complete documentation updates for new features
 - [ ] Community building and feedback gathering
 - [ ] Extended model tier testing (4B, 7B, 15B)
@@ -86,10 +91,12 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 ## 🛤️ Release Milestones
 
 ### ✅ v0.2.0-alpha: Consumer Hardware Revolution ✅ **COMPLETED**
+
 **Completed:** October 2025
 **Focus:** Make the project accessible to all users with consumer hardware
 
 **🎉 MAJOR ACHIEVEMENTS:**
+
 - [x] **Open-access model integration** - Eliminated HuggingFace authentication barriers
 - [x] **Dynamic GPU memory optimization** - Automatic detection and optimization for consumer GPUs
 - [x] **Intelligent dependency detection** - Sudo-free operation on prepared systems
@@ -99,6 +106,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 - [x] **Complete chat functionality** - End-to-end OpenAI-compatible API validation
 
 **✅ Exit Criteria MET:**
+
 - All critical authentication barriers eliminated
 - Consumer hardware compatibility validated (RTX 2060, 3060, 4060+)
 - Zero-sudo operation on prepared systems
@@ -109,10 +117,12 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 ---
 
 ### v0.3.0-beta: Multi-Model Expansion
+
 **Target:** Q4 2025
 **Focus:** Expand model compatibility and testing across all tiers
 
 **Goals:**
+
 - [ ] Test suite for 4B, 7B, and 15B model tiers
 - [ ] Model-specific configuration templates for each tier
 - [ ] Performance benchmarking tools across GPU configurations
@@ -122,6 +132,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 - [ ] Multi-model concurrent deployment testing
 
 **Exit Criteria:**
+
 - Support for all 4 model tiers (1B, 4B, 7B, 15B) with optimized settings
 - Automated tests for each supported model family
 - Performance baseline documentation for different GPU classes
@@ -131,10 +142,12 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 ---
 
 ### v0.4.0-beta: Advanced Features
+
 **Target:** Q4 2025  
 **Focus:** Power user features and optimization
 
 **Goals:**
+
 - [ ] Multi-GPU deployment support
 - [ ] Quantization configuration helpers
 - [ ] Advanced Rider integration features
@@ -142,6 +155,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 - [ ] Load testing tools
 
 **Exit Criteria:**
+
 - Multi-GPU deployment tested and documented
 - Quantization guide with examples
 - Performance monitoring dashboard
@@ -150,10 +164,12 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 ---
 
 ### v0.5.0-rc: Production Readiness
+
 **Target:** Q1 2026  
 **Focus:** Stability, security, and polish
 
 **Goals:**
+
 - [ ] Security audit and hardening
 - [ ] Production deployment guide
 - [ ] Monitoring and alerting setup
@@ -161,6 +177,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 - [ ] Migration guides
 
 **Exit Criteria:**
+
 - Security audit complete
 - Production deployment tested by community
 - All critical and high-priority bugs resolved
@@ -169,10 +186,12 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 ---
 
 ### v1.0.0: General Availability
+
 **Target:** When it's ready  
 **Focus:** Stable, production-ready release
 
 **Goals:**
+
 - [ ] Stable API and configuration format
 - [ ] Comprehensive documentation
 - [ ] Active community support
@@ -180,6 +199,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 - [ ] Long-term support commitment
 
 **Exit Criteria:**
+
 - 30+ days without critical bugs
 - Positive community feedback
 - At least 10 production deployments
@@ -191,9 +211,11 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 ## 🎒 Backlog (Future Considerations)
 
 ### Community Requested Features
-*This section will be populated based on community feedback*
+
+_This section will be populated based on community feedback_
 
 ### Nice-to-Have Features
+
 - Docker/Podman deployment support
 - Web UI for configuration and monitoring
 - Integration with other IDEs (VS Code, IntelliJ)
@@ -203,6 +225,7 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 - RAG (Retrieval-Augmented Generation) examples
 
 ### Research & Exploration
+
 - Integration with TLDA (Tiny Walnut Games Living Dev Agent)
 - Automated model evaluation frameworks
 - Cost optimization strategies
@@ -213,17 +236,20 @@ We've successfully transformed vLLM-Bootstrap from a developer tool requiring ma
 ## 🤝 How to Contribute to the Roadmap
 
 ### Suggest Features
+
 1. Check existing [feature requests](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
 2. Open a new feature request if your idea isn't there
 3. Participate in discussions about proposed features
 
 ### Help with Current Milestones
+
 1. Check the current milestone's goals
 2. Look for issues tagged with the milestone
 3. Comment on issues you'd like to work on
 4. Submit PRs following our [contributing guidelines](CONTRIBUTING.md)
 
 ### Provide Feedback
+
 1. Use the project and share your experience
 2. Report bugs and usability issues
 3. Suggest improvements to documentation
@@ -246,6 +272,7 @@ We'll measure project success by:
 ## 🔄 Roadmap Updates
 
 This roadmap is a living document and will be updated:
+
 - **Monthly:** Progress updates and milestone adjustments
 - **Quarterly:** Major roadmap reviews and community input
 - **As Needed:** Based on critical feedback or changing priorities
@@ -263,4 +290,4 @@ This roadmap is a living document and will be updated:
 
 ---
 
-*This roadmap reflects our current thinking but is subject to change based on community needs, technical discoveries, and resource availability. We're building this together!*
+_This roadmap reflects our current thinking but is subject to change based on community needs, technical discoveries, and resource availability. We're building this together!_

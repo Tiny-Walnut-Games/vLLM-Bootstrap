@@ -7,12 +7,14 @@
 ## What Testing Does
 
 Testing validates that your installation works correctly:
+
 - ✅ Models launch successfully
 - ✅ API endpoints respond correctly
 - ✅ Chat completions work as expected
 - ✅ Configuration files are valid
 
 **Testing is optional** but recommended for:
+
 - First-time installation verification
 - Troubleshooting issues
 - Contributing to the project
@@ -23,12 +25,12 @@ Testing validates that your installation works correctly:
 
 **Important distinction**:
 
-| **Using vLLM** | **Testing vLLM** |
-|----------------|------------------|
-| Run models, chat via CLI | Validate installation works |
-| WSL/Linux environment | Windows (PowerShell) or Linux |
-| Python dependencies | Node.js/Playwright dependencies |
-| `./scripts/daily-bootstrap.sh qa` | `npm run test` |
+| **Using vLLM**                    | **Testing vLLM**                |
+| --------------------------------- | ------------------------------- |
+| Run models, chat via CLI          | Validate installation works     |
+| WSL/Linux environment             | Windows (PowerShell) or Linux   |
+| Python dependencies               | Node.js/Playwright dependencies |
+| `./scripts/daily-bootstrap.sh qa` | `npm run test`                  |
 
 **If you just want to use vLLM**, you don't need testing. Follow [Getting Started](Getting-Started) instead.
 
@@ -39,11 +41,13 @@ Testing validates that your installation works correctly:
 ### For Testing (Additional Requirements)
 
 **Windows**:
+
 - Node.js 18+ (LTS recommended)
 - npm (comes with Node.js)
 - PowerShell 5.1+
 
 **Linux**:
+
 - Node.js 18+
 - npm
 - Bash
@@ -85,12 +89,14 @@ choco install nodejs-lts
 ### Linux
 
 **Ubuntu/Debian**:
+
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
 ```
 
 **Verify installation**:
+
 ```bash
 node --version  # Should show v18.x.x or v20.x.x
 npm --version   # Should show 9.x.x or 10.x.x
@@ -111,6 +117,7 @@ npx playwright install
 ```
 
 **What this installs**:
+
 - Playwright testing framework
 - TypeScript compiler
 - Browser engines for testing
@@ -130,6 +137,7 @@ npm run test:1b
 ```
 
 **What this does**:
+
 - Launches 1B model (Llama-3.2-1B) on port 8100
 - Runs comprehensive test suite
 - Generates HTML report
@@ -166,12 +174,14 @@ npx playwright test tests/e2e/cli-chat-1b.spec.ts
 ### 1. Configuration Tests
 
 **What they check**:
+
 - Config files exist and are valid
 - Port ranges don't overlap
 - Chat template mappings are complete
 - Script versions are consistent
 
 **Run**:
+
 ```bash
 npx playwright test configuration-validation
 ```
@@ -181,6 +191,7 @@ npx playwright test configuration-validation
 ### 2. API Tests
 
 **What they check**:
+
 - Model launches successfully
 - Health endpoint responds
 - Models list correctly
@@ -188,6 +199,7 @@ npx playwright test configuration-validation
 - OpenAI API compatibility
 
 **Run**:
+
 ```bash
 npx playwright test api-validation
 ```
@@ -197,6 +209,7 @@ npx playwright test api-validation
 ### 3. CLI Chat Tests (1B Tier)
 
 **What they check**:
+
 - 1B model launches on port 8100
 - Greeting test ("Say hello in 3 words")
 - Math test ("What is 2+2?")
@@ -206,6 +219,7 @@ npx playwright test api-validation
 - Error handling
 
 **Run**:
+
 ```bash
 npx playwright test cli-chat-1b
 ```
@@ -252,16 +266,19 @@ Running 8 tests using 1 worker
 ### Test Reports
 
 **HTML Report** (auto-opens in browser):
+
 ```
 test-reports/html/index.html
 ```
 
 **JSON Report** (for CI/CD):
+
 ```
 test-reports/results.json
 ```
 
 **Manual open**:
+
 ```bash
 # Open HTML report
 npx playwright show-report
@@ -321,6 +338,7 @@ If model is already running:
 ```
 
 **Options**:
+
 - `-NoModel` - Skip model launch (use existing)
 - `-Cleanup` - Kill model after tests
 
@@ -331,6 +349,7 @@ If model is already running:
 ```
 
 **Options**:
+
 - `--no-model` - Skip model launch
 - `--cleanup` - Kill model after tests
 
@@ -343,6 +362,7 @@ If model is already running:
 **Cause**: Node.js not installed
 
 **Fix**:
+
 1. Install Node.js from https://nodejs.org/
 2. Restart terminal
 3. Verify: `node --version`
@@ -352,6 +372,7 @@ If model is already running:
 **Cause**: Playwright not installed
 
 **Fix**:
+
 ```bash
 npm install
 npx playwright install
@@ -362,6 +383,7 @@ npx playwright install
 **Cause**: Model not running
 
 **Fix**:
+
 ```bash
 # In WSL/Linux terminal
 source ~/torch-env/bin/activate
@@ -376,6 +398,7 @@ Wait for "Application startup complete", then re-run tests.
 **Cause**: Slow system or insufficient VRAM
 
 **Fix**:
+
 - Try 1B tier only: `npm run test:1b`
 - Increase timeout in `playwright.config.ts` (advanced)
 - Check GPU: `nvidia-smi`
@@ -385,6 +408,7 @@ Wait for "Application startup complete", then re-run tests.
 **Cause**: HuggingFace auth, VRAM, or CUDA issues
 
 **Fix**:
+
 1. Verify manual launch works:
    ```bash
    source ~/torch-env/bin/activate
@@ -403,10 +427,12 @@ Wait for "Application startup complete", then re-run tests.
 Tests run automatically on push/PR (if configured):
 
 **Workflows**:
+
 - `.github/workflows/test-all-tiers.yml` - Tests all tiers sequentially
 - `.github/workflows/test-linux-practical.yml` - Auto-detects GPU, tests available tiers
 
 **Requirements**:
+
 - Self-hosted GitHub Actions runner
 - NVIDIA GPU with CUDA support
 - 16GB+ VRAM (for full suite)
@@ -455,6 +481,7 @@ Found an issue? Want to improve tests?
 3. **Pull Requests**: See [CONTRIBUTING.md](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/blob/main/CONTRIBUTING.md)
 
 **Helpful contributions**:
+
 - Test on different hardware configurations
 - Add test cases for edge cases
 - Improve test documentation
@@ -465,6 +492,7 @@ Found an issue? Want to improve tests?
 ## Next Steps
 
 After tests pass:
+
 - **[Use vLLM via CLI](CLI-Usage)** - Chat with your models
 - **[Configure Models](Model-Configuration)** - Try different tiers
 - **[Troubleshoot Issues](Troubleshooting)** - If tests fail

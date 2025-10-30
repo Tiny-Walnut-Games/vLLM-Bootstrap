@@ -3,26 +3,19 @@
     "node": true,
     "es2020": true
   },
-  "extends": [
-    "eslint:recommended"
-  ],
+  "extends": ["eslint:recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "no-console": [
       "warn",
       {
-        "allow": [
-          "warn",
-          "error"
-        ]
+        "allow": ["warn", "error"]
       }
     ],
     "no-unused-vars": "off",
@@ -32,33 +25,12 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "@typescript-eslint/explicit-function-return-types": "warn",
-    "semi": [
-      "error",
-      "always"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "indent": [
-      "error",
-      2
-    ],
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
-    "eol-last": [
-      "error",
-      "always"
-    ]
+
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "indent": ["error", 2],
+    "comma-dangle": ["error", "always-multiline"],
+    "eol-last": ["error", "always"]
   },
-  "ignorePatterns": [
-    "dist",
-    "node_modules",
-    ".playwright",
-    "test-reports",
-    "*.config.js"
-  ]
+  "ignorePatterns": ["dist", "node_modules", ".playwright", "test-reports", "*.config.js"]
 }

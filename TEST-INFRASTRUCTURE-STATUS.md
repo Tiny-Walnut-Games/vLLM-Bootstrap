@@ -9,6 +9,7 @@ The comprehensive E2E testing infrastructure for vLLM-Doctrine has been successf
 ## 📊 Framework Information
 
 **Target Framework:** `Playwright` (TypeScript)
+
 - **Version:** ^1.44.0
 - **Configuration File:** `playwright.config.ts`
 - **Test Directory:** `tests/e2e/`
@@ -18,35 +19,39 @@ The comprehensive E2E testing infrastructure for vLLM-Doctrine has been successf
 ## 🗂️ Test Files Created/Updated
 
 ### Core Test Files
-| File | Purpose | Status |
-|------|---------|--------|
-| `tests/e2e/cli-chat-1b.spec.ts` | 1B tier CLI validation on consumer hardware | ✅ Complete |
-| `tests/e2e/api-validation.spec.ts` | OpenAI API compatibility testing | ✅ Complete |
-| `tests/e2e/configuration-validation.spec.ts` | Configuration file validation | ✅ Complete |
-| `tests/e2e/ide-integration.spec.ts` | IDE integration scenarios | ✅ Complete |
-| `tests/e2e/new-user-journey.spec.ts` | New user onboarding flow | ✅ Complete |
-| `tests/e2e/rider-integration.spec.ts` | JetBrains Rider specific tests | ✅ Complete |
+
+| File                                         | Purpose                                     | Status      |
+| -------------------------------------------- | ------------------------------------------- | ----------- |
+| `tests/e2e/cli-chat-1b.spec.ts`              | 1B tier CLI validation on consumer hardware | ✅ Complete |
+| `tests/e2e/api-validation.spec.ts`           | OpenAI API compatibility testing            | ✅ Complete |
+| `tests/e2e/configuration-validation.spec.ts` | Configuration file validation               | ✅ Complete |
+| `tests/e2e/ide-integration.spec.ts`          | IDE integration scenarios                   | ✅ Complete |
+| `tests/e2e/new-user-journey.spec.ts`         | New user onboarding flow                    | ✅ Complete |
+| `tests/e2e/rider-integration.spec.ts`        | JetBrains Rider specific tests              | ✅ Complete |
 
 ### Infrastructure Files
-| File | Purpose | Status |
-|------|---------|--------|
-| `tests/global-setup.ts` | Global test environment setup | ✅ Complete |
-| `tests/global-teardown.ts` | Global test cleanup | ✅ Complete |
-| `playwright.config.ts` | Playwright configuration | ✅ Complete |
-| `package.json` | npm scripts and dependencies | ✅ Fixed |
+
+| File                       | Purpose                       | Status      |
+| -------------------------- | ----------------------------- | ----------- |
+| `tests/global-setup.ts`    | Global test environment setup | ✅ Complete |
+| `tests/global-teardown.ts` | Global test cleanup           | ✅ Complete |
+| `playwright.config.ts`     | Playwright configuration      | ✅ Complete |
+| `package.json`             | npm scripts and dependencies  | ✅ Fixed    |
 
 ### Test Runners
-| File | Platform | Status |
-|------|----------|--------|
-| `tests/run-1b-tests-local.sh` | Linux/macOS/WSL (Bash) | ✅ Complete |
-| `tests/run-1b-tests-local.ps1` | Windows (PowerShell) | ✅ Complete |
-| `tests/run-comprehensive-tests.sh` | Linux/macOS/WSL (Bash) | ✅ Complete |
-| `tests/run-comprehensive-tests.ps1` | Windows (PowerShell) | ✅ Complete |
+
+| File                                | Platform               | Status      |
+| ----------------------------------- | ---------------------- | ----------- |
+| `tests/run-1b-tests-local.sh`       | Linux/macOS/WSL (Bash) | ✅ Complete |
+| `tests/run-1b-tests-local.ps1`      | Windows (PowerShell)   | ✅ Complete |
+| `tests/run-comprehensive-tests.sh`  | Linux/macOS/WSL (Bash) | ✅ Complete |
+| `tests/run-comprehensive-tests.ps1` | Windows (PowerShell)   | ✅ Complete |
 
 ### GitHub Actions Workflows
-| File | Purpose | Status |
-|------|---------|--------|
-| `.github/workflows/test-all-tiers.yml` | Comprehensive CI/CD for all tiers | ✅ Complete |
+
+| File                                         | Purpose                                    | Status      |
+| -------------------------------------------- | ------------------------------------------ | ----------- |
+| `.github/workflows/test-all-tiers.yml`       | Comprehensive CI/CD for all tiers          | ✅ Complete |
 | `.github/workflows/test-linux-practical.yml` | Practical Linux testing with GPU detection | ✅ Complete |
 
 ---
@@ -71,6 +76,7 @@ npm run install-playwright  # Install Playwright browsers
 ## 🚀 Quick Start (Local Testing)
 
 ### Windows Users (via WSL)
+
 ```powershell
 # From project root
 .\tests\run-1b-tests-local.ps1
@@ -81,6 +87,7 @@ npm run install-playwright  # Install Playwright browsers
 ```
 
 ### Linux/macOS Users
+
 ```bash
 # From project root
 ./tests/run-1b-tests-local.sh
@@ -91,6 +98,7 @@ npm run install-playwright  # Install Playwright browsers
 ```
 
 ### Or Use npm Directly
+
 ```bash
 # Install dependencies first
 npm ci
@@ -108,6 +116,7 @@ npx playwright test --reporter=html --reporter=json
 ## 🎯 Test Coverage by Tier
 
 ### Phase 1: Local (1B Tier - RTX 2060 Compatible)
+
 **Status:** ✅ **READY FOR IMMEDIATE USE**
 
 - **Test File:** `tests/e2e/cli-chat-1b.spec.ts`
@@ -118,6 +127,7 @@ npx playwright test --reporter=html --reporter=json
 - **Port:** 8100
 
 **Validated Scenarios:**
+
 - ✅ Health endpoint verification
 - ✅ Models listing endpoint
 - ✅ Greeting test ("Say hello in 3 words")
@@ -128,6 +138,7 @@ npx playwright test --reporter=html --reporter=json
 - ✅ Error handling (empty/whitespace prompts)
 
 ### Phase 2: CI/CD (All Tiers - Linux GPU Runners)
+
 **Status:** ✅ **READY FOR DEPLOYMENT**
 
 - **Test File:** GitHub Actions workflows
@@ -143,7 +154,9 @@ npx playwright test --reporter=html --reporter=json
 | 15B | plan | 8700 | Codestral-15B | 6 min | 40GB |
 
 ### Phase 3: Extended Testing (Windows/macOS)
+
 **Status:** ⏳ **READY FOR IMPLEMENTATION**
+
 - Workflows created as templates
 - Awaiting GPU runner configuration on user's self-hosted infrastructure
 
@@ -154,23 +167,27 @@ npx playwright test --reporter=html --reporter=json
 ### cli-chat-1b.spec.ts (1B Tier - Core Validation)
 
 **Infrastructure Tests:**
+
 - Port availability checking
 - Health endpoint verification
 - Models listing validation
 - Response JSON structure validation
 
 **Customer Experience Tests:**
+
 1. **Greeting Test** - Basic conversational ability
 2. **Math Test** - Numerical reasoning
 3. **Code Generation** - Code understanding and creation
 
 **Reliability Tests:**
+
 - Multi-turn conversations
 - Concurrent request handling
 - Empty/whitespace prompt handling
 - Error recovery
 
 **Platform Support:**
+
 - Windows (via WSL)
 - Linux (native)
 - macOS (native)
@@ -180,6 +197,7 @@ npx playwright test --reporter=html --reporter=json
 ## 🔧 Configuration
 
 ### playwright.config.ts
+
 ```typescript
 // Key settings for vLLM testing
 {
@@ -193,6 +211,7 @@ npx playwright test --reporter=html --reporter=json
 ```
 
 ### Environment Variables (Optional)
+
 ```bash
 # Skip large model tests on constrained hardware
 export SKIP_LARGE_MODELS=true
@@ -210,6 +229,7 @@ export GPU_FALLBACK=true
 ## 🌐 GitHub Actions Configuration
 
 ### test-all-tiers.yml (Comprehensive - All Tiers)
+
 - **Trigger:** Push to main/develop, PRs, daily schedule (2 AM UTC)
 - **Environment:** GPU runner (ubuntu-latest-gpu-l4)
 - **Strategy:** Sequential execution (max-parallel: 1)
@@ -217,6 +237,7 @@ export GPU_FALLBACK=true
 - **Artifacts:** HTML reports, JSON results
 
 ### test-linux-practical.yml (Pragmatic - GPU Auto-detection)
+
 - **Trigger:** Manual workflow dispatch + schedule
 - **Environment:** Standard or GPU runner
 - **GPU Detection:** Graceful skip if no GPU
@@ -248,6 +269,7 @@ Each test run produces:
 ## ✅ Verification Checklist
 
 ### Pre-Flight Checks
+
 - [x] Playwright framework installed (v1.44.0+)
 - [x] Node.js version ≥ 18.0.0
 - [x] Test files created with proper structure
@@ -257,6 +279,7 @@ Each test run produces:
 - [x] Documentation complete
 
 ### Local Testing Ready
+
 - [x] 1B tier tests fully implemented
 - [x] PowerShell runner for Windows/WSL
 - [x] Bash runner for Linux/macOS
@@ -265,6 +288,7 @@ Each test run produces:
 - [x] HTML report generation
 
 ### CI/CD Ready
+
 - [x] All-tiers comprehensive workflow
 - [x] Practical workflow with GPU auto-detection
 - [x] Sequential execution (prevents GPU OOM)
@@ -276,8 +300,10 @@ Each test run produces:
 ## 🎯 Next Steps
 
 ### For Immediate Testing (1B Tier)
+
 1. Ensure Node.js is installed: `node --version`
 2. From project root, run:
+
    ```bash
    npm ci
    npx playwright install
@@ -291,11 +317,13 @@ Each test run produces:
    ```
 
 ### For CI/CD Integration
+
 1. Configure GitHub Actions runners for GPU (if self-hosted)
 2. Push changes to trigger workflows
 3. Monitor test results in Actions tab
 
 ### For Extended Coverage
+
 1. Set up GPU runners for 4B, 7B, 15B tiers
 2. Configure environment variables as needed
 3. Enable scheduled runs for nightly testing
@@ -305,6 +333,7 @@ Each test run produces:
 ## 🆘 Troubleshooting
 
 ### Model Won't Launch
+
 ```bash
 # Check if model already running
 curl http://localhost:8100/health
@@ -316,11 +345,13 @@ npm run test:1b -- --no-model
 ```
 
 ### Tests Timeout
+
 - Increase `LAUNCH_TIMEOUT` or `CHAT_TIMEOUT` environment variables
 - Check system resources: `nvidia-smi`
 - Reduce concurrent tests: already configured to `workers: 1`
 
 ### Node.js/npm Not Found
+
 ```powershell
 # Windows: Install via winget
 winget install OpenJS.NodeJS
@@ -329,6 +360,7 @@ winget install OpenJS.NodeJS
 ```
 
 ### Playwright Browsers Not Installed
+
 ```bash
 npx playwright install
 # or
@@ -359,6 +391,7 @@ npm run install-playwright
 ## 📝 Summary
 
 ✅ **Complete End-to-End Testing Infrastructure**
+
 - Framework: Playwright (TypeScript)
 - Phase 1 (Local 1B): Fully operational
 - Phase 2 (CI/CD All Tiers): Ready for deployment

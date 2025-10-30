@@ -21,21 +21,22 @@ The comprehensive End-to-End testing infrastructure for vLLM-Doctrine has been *
 
 ## 📊 Testing Framework Details
 
-| Aspect | Details |
-|--------|---------|
-| **Framework** | Playwright v1.44.0+ (TypeScript) |
-| **Configuration** | `playwright.config.ts` |
-| **Test Directory** | `tests/e2e/` (6 test suites) |
-| **Node.js Requirement** | ≥ 18.0.0 |
-| **Test Timeout** | 2 minutes per test |
-| **Execution Model** | Sequential (1 worker, prevents GPU OOM) |
-| **Reporters** | HTML, JSON, JUnit |
+| Aspect                  | Details                                 |
+| ----------------------- | --------------------------------------- |
+| **Framework**           | Playwright v1.44.0+ (TypeScript)        |
+| **Configuration**       | `playwright.config.ts`                  |
+| **Test Directory**      | `tests/e2e/` (6 test suites)            |
+| **Node.js Requirement** | ≥ 18.0.0                                |
+| **Test Timeout**        | 2 minutes per test                      |
+| **Execution Model**     | Sequential (1 worker, prevents GPU OOM) |
+| **Reporters**           | HTML, JSON, JUnit                       |
 
 ---
 
 ## 📁 Complete File Inventory
 
 ### Test Suites (6 files, ~72 KB)
+
 ```
 tests/e2e/
 ├── cli-chat-1b.spec.ts              (10.7 KB) - 1B tier CLI validation
@@ -47,6 +48,7 @@ tests/e2e/
 ```
 
 ### Infrastructure Files
+
 ```
 tests/
 ├── setup/
@@ -65,6 +67,7 @@ package.json                         - npm scripts & dependencies
 ```
 
 ### GitHub Actions Workflows
+
 ```
 .github/workflows/
 ├── test-all-tiers.yml              - Comprehensive CI/CD (all tiers)
@@ -74,6 +77,7 @@ package.json                         - npm scripts & dependencies
 ```
 
 ### Documentation
+
 ```
 TEST-INFRASTRUCTURE-STATUS.md        - Detailed infrastructure status
 E2E-TESTING-COMPLETE.md             - This file
@@ -85,6 +89,7 @@ E2E-TESTING-COMPLETE.md             - This file
 ## 🚀 Quick Start Commands
 
 ### Windows (PowerShell)
+
 ```powershell
 # Navigate to project root, then:
 .\tests\run-1b-tests-local.ps1
@@ -95,6 +100,7 @@ E2E-TESTING-COMPLETE.md             - This file
 ```
 
 ### Linux/macOS (Bash)
+
 ```bash
 # From project root:
 ./tests/run-1b-tests-local.sh
@@ -105,6 +111,7 @@ E2E-TESTING-COMPLETE.md             - This file
 ```
 
 ### npm Commands (All Platforms)
+
 ```bash
 npm install                    # Install dependencies first time
 npx playwright install         # Download browser engines
@@ -152,6 +159,7 @@ All scripts defined in `package.json`:
 **Port**: 8100
 
 **Test Coverage**:
+
 - ✅ Health endpoint validation
 - ✅ Models listing endpoint
 - ✅ Greeting test ("Say hello in 3 words")
@@ -163,7 +171,8 @@ All scripts defined in `package.json`:
 
 ### Phase 2: CI/CD Testing (All Tiers) ✅ READY
 
-**Files**: 
+**Files**:
+
 - `.github/workflows/test-all-tiers.yml` (comprehensive)
 - `.github/workflows/test-linux-practical.yml` (pragmatic)
 
@@ -189,7 +198,9 @@ All scripts defined in `package.json`:
 Each test run automatically produces:
 
 ### 1. HTML Report
+
 **Location**: `test-reports/html/index.html`
+
 - Interactive test explorer
 - Screenshot captures on failure
 - Detailed execution traces
@@ -197,13 +208,17 @@ Each test run automatically produces:
 - Auto-opens in browser after tests complete
 
 ### 2. JSON Results
+
 **Location**: `test-reports/results.json`
+
 - Machine-readable format
 - CI/CD integration compatible
 - Full test metadata and timings
 
 ### 3. JUnit Report
+
 **Location**: `test-reports/junit.xml`
+
 - Standard CI system format (Jenkins, GitLab, etc.)
 
 ---
@@ -211,6 +226,7 @@ Each test run automatically produces:
 ## 🔧 Configuration Details
 
 ### playwright.config.ts
+
 ```typescript
 {
   testDir: './tests/e2e',        // All test files here
@@ -219,19 +235,20 @@ Each test run automatically produces:
   timeout: 120000,               // 2 minutes per test
   actionTimeout: 30000,          // 30 seconds for actions
   navigationTimeout: 60000,      // 60 seconds for navigation
-  
+
   reporters: [
     ['html', { outputFolder: 'test-reports/html' }],
     ['json', { outputFile: 'test-reports/results.json' }],
     ['line']
   ],
-  
+
   globalSetup: './tests/setup/global-setup.ts',
   globalTeardown: './tests/setup/global-teardown.ts'
 }
 ```
 
 ### Environment Variables (Optional)
+
 ```bash
 # Skip large model tests on limited VRAM
 export SKIP_LARGE_MODELS=true
@@ -276,12 +293,14 @@ async function launch1BModel() {...}
 ## ✅ Implementation Checklist
 
 ### Framework Setup
+
 - [x] Playwright v1.44.0+ installed
 - [x] TypeScript configuration
 - [x] Node.js ≥ 18.0.0 requirement
 - [x] All dependencies in package.json
 
 ### Test Suites
+
 - [x] CLI chat validation (1B)
 - [x] API compatibility testing
 - [x] Configuration validation
@@ -290,6 +309,7 @@ async function launch1BModel() {...}
 - [x] Rider-specific tests
 
 ### Local Runners
+
 - [x] PowerShell script (Windows)
 - [x] Bash scripts (Linux/macOS)
 - [x] Prerequisite checking
@@ -298,6 +318,7 @@ async function launch1BModel() {...}
 - [x] Colored output
 
 ### CI/CD Workflows
+
 - [x] Comprehensive all-tiers workflow
 - [x] Practical GPU auto-detect workflow
 - [x] Sequential execution strategy
@@ -305,6 +326,7 @@ async function launch1BModel() {...}
 - [x] Artifact upload
 
 ### Documentation
+
 - [x] Quick start guide
 - [x] CI testing guide
 - [x] This completion document
@@ -314,13 +336,13 @@ async function launch1BModel() {...}
 
 ## 📚 Documentation Files
 
-| File | Purpose |
-|------|---------|
-| `tests/QUICK-START-TESTING.md` | User-friendly quick start guide |
-| `.github/CI-TESTING-GUIDE.md` | CI/CD setup and GPU runner config |
-| `TEST-INFRASTRUCTURE-STATUS.md` | Detailed infrastructure overview |
-| `E2E-TESTING-COMPLETE.md` | This completion document |
-| `.zencoder/rules/repo.md` | Repository metadata (updated) |
+| File                            | Purpose                           |
+| ------------------------------- | --------------------------------- |
+| `tests/QUICK-START-TESTING.md`  | User-friendly quick start guide   |
+| `.github/CI-TESTING-GUIDE.md`   | CI/CD setup and GPU runner config |
+| `TEST-INFRASTRUCTURE-STATUS.md` | Detailed infrastructure overview  |
+| `E2E-TESTING-COMPLETE.md`       | This completion document          |
+| `.zencoder/rules/repo.md`       | Repository metadata (updated)     |
 
 ---
 
@@ -355,6 +377,7 @@ async function launch1BModel() {...}
 ## 🆘 Troubleshooting
 
 ### Model Won't Launch
+
 ```bash
 # Check if port already has model
 curl http://localhost:8100/health
@@ -365,6 +388,7 @@ npm run test:1b -- --no-model
 ```
 
 ### Tests Timeout
+
 ```bash
 # Increase timeouts via environment variables
 export LAUNCH_TIMEOUT=300000    # 5 minutes
@@ -375,6 +399,7 @@ npm run test:1b
 ```
 
 ### Node.js Not Found
+
 ```powershell
 # Windows: Install via winget
 winget install OpenJS.NodeJS
@@ -384,6 +409,7 @@ node --version
 ```
 
 ### Playwright Browsers Missing
+
 ```bash
 npm run install-playwright
 # or
@@ -395,17 +421,20 @@ npx playwright install
 ## 📈 Next Steps
 
 ### For Immediate Local Testing
+
 1. Ensure Node.js is installed: `node --version`
 2. From project root: `npm ci && npx playwright install`
 3. Launch tests: `npm run test:1b`
 4. Review HTML report in browser
 
 ### For CI/CD Integration
+
 1. Configure GitHub Actions runners (GPU required for 4B+)
 2. Push changes to trigger workflows
 3. Monitor Actions tab for results
 
 ### For Extended Coverage
+
 1. Set up GPU runners for 4B, 7B, 15B tiers
 2. Configure environment as needed
 3. Enable scheduled nightly testing
