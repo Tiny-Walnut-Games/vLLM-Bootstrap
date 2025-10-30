@@ -14,11 +14,21 @@
     "test:journey": "playwright test tests/e2e/new-user-journey.spec.ts",
     "test:rider": "playwright test tests/e2e/rider-integration.spec.ts",
     "test:report": "playwright show-report",
-    "install-playwright": "playwright install"
+    "install-playwright": "playwright install",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
+    "type-check": "tsc --noEmit"
   },
   "devDependencies": {
     "@playwright/test": "^1.44.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
