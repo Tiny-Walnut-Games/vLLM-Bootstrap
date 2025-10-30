@@ -1,4 +1,6 @@
 name: Test All Model Tiers (E2E)
+permissions:
+  contents: read
 
 on:
   push:

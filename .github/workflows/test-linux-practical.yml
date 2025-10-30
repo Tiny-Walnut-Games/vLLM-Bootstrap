@@ -1,4 +1,6 @@
 name: Practical Linux E2E Tests
+permissions:
+  contents: read
 
 # This is a practical, working version of CI tests suitable for:
 # - Self-hosted runners with GPU
