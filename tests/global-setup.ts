@@ -6,14 +6,14 @@
  */
 import { FullConfig } from '@playwright/test';
 import { execSync } from 'node:child_process';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 
 function detectWSLEnvironment(): boolean {
   try {
     const isWSL = !!(
       process.env.WSL_DISTRO_NAME ||
       (existsSync('/proc/version') &&
-        execSync('cat /proc/version', { encoding: 'utf8' }).includes('WSL'))
+        readFileSync('/proc/version', { encoding: 'utf8' }).includes('WSL'))
     );
 
     console.log(
