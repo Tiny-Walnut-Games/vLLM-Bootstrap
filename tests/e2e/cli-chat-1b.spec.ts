@@ -14,7 +14,7 @@ import { exec, execSync } from 'node:child_process';
 const FAST_TIER_PORT = 8100;
 const LAUNCH_TIMEOUT = 180000; // 3 minutes for model to launch
 const CHAT_TIMEOUT = 30000; // 30 seconds per chat request
-const AUTH_TOKEN = 'fallback-token-12345'; // Match fallback server default
+const AUTH_TOKEN = process.env.FALLBACK_AUTH_TOKEN ?? 'fallback-token-12345';
 
 // Type-safe response validation with runtime type guards
 // No explicit interfaces needed - using type guards on unknown types

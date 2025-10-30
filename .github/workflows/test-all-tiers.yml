@@ -101,6 +101,8 @@ jobs:
       - name: Launch ${{ matrix.tier.name }} model
         if: matrix.tier.skip == false
         timeout-minutes: 15
+        env:
+          FALLBACK_AUTH_TOKEN: 'fallback-token-12345'
         run: |
           cd ~/.config/llm-doctrine
           source ~/torch-env/bin/activate
@@ -113,7 +115,7 @@ jobs:
           # Wait for health endpoint with timeout
           ELAPSED=0
           while [ $ELAPSED -lt 300 ]; do
-            if curl -s -f -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health > /dev/null 2>&1; then
+            if curl -s -f -H "Authorization: Bearer ${FALLBACK_AUTH_TOKEN}" http://localhost:${{ matrix.tier.port }}/health > /dev/null 2>&1; then
               echo "✅ Model ready on port ${{ matrix.tier.port }}"
               break
             fi
@@ -124,18 +126,20 @@ jobs:
 
           if [ $ELAPSED -ge 300 ]; then
             echo "❌ Timeout waiting for model"
-            curl -v -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health || true
+            curl -v -H "Authorization: Bearer ${FALLBACK_AUTH_TOKEN}" http://localhost:${{ matrix.tier.port }}/health || true
             exit 1
           fi
 
       - name: Verify model is responding
         if: matrix.tier.skip == false
+        env:
+          FALLBACK_AUTH_TOKEN: 'fallback-token-12345'
         run: |
           echo "Testing model health..."
-          curl -s -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health | jq . || curl -v -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health
+          curl -s -H "Authorization: Bearer ${FALLBACK_AUTH_TOKEN}" http://localhost:${{ matrix.tier.port }}/health | jq . || curl -v -H "Authorization: Bearer ${FALLBACK_AUTH_TOKEN}" http://localhost:${{ matrix.tier.port }}/health
 
           echo "Testing models endpoint..."
-          curl -s -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/v1/models | jq . || echo "Models endpoint failed"
+          curl -s -H "Authorization: Bearer ${FALLBACK_AUTH_TOKEN}" http://localhost:${{ matrix.tier.port }}/v1/models | jq . || echo "Models endpoint failed"
 
       - name: Run test for ${{ matrix.tier.name }}
         if: matrix.tier.skip == false

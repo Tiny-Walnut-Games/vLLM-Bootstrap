@@ -14,7 +14,7 @@ import {
 } from '../utils/model-utils';
 
 // Authentication token for fallback server (matches fallback server config)
-const AUTH_TOKEN = 'fallback-token-12345';
+const AUTH_TOKEN = process.env.FALLBACK_AUTH_TOKEN ?? 'fallback-token-12345';
 
 test.describe('vLLM-Doctrine API Validation', () => {
   test.beforeEach(async () => {

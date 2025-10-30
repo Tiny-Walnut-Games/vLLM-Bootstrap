@@ -101,34 +101,41 @@ done
 if [ -n "$MISSING_DEPS" ]; then
   echo "⚠️  Missing dependencies:$MISSING_CMDS"
   
-  # Validate each package against allowlist
+  # Collect validated packages into array to prevent word-splitting/injection
+  declare -a VALIDATED_DEPS=()
   for pkg in $MISSING_DEPS; do
-    if ! validate_package "$pkg"; then
+    if validate_package "$pkg"; then
+      VALIDATED_DEPS+=("$pkg")
+    else
       echo "❌ SECURITY ERROR: Package '$pkg' not in approved installation list"
       audit_log "PACKAGE_INSTALL" "BLOCKED" "Attempted to install non-allowlisted package: $pkg"
       exit 1
     fi
   done
   
-  echo "🔄 Installing system dependencies (validated)..."
-  echo "📝 This may require sudo privileges. Please enter your password if prompted."
-  audit_log "PACKAGE_INSTALL" "STARTED" "Packages: $MISSING_DEPS"
-  
-  # Install with proper quoting to prevent injection
-  if sudo apt-get update 2>/dev/null; then
-    if sudo apt-get install -y $MISSING_DEPS 2>/dev/null; then
-      echo "✅ Dependencies installed successfully"
-      audit_log "PACKAGE_INSTALL" "SUCCESS" "Packages installed: $MISSING_DEPS"
+  if [ ${#VALIDATED_DEPS[@]} -eq 0 ]; then
+    echo "ℹ️ No validated dependencies to install."
+  else
+    echo "🔄 Installing system dependencies (validated): ${VALIDATED_DEPS[*]}"
+    echo "📝 This may require sudo privileges. Please enter your password if prompted."
+    audit_log "PACKAGE_INSTALL" "STARTED" "Packages: ${VALIDATED_DEPS[*]}"
+    
+    # Install with proper array expansion to prevent injection
+    if sudo apt-get update 2>/dev/null; then
+      if sudo apt-get install -y "${VALIDATED_DEPS[@]}" 2>/dev/null; then
+        echo "✅ Dependencies installed successfully"
+        audit_log "PACKAGE_INSTALL" "SUCCESS" "Packages installed: ${VALIDATED_DEPS[*]}"
+      else
+        echo "❌ Failed to install dependencies. Please install manually:"
+        echo "   sudo apt-get update && sudo apt-get install -y ${VALIDATED_DEPS[*]}"
+        audit_log "PACKAGE_INSTALL" "FAILED" "apt-get install failed for: ${VALIDATED_DEPS[*]}"
+        exit 1
+      fi
     else
-      echo "❌ Failed to install dependencies. Please install manually:"
-      echo "   sudo apt-get update && sudo apt-get install -y $MISSING_DEPS"
-      audit_log "PACKAGE_INSTALL" "FAILED" "apt-get install failed for: $MISSING_DEPS"
+      echo "❌ Failed to update package list"
+      audit_log "PACKAGE_INSTALL" "FAILED" "apt-get update failed"
       exit 1
     fi
-  else
-    echo "❌ Failed to update package list"
-    audit_log "PACKAGE_INSTALL" "FAILED" "apt-get update failed"
-    exit 1
   fi
 else
   echo "✅ All system dependencies found"
@@ -340,7 +347,9 @@ for PORT in $(seq "$START" "$END"); do
 
     if [ "$FORCE_FALLBACK" -eq 1 ]; then
       echo "⚠️  Low-memory CPU-only system detected. Starting lightweight fallback server instead of vLLM."
-      nohup python3 ./fallback-openai-server.py --port "$PORT" --model "$MODEL" --token "fallback-token-12345" >> "$LOG_FILE" 2>&1 &
+      # Use environment variable for token, fallback to default if not set
+      FALLBACK_TOKEN="${FALLBACK_AUTH_TOKEN:-fallback-token-12345}"
+      nohup python3 ./fallback-openai-server.py --port "$PORT" --model "$MODEL" --token "$FALLBACK_TOKEN" >> "$LOG_FILE" 2>&1 &
       FALLBACK_PID=$!
       echo "ℹ️  Fallback server PID: $FALLBACK_PID"
       wait $FALLBACK_PID
@@ -380,7 +389,9 @@ for PORT in $(seq "$START" "$END"); do
       if kill -0 "$VLLM_PID" 2>/dev/null; then
         kill "$VLLM_PID" 2>/dev/null || true
       fi
-      nohup python3 ./fallback-openai-server.py --port "$PORT" --model "$MODEL" --token "fallback-token-12345" >> "$LOG_FILE" 2>&1 &
+      # Use environment variable for token, fallback to default if not set
+      FALLBACK_TOKEN="${FALLBACK_AUTH_TOKEN:-fallback-token-12345}"
+      nohup python3 ./fallback-openai-server.py --port "$PORT" --model "$MODEL" --token "$FALLBACK_TOKEN" >> "$LOG_FILE" 2>&1 &
       FALLBACK_PID=$!
       echo "ℹ️  Fallback server PID: $FALLBACK_PID"
       wait $FALLBACK_PID

@@ -10,7 +10,7 @@ import { exec, execSync } from 'node:child_process';
 const fetch = globalThis.fetch || require('node-fetch');
 
 // Authentication token for fallback server (matches fallback server config)
-const AUTH_TOKEN = 'fallback-token-12345';
+const AUTH_TOKEN = process.env.FALLBACK_AUTH_TOKEN ?? 'fallback-token-12345';
 
 export interface ModelTier {
   name: string;

@@ -11,7 +11,7 @@ import { launchModel, stopAllModels } from '../utils/model-utils';
 // No explicit interfaces needed - using type guards on unknown types
 
 // Authentication token for fallback server (matches fallback server config)
-const AUTH_TOKEN = 'fallback-token-12345';
+const AUTH_TOKEN = process.env.FALLBACK_AUTH_TOKEN ?? 'fallback-token-12345';
 
 test.describe('IDE Integration Validation', () => {
   test.beforeEach(async () => {

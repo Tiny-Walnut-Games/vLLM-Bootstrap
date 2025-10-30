@@ -286,7 +286,7 @@ verify_model() {
 
   # Test models endpoint (with authentication)
   print_info "Testing models endpoint with authentication..."
-  AUTH_TOKEN="fallback-token-12345"
+  AUTH_TOKEN="${FALLBACK_AUTH_TOKEN:-fallback-token-12345}"
   MODELS_RESPONSE=$(curl -s -w "\n%{http_code}" \
     -H "Authorization: Bearer $AUTH_TOKEN" \
     http://localhost:$PORT/v1/models 2>&1)

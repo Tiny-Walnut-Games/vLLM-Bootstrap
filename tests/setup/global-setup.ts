@@ -8,7 +8,7 @@ import { chromium, FullConfig } from '@playwright/test';
  *
  * Includes Bearer token authentication for secure fallback servers.
  */
-const AUTH_TOKEN = 'fallback-token-12345'; // Match fallback server default
+const AUTH_TOKEN = process.env.FALLBACK_AUTH_TOKEN ?? 'fallback-token-12345';
 
 async function globalSetup(_config: FullConfig) {
   console.log('🚀 vLLM-Doctrine E2E Test Setup');
