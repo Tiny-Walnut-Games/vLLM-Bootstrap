@@ -30,11 +30,35 @@ async function chatWithModel(prompt: string, maxTokens = 30): Promise<string> {
       temperature: 0.7
     };
 
-    const command = `curl -s -X POST http://localhost:${FAST_TIER_PORT}/v1/chat/completions \\
-      -H "Content-Type: application/json" \\
-      -d '${JSON.stringify(payload)}'`;
+    const command = `curl`;
+    const args = [
+      '-s',
+      '-X',
+      'POST',
+      `http://localhost:${FAST_TIER_PORT}/v1/chat/completions`,
+      '-H',
+      'Content-Type: application/json',
+      '-d',
+      '@-',
+    ];
 
-    const { stdout, stderr } = await execAsync(command, { timeout: CHAT_TIMEOUT });
+    const { stdout, stderr } = await new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
+      const child = spawn(command, args, { timeout: CHAT_TIMEOUT });
+      let stdout = '';
+      let stderr = '';
+      child.stdout.on('data', (data) => (stdout += data));
+      child.stderr.on('data', (data) => (stderr += data));
+      child.on('close', (code) => {
+        if (code === 0) {
+          resolve({ stdout, stderr });
+        } else {
+          reject(new Error(`Process exited with code ${code}: ${stderr}`));
+        }
+      });
+      child.on('error', (err) => reject(err));
+      child.stdin.write(JSON.stringify(payload));
+      child.stdin.end();
+    });
     
     if (stderr) {
       console.warn(`Chat stderr: ${stderr}`);
