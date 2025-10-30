@@ -27,10 +27,16 @@
     ],
 
     "semi": ["error", "always"],
-    "quotes": ["error", "single"],
+    "quotes": ["error", "single", { "avoidEscape": true }],
     "indent": ["error", 2],
     "comma-dangle": ["error", "always-multiline"],
     "eol-last": ["error", "always"]
   },
-  "ignorePatterns": ["dist", "node_modules", ".playwright", "test-reports", "*.config.js"]
+  "ignorePatterns": [
+    "dist",
+    "node_modules",
+    ".playwright",
+    "test-reports",
+    "*.config.js"
+  ]
 }

@@ -41,8 +41,16 @@ test.describe('New User Journey - Complete Setup', () => {
     // Simulate checking for existing installations
     const cleanEnvironmentChecks = [
       { name: 'Python venv', path: '~/torch-env', shouldExist: false },
-      { name: 'vLLM installation', command: 'pip show vllm', shouldSucceed: false },
-      { name: 'HuggingFace CLI', command: 'huggingface-cli whoami', shouldSucceed: false },
+      {
+        name: 'vLLM installation',
+        command: 'pip show vllm',
+        shouldSucceed: false,
+      },
+      {
+        name: 'HuggingFace CLI',
+        command: 'huggingface-cli whoami',
+        shouldSucceed: false,
+      },
       { name: 'NVIDIA drivers', command: 'nvidia-smi', shouldSucceed: true }, // Should exist
     ];
 
@@ -177,10 +185,14 @@ test.describe('New User Journey - Complete Setup', () => {
 
     console.log('  📝 Command: ./daily-bootstrap.sh qa');
     console.log('  🎯 Expected port range: 8500-8699');
-    console.log('  ⏳ Model loading time: 2-5 minutes depending on download/GPU');
+    console.log(
+      '  ⏳ Model loading time: 2-5 minutes depending on download/GPU',
+    );
 
     // Mock successful launch
-    console.log(`✅ Model launched successfully on port ${setupContext.modelPort}`);
+    console.log(
+      `✅ Model launched successfully on port ${setupContext.modelPort}`,
+    );
 
     expect(setupContext.modelPort).toBeGreaterThanOrEqual(8500);
     expect(setupContext.modelPort).toBeLessThanOrEqual(8699);
@@ -197,8 +209,16 @@ test.describe('New User Journey - Complete Setup', () => {
 
     const connectionTests = [
       { name: 'Health Check', endpoint: '/health', expectedStatus: 200 },
-      { name: 'Models Endpoint', endpoint: '/v1/models', expectedContent: 'data' },
-      { name: 'Chat Completion', endpoint: '/v1/chat/completions', expectedContent: 'choices' },
+      {
+        name: 'Models Endpoint',
+        endpoint: '/v1/models',
+        expectedContent: 'data',
+      },
+      {
+        name: 'Chat Completion',
+        endpoint: '/v1/chat/completions',
+        expectedContent: 'choices',
+      },
     ];
 
     connectionTests.forEach((test) => {
@@ -220,9 +240,12 @@ test.describe('Browser-based Model API Testing', () => {
   });
 
   test('Models Endpoint Returns Valid JSON', async ({ request }) => {
-    const response = await request.get(`http://localhost:${modelPort}/v1/models`, {
-      headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
-    });
+    const response = await request.get(
+      `http://localhost:${modelPort}/v1/models`,
+      {
+        headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
+      },
+    );
     expect(response.ok()).toBeTruthy();
 
     const data = await response.json();
@@ -232,15 +255,20 @@ test.describe('Browser-based Model API Testing', () => {
   });
 
   test('Chat Completion Works', async ({ request }) => {
-    const response = await request.post(`http://localhost:${modelPort}/v1/chat/completions`, {
-      headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
-      data: {
-        model: 'default',
-        messages: [{ role: 'user', content: 'Say hello in exactly 3 words.' }],
-        max_tokens: 20,
-        temperature: 0.7,
+    const response = await request.post(
+      `http://localhost:${modelPort}/v1/chat/completions`,
+      {
+        headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
+        data: {
+          model: 'default',
+          messages: [
+            { role: 'user', content: 'Say hello in exactly 3 words.' },
+          ],
+          max_tokens: 20,
+          temperature: 0.7,
+        },
       },
-    });
+    );
 
     expect(response.ok()).toBeTruthy();
 
@@ -262,15 +290,18 @@ test.describe('Browser-based Model API Testing', () => {
       { role: 'user', content: 'What is 2+2?' },
     ];
 
-    const response = await request.post(`http://localhost:${modelPort}/v1/chat/completions`, {
-      headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
-      data: {
-        model: 'default',
-        messages: testMessages,
-        max_tokens: 50,
-        temperature: 0.1,
+    const response = await request.post(
+      `http://localhost:${modelPort}/v1/chat/completions`,
+      {
+        headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
+        data: {
+          model: 'default',
+          messages: testMessages,
+          max_tokens: 50,
+          temperature: 0.1,
+        },
       },
-    });
+    );
 
     expect(response.ok()).toBeTruthy();
 

@@ -19,7 +19,7 @@ on:
       - '.github/workflows/test-linux-practical.yml'
   pull_request:
     branches: [main, develop]
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch: # Manual trigger
 
 jobs:
   test-environment-detection:
@@ -161,21 +161,21 @@ jobs:
         run: |
           cat >> $GITHUB_STEP_SUMMARY << 'EOF'
           ## E2E Test Results
-          
+
           ### Environment
           - **GPU Available**: ${{ needs.test-environment-detection.outputs.has_gpu }}
           - **CUDA**: ${{ needs.test-environment-detection.outputs.cuda_version }}
-          
+
           ### Test Status
           - **1B Tier (Fast)**: ${{ needs.test-1b-tier.result }}
           - **API Tests**: ${{ needs.test-api-connectivity.result }}
-          
+
           ### Next Steps
           If tests failed or were skipped:
           1. Review logs in "Artifacts" section
           2. For full testing, configure a GPU runner (see CI-TESTING-GUIDE.md)
           3. Ensure Python 3.11+ and Node.js 20+ installed locally
-          
+
           EOF
 
       - name: Report GPU requirement

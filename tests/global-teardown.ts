@@ -15,7 +15,9 @@ async function globalTeardown(_config: FullConfig) {
 
   try {
     // Kill any remaining vLLM processes
-    execSync('pkill -f "vllm.entrypoints.openai.api_server" || true', { stdio: 'pipe' });
+    execSync('pkill -f "vllm.entrypoints.openai.api_server" || true', {
+      stdio: 'pipe',
+    });
     vllmCleanupSuccess = true;
     console.log('✅ Stopped any running vLLM servers');
   } catch (error) {

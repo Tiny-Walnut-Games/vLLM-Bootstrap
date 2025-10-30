@@ -42,7 +42,11 @@ export const MODEL_TIERS: ModelTier[] = [
     tier: '4B',
     portStart: 8300,
     portEnd: 8499,
-    models: ['microsoft/phi-3.5-mini-instruct', 'google/gemma-3-4b', 'cerebras/Cerebras-GPT-2.7B'],
+    models: [
+      'microsoft/phi-3.5-mini-instruct',
+      'google/gemma-3-4b',
+      'cerebras/Cerebras-GPT-2.7B',
+    ],
     expectedTemplate: 'phi3',
   },
   {
@@ -95,7 +99,10 @@ async function checkPortHealth(port: number): Promise<boolean> {
 /**
  * Scan port range for an available model server
  */
-async function findAvailablePort(portStart: number, portEnd: number): Promise<number | null> {
+async function findAvailablePort(
+  portStart: number,
+  portEnd: number,
+): Promise<number | null> {
   for (let port = portStart; port <= portEnd; port++) {
     const isHealthy = await checkPortHealth(port);
     if (isHealthy) {
@@ -110,7 +117,9 @@ async function findAvailablePort(portStart: number, portEnd: number): Promise<nu
  */
 async function cleanupExistingProcesses(): Promise<void> {
   try {
-    execSync('pkill -f "vllm.entrypoints.openai.api_server" || true', { stdio: 'pipe' });
+    execSync('pkill -f "vllm.entrypoints.openai.api_server" || true', {
+      stdio: 'pipe',
+    });
     await new Promise((resolve) => setTimeout(resolve, 2000));
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -122,7 +131,10 @@ async function cleanupExistingProcesses(): Promise<void> {
 /**
  * Launch a model server for the specified tier
  */
-export async function launchModel(role: ModelTier['role'], timeout = 120000): Promise<number> {
+export async function launchModel(
+  role: ModelTier['role'],
+  timeout = 120000,
+): Promise<number> {
   console.log(`🚀 Launching ${role} model...`);
 
   await cleanupExistingProcesses();
@@ -156,7 +168,9 @@ export async function launchModel(role: ModelTier['role'], timeout = 120000): Pr
 export async function stopAllModels(): Promise<void> {
   let stopSuccess = false;
   try {
-    execSync('pkill -f "vllm.entrypoints.openai.api_server" || true', { stdio: 'pipe' });
+    execSync('pkill -f "vllm.entrypoints.openai.api_server" || true', {
+      stdio: 'pipe',
+    });
     await new Promise((resolve) => setTimeout(resolve, 3000));
     stopSuccess = true;
     console.log('✅ All models stopped');
@@ -239,7 +253,12 @@ export async function testOpenAICompatibility(port: number): Promise<{
       const data = (await response.json()) as unknown;
 
       // Type-safe validation
-      if (typeof data === 'object' && data !== null && 'data' in data && Array.isArray(data.data)) {
+      if (
+        typeof data === 'object' &&
+        data !== null &&
+        'data' in data &&
+        Array.isArray(data.data)
+      ) {
         results.models = true;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         results.modelList = (data.data as any[]).map((m: any) => m.id) || [];
@@ -360,7 +379,12 @@ async function testCodeGeneration(baseUrl: string): Promise<boolean> {
   try {
     const content = await makeChatRequest(
       baseUrl,
-      [{ role: 'user', content: 'Write a Python function to calculate factorial' }],
+      [
+        {
+          role: 'user',
+          content: 'Write a Python function to calculate factorial',
+        },
+      ],
       100,
       0.3,
     );
@@ -379,7 +403,12 @@ async function testCodeCompletion(baseUrl: string): Promise<boolean> {
   try {
     const content = await makeChatRequest(
       baseUrl,
-      [{ role: 'user', content: 'Complete this Python code: def hello_world():' }],
+      [
+        {
+          role: 'user',
+          content: 'Complete this Python code: def hello_world():',
+        },
+      ],
       50,
       0.1,
     );
@@ -399,7 +428,10 @@ async function testSystemMessages(baseUrl: string): Promise<boolean> {
     const content = await makeChatRequest(
       baseUrl,
       [
-        { role: 'system', content: 'You are a helpful coding assistant working in an IDE.' },
+        {
+          role: 'system',
+          content: 'You are a helpful coding assistant working in an IDE.',
+        },
         { role: 'user', content: 'Explain what this does: print("hello")' },
       ],
       80,

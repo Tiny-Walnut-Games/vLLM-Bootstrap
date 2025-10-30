@@ -55,7 +55,8 @@ test.describe('Rider AI Assistant Integration', () => {
       messages: [
         {
           role: 'system',
-          content: 'You are a helpful coding assistant integrated with JetBrains Rider.',
+          content:
+            'You are a helpful coding assistant integrated with JetBrains Rider.',
         },
         {
           role: 'user',
@@ -161,16 +162,23 @@ test.describe('Rider AI Assistant Integration', () => {
         language: 'C#',
         prompt:
           'Create a simple REST API controller for managing users with GET and POST endpoints.',
-        expectedKeywords: ['ApiController', 'HttpGet', 'HttpPost', 'public class'],
+        expectedKeywords: [
+          'ApiController',
+          'HttpGet',
+          'HttpPost',
+          'public class',
+        ],
       },
       {
         language: 'C#',
-        prompt: 'Write a unit test using xUnit for testing a calculator Add method.',
+        prompt:
+          'Write a unit test using xUnit for testing a calculator Add method.',
         expectedKeywords: ['[Test]', '[Fact]', 'Assert', 'public void'],
       },
       {
         language: 'SQL',
-        prompt: 'Write a SQL query to find all users who registered in the last 30 days.',
+        prompt:
+          'Write a SQL query to find all users who registered in the last 30 days.',
         expectedKeywords: ['SELECT', 'WHERE', 'DATEADD', 'GETDATE'],
       },
     ];
@@ -218,21 +226,27 @@ test.describe('Rider AI Assistant Integration', () => {
     console.log('⚠️ Testing error handling...');
 
     // Test malformed request
-    const malformedResponse = await request.post(`${baseUrl}/v1/chat/completions`, {
-      headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
-      data: {
-        // Missing required fields
-        messages: [],
-        max_tokens: -1,
+    const malformedResponse = await request.post(
+      `${baseUrl}/v1/chat/completions`,
+      {
+        headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
+        data: {
+          // Missing required fields
+          messages: [],
+          max_tokens: -1,
+        },
       },
-    });
+    );
 
     expect(malformedResponse.status()).toBe(400);
 
     // Test invalid endpoint
-    const invalidResponse = await request.get(`${baseUrl}/v1/invalid-endpoint`, {
-      headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
-    });
+    const invalidResponse = await request.get(
+      `${baseUrl}/v1/invalid-endpoint`,
+      {
+        headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
+      },
+    );
     expect(invalidResponse.status()).toBe(404);
 
     console.log('✅ Error handling works correctly');
@@ -247,7 +261,9 @@ test.describe('Rider AI Assistant Integration', () => {
       headers: { Authorization: `Bearer ${AUTH_TOKEN}` },
       data: {
         model: 'default',
-        messages: [{ role: 'user', content: 'Write a simple "Hello World" in C#.' }],
+        messages: [
+          { role: 'user', content: 'Write a simple "Hello World" in C#.' },
+        ],
         max_tokens: 50,
         temperature: 0.1,
       },
@@ -320,7 +336,8 @@ test.describe('Rider Configuration Scenarios', () => {
       {
         step: 6,
         action: 'Enable AI Assistant',
-        details: 'Make sure AI Assistant is enabled in Tools → AI Assistant → Enable AI Assistant',
+        details:
+          'Make sure AI Assistant is enabled in Tools → AI Assistant → Enable AI Assistant',
       },
       {
         step: 7,
@@ -362,7 +379,11 @@ test.describe('Rider Configuration Scenarios', () => {
       {
         issue: 'Slow Responses in Rider',
         symptoms: ['AI suggestions take >30 seconds', 'Timeout errors'],
-        causes: ['CPU-only mode', 'Large model on limited VRAM', 'Network latency'],
+        causes: [
+          'CPU-only mode',
+          'Large model on limited VRAM',
+          'Network latency',
+        ],
         solutions: [
           'Switch to smaller model tier (fast/edit)',
           'Verify GPU utilization with nvidia-smi',
@@ -411,21 +432,35 @@ test.describe('Rider Configuration Scenarios', () => {
       {
         useCase: 'Full Development Workflow',
         models: [
-          { tier: 'fast', port: 8100, purpose: 'Autocomplete, quick suggestions' },
-          { tier: 'edit', port: 8300, purpose: 'Code refactoring, documentation' },
+          {
+            tier: 'fast',
+            port: 8100,
+            purpose: 'Autocomplete, quick suggestions',
+          },
+          {
+            tier: 'edit',
+            port: 8300,
+            purpose: 'Code refactoring, documentation',
+          },
           { tier: 'qa', port: 8500, purpose: 'Code review, debugging help' },
         ],
         riderConfig: 'Configure 3 providers, switch based on task complexity',
       },
       {
         useCase: 'Resource-Constrained Setup',
-        models: [{ tier: 'fast', port: 8100, purpose: 'Primary model for all tasks' }],
+        models: [
+          { tier: 'fast', port: 8100, purpose: 'Primary model for all tasks' },
+        ],
         riderConfig: 'Single provider, good for systems with <12GB VRAM',
       },
       {
         useCase: 'Specialized Development',
         models: [
-          { tier: 'plan', port: 8700, purpose: 'Architecture decisions, complex planning' },
+          {
+            tier: 'plan',
+            port: 8700,
+            purpose: 'Architecture decisions, complex planning',
+          },
           { tier: 'qa', port: 8500, purpose: 'General coding assistance' },
         ],
         riderConfig: 'Two providers: planning model + general-purpose model',
@@ -436,7 +471,9 @@ test.describe('Rider Configuration Scenarios', () => {
       console.log(`\n${index + 1}. ${setup.useCase}`);
       console.log('   Models:');
       setup.models.forEach((model) => {
-        console.log(`     • ${model.tier} (port ${model.port}): ${model.purpose}`);
+        console.log(
+          `     • ${model.tier} (port ${model.port}): ${model.purpose}`,
+        );
       });
       console.log(`   Rider Configuration: ${setup.riderConfig}`);
     });

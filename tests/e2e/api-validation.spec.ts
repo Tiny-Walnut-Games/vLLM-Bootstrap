@@ -103,7 +103,10 @@ test.describe('vLLM-Doctrine API Validation', () => {
           // System + user (Rider format)
           {
             messages: [
-              { role: 'system', content: 'You are a helpful coding assistant.' },
+              {
+                role: 'system',
+                content: 'You are a helpful coding assistant.',
+              },
               { role: 'user', content: 'Help me write code' },
             ],
             description: 'system + user messages',
@@ -120,24 +123,30 @@ test.describe('vLLM-Doctrine API Validation', () => {
         ];
 
         for (const testCase of testCases) {
-          const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${AUTH_TOKEN}`,
+          const response = await fetch(
+            `http://localhost:${port}/v1/chat/completions`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${AUTH_TOKEN}`,
+              },
+              body: JSON.stringify({
+                model: 'default',
+                messages: testCase.messages,
+                max_tokens: 50,
+                temperature: 0.3,
+              }),
             },
-            body: JSON.stringify({
-              model: 'default',
-              messages: testCase.messages,
-              max_tokens: 50,
-              temperature: 0.3,
-            }),
-          });
+          );
 
           expect(response.ok, `Failed for ${testCase.description}`).toBe(true);
 
           const data = (await response.json()) as Record<string, unknown>;
-          expect(data.choices, `No choices in response for ${testCase.description}`).toBeDefined();
+          expect(
+            data.choices,
+            `No choices in response for ${testCase.description}`,
+          ).toBeDefined();
           expect(
             (data as Record<string, unknown>).choices,
             `Empty choices for ${testCase.description}`,
@@ -205,44 +214,53 @@ test.describe('vLLM-Doctrine API Validation', () => {
     const port = await launchModel('fast', 180000);
 
     // Test malformed JSON
-    const malformedResponse = await fetch(`http://localhost:${port}/v1/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${AUTH_TOKEN}`,
+    const malformedResponse = await fetch(
+      `http://localhost:${port}/v1/chat/completions`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+        body: '{ invalid json }',
       },
-      body: '{ invalid json }',
-    });
+    );
 
     expect(malformedResponse.status).toBe(400);
 
     // Test missing required fields
-    const missingFieldsResponse = await fetch(`http://localhost:${port}/v1/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${AUTH_TOKEN}`,
+    const missingFieldsResponse = await fetch(
+      `http://localhost:${port}/v1/chat/completions`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+        body: JSON.stringify({
+          model: 'default',
+          // Missing messages field
+        }),
       },
-      body: JSON.stringify({
-        model: 'default',
-        // Missing messages field
-      }),
-    });
+    );
 
     expect(missingFieldsResponse.status).toBe(400);
 
     // Test invalid model name
-    const invalidModelResponse = await fetch(`http://localhost:${port}/v1/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${AUTH_TOKEN}`,
+    const invalidModelResponse = await fetch(
+      `http://localhost:${port}/v1/chat/completions`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+        body: JSON.stringify({
+          model: 'non-existent-model',
+          messages: [{ role: 'user', content: 'test' }],
+        }),
       },
-      body: JSON.stringify({
-        model: 'non-existent-model',
-        messages: [{ role: 'user', content: 'test' }],
-      }),
-    });
+    );
 
     // Should either work (if model accepts any name) or return 400/404
     expect([200, 400, 404]).toContain(invalidModelResponse.status);

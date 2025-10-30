@@ -14,7 +14,9 @@ async function globalTeardown(_config: FullConfig) {
 
   console.log('✅ Test cleanup complete');
   console.log('');
-  console.log('💡 Models are still running - stop manually with Ctrl+C if needed');
+  console.log(
+    '💡 Models are still running - stop manually with Ctrl+C if needed',
+  );
   console.log('');
 }
 

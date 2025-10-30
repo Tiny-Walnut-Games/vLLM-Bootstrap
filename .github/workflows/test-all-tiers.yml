@@ -21,7 +21,7 @@ jobs:
   # ============================================================================
   test-linux-all-tiers:
     name: Linux - All Tiers (1B, 4B, 7B, 15B)
-    runs-on: ubuntu-latest-gpu-l4  # GPU runner with sufficient VRAM
+    runs-on: ubuntu-latest-gpu-l4 # GPU runner with sufficient VRAM
     timeout-minutes: 120
     strategy:
       matrix:
@@ -46,7 +46,7 @@ jobs:
             port: 8700
             timeout: 360
             skip: false
-      max-parallel: 1  # Run tiers sequentially (only one model at a time)
+      max-parallel: 1 # Run tiers sequentially (only one model at a time)
 
     steps:
       - name: Checkout repository
@@ -106,10 +106,10 @@ jobs:
           source ~/torch-env/bin/activate
           timeout ${{ matrix.tier.timeout }} bash ./daily-bootstrap.sh ${{ matrix.tier.role }} &
           MODEL_PID=$!
-          
+
           echo "Model process started with PID: $MODEL_PID"
           sleep 10
-          
+
           # Wait for health endpoint with timeout
           ELAPSED=0
           while [ $ELAPSED -lt 300 ]; do
@@ -121,7 +121,7 @@ jobs:
             sleep 5
             ELAPSED=$((ELAPSED + 5))
           done
-          
+
           if [ $ELAPSED -ge 300 ]; then
             echo "❌ Timeout waiting for model"
             curl -v -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health || true
@@ -133,7 +133,7 @@ jobs:
         run: |
           echo "Testing model health..."
           curl -s -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health | jq . || curl -v -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health
-          
+
           echo "Testing models endpoint..."
           curl -s -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/v1/models | jq . || echo "Models endpoint failed"
 
@@ -142,7 +142,7 @@ jobs:
         run: |
           export TEST_PORT=${{ matrix.tier.port }}
           export TEST_TIER=${{ matrix.tier.role }}
-          
+
           # Run generic API validation test
           npx playwright test tests/e2e/api-validation.spec.ts \
             --grep "Fast.*Model Tier" \
