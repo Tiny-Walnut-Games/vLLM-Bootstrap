@@ -48,15 +48,15 @@ cd ~/.config/llm-doctrine
 # 3. Download and extract scripts here
 
 # 4. Run initial setup
-chmod +x *.sh
-./initial-bootstrap.sh
+chmod +x scripts/*.sh
+./scripts/initial-bootstrap.sh
 
 # 5. Launch a model
 source ~/torch-env/bin/activate
-./daily-bootstrap.sh qa
+./scripts/daily-bootstrap.sh qa
 
 # 6. Test connection
-./test-connection.sh 8500
+./scripts/test-connection.sh 8500
 
 # 7. Configure Rider
 # Settings → Tools → AI Assistant → Models
