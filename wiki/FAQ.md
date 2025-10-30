@@ -467,10 +467,10 @@ Yes, under MIT license. Include original copyright notice.
 ## Still Have Questions?
 
 - **[Troubleshooting Guide](Troubleshooting)** - Solve common problems
-- **[GitHub Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)** - Ask the community
+- **[GitHub Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)** - Ask the community (use `question` label)
 - **[GitHub Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)** - Report bugs
 - **[Documentation](Home)** - Browse all guides
 
 ---
 
-**Didn't find your answer?** → [Start a Discussion](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions/new)
+**Didn't find your answer?** → [Open an Issue](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues/new?labels=question)

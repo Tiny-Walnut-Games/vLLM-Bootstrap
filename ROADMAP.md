@@ -284,7 +284,7 @@ This roadmap is a living document and will be updated:
 
 ## 💬 Questions or Suggestions?
 
-- **Discussions:** [GitHub Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)
+- **Questions & Feedback:** [GitHub Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)
 - **Issues:** [Feature Requests](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues/new?template=feature_request.md)
 - **Contact:** Open an issue or start a discussion
 

@@ -477,7 +477,7 @@ Tests run automatically on push/PR (if configured):
 Found an issue? Want to improve tests?
 
 1. **Report Issues**: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues
-2. **Discussions**: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions
+2. **Questions**: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues (use `question` label)
 3. **Pull Requests**: See [CONTRIBUTING.md](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/blob/main/CONTRIBUTING.md)
 
 **Helpful contributions**:

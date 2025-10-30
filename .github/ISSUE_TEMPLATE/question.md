@@ -27,4 +27,4 @@ Any other details that might help us answer your question.
 
 ---
 
-**Note:** For general discussions, consider using [GitHub Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions) instead!
+**Note:** You can also open an issue with the `question` label for inquiries related to vLLM-Bootstrap!

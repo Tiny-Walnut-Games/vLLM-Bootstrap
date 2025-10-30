@@ -240,6 +240,8 @@ test-matrix:
 - Full matrix on main branch only
 - **Savings**: 20-40 minutes on PR failures
 
+**Reference**: For more details on artifact caching, see GitHub Actions documentation
+
 ---
 
 ## 📊 Total Optimization Impact

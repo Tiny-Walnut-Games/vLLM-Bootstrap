@@ -130,7 +130,7 @@ curl http://localhost:8500/v1/chat/completions \
 Found a bug? Have a suggestion? Want to test on your hardware?
 
 - **[Report Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)**
-- **[Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)**
+- **[Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)** (use `question` label for Q&A)
 - **[Contribution Guide](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/blob/main/CONTRIBUTING.md)**
 
 ---

@@ -90,7 +90,7 @@ Primary documentation hosted on GitHub Wiki for easy community editing and acces
 
 Same content formatted for GitBook publication.
 
-**Structure**: See [SUMMARY.md](SUMMARY.md)
+**Status**: Documentation structure complete in wiki format (coming soon)
 
 ### Markdown Files
 
@@ -176,7 +176,7 @@ Archived in: `docs-archive/2025-10-29_114041/`
 
 **Questions**:
 
-- GitHub Discussions: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions
+- GitHub Issues: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues (with `question` label)
 
 **Bug reports** (not doc-related):
 

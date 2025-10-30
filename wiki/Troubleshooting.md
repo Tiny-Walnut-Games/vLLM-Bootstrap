@@ -643,7 +643,7 @@ huggingface-cli whoami
 ### Community Support
 
 - **GitHub Issues**: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues
-- **Discussions**: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions
+- **Questions**: https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues (use `question` label)
 - **FAQ**: [FAQ](FAQ)
 
 ---

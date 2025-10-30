@@ -166,7 +166,7 @@ Use these labels in combination with milestones:
 ## Questions?
 
 - See [ROADMAP.md](ROADMAP.md) for detailed goals and timelines
-- Ask in [GitHub Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)
+- Ask in [GitHub Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues) (use `question` label)
 - Open an issue if you think a milestone needs adjustment
 
 ---

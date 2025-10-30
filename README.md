@@ -178,7 +178,7 @@ We welcome contributions!
 
 - [Contributing Guide](CONTRIBUTING.md)
 - [GitHub Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)
-- [Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)
+- [Questions & Support](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)
 
 ---
 
@@ -244,7 +244,7 @@ SOFTWARE.
 
 - **📚 [Documentation Wiki](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/wiki)**
 - **🐛 [Report Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)**
-- **💬 [Discussions](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/discussions)**
+- **💬 [Issues](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/issues)**
 - **📖 [Getting Started](https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/wiki/Getting-Started)**
 - **🚀 [Roadmap](ROADMAP.md)**
 - **📝 [Changelog](CHANGELOG.md)**
