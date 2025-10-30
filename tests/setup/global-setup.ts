@@ -50,7 +50,7 @@ async function globalSetup(_config: FullConfig) {
             }
           } catch (e) {
             // Model info fetch failed, but health check passed
-            console.log('   ⚠️ Model running but couldn\'t get details');
+            console.log("   ⚠️ Model running but couldn't get details");
           }
         }
       } catch (e) {

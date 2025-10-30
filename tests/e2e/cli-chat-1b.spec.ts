@@ -16,6 +16,9 @@ const LAUNCH_TIMEOUT = 180000; // 3 minutes for model to launch
 const CHAT_TIMEOUT = 30000; // 30 seconds per chat request
 const AUTH_TOKEN = 'fallback-token-12345'; // Match fallback server default
 
+// Type-safe response validation with runtime type guards
+// No explicit interfaces needed - using type guards on unknown types
+
 /**
  * Helper: Execute chat completion via safe HTTP client (not shell command)
  * Uses native fetch to prevent command injection vulnerabilities
@@ -47,19 +50,33 @@ async function chatWithModel(prompt: string, maxTokens = 30): Promise<string> {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const data = (await response.json()) as Record<string, unknown>;
+      const data = (await response.json()) as unknown;
 
       // Validate response structure
-      if (!data.choices || !Array.isArray(data.choices) || data.choices.length === 0) {
+      if (
+        typeof data !== 'object' ||
+        data === null ||
+        !('choices' in data) ||
+        !Array.isArray(data.choices) ||
+        data.choices.length === 0
+      ) {
         throw new Error('Invalid response structure: missing choices array');
       }
 
-      const content = (data.choices as unknown[])[0]?.message?.content;
-      if (typeof content !== 'string') {
+      const choice = data.choices[0];
+      if (
+        typeof choice !== 'object' ||
+        choice === null ||
+        !('message' in choice) ||
+        typeof choice.message !== 'object' ||
+        choice.message === null ||
+        !('content' in choice.message) ||
+        typeof choice.message.content !== 'string'
+      ) {
         throw new Error('Invalid response structure: message content is not a string');
       }
 
-      return content;
+      return choice.message.content;
     } finally {
       clearTimeout(timeoutId);
     }
@@ -103,6 +120,7 @@ async function isPortReady(port: number, timeout = 5000): Promise<boolean> {
  * Helper: Launch the 1B model
  */
 async function launch1BModel(): Promise<void> {
+  // eslint-disable-next-line no-console
   console.log('🚀 Launching 1B (fast) model...');
 
   // Kill any existing processes
@@ -122,7 +140,8 @@ async function launch1BModel(): Promise<void> {
       : 'bash -c "cd ~/.config/llm-doctrine && source ~/torch-env/bin/activate && ./daily-bootstrap.sh fast"';
 
   try {
-    exec(launchCmd, { detached: true, stdio: 'ignore' });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    exec(launchCmd, { detached: true, stdio: 'ignore' } as any);
   } catch (e) {
     // Background execution may throw, but process is launched
   }
@@ -135,6 +154,7 @@ async function launch1BModel(): Promise<void> {
     );
   }
 
+  // eslint-disable-next-line no-console
   console.log(`✅ 1B model ready on port ${FAST_TIER_PORT}`);
 }
 
@@ -184,11 +204,21 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
     });
     expect(response.ok).toBe(true);
 
-    const data = await response.json();
-    expect(data.data).toBeDefined();
-    expect(data.data.length).toBeGreaterThan(0);
+    const data = (await response.json()) as unknown;
+
+    // Type-safe validation
+    if (
+      typeof data !== 'object' ||
+      data === null ||
+      !('data' in data) ||
+      !Array.isArray(data.data) ||
+      data.data.length === 0
+    ) {
+      throw new Error('Invalid models response structure');
+    }
 
     // Should include 'default' model
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const hasDefault = data.data.some((m: any) => m.id === 'default');
     expect(hasDefault).toBe(true);
   });
@@ -297,11 +327,14 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
     expect(response.ok).toBe(true);
 
     // Should be valid JSON
-    const data = (await response.json()) as Record<string, unknown>;
+    const data = (await response.json()) as unknown;
 
-    // Should have expected structure
-    expect((data as unknown)?.choices).toBeDefined();
-    expect((data as unknown as Record<string, unknown>)?.choices).toBeDefined();
+    // Type-safe validation
+    if (typeof data !== 'object' || data === null || !('choices' in data)) {
+      throw new Error('Invalid JSON response structure');
+    }
+
+    expect(data.choices).toBeDefined();
   });
 
   test('should gracefully handle empty/whitespace prompts', async () => {

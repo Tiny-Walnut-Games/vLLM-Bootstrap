@@ -79,7 +79,7 @@ export const MODEL_TIERS: ModelTier[] = [
 async function checkPortHealth(port: number): Promise<boolean> {
   try {
     const response = await fetch(`http://localhost:${port}/health`, {
-      timeout: 5000,
+      signal: AbortSignal.timeout(5000),
       headers: {
         Authorization: `Bearer ${AUTH_TOKEN}`,
       },
@@ -178,7 +178,7 @@ export async function stopAllModels(): Promise<void> {
 export async function isPortAvailable(port: number): Promise<boolean> {
   try {
     const response = await fetch(`http://localhost:${port}/health`, {
-      timeout: 3000,
+      signal: AbortSignal.timeout(3000),
       headers: {
         Authorization: `Bearer ${AUTH_TOKEN}`,
       },
@@ -236,9 +236,14 @@ export async function testOpenAICompatibility(port: number): Promise<{
       },
     });
     if (response.ok) {
-      const data = await response.json();
-      results.models = true;
-      results.modelList = data.data?.map((m: any) => m.id) || [];
+      const data = (await response.json()) as unknown;
+
+      // Type-safe validation
+      if (typeof data === 'object' && data !== null && 'data' in data && Array.isArray(data.data)) {
+        results.models = true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        results.modelList = (data.data as any[]).map((m: any) => m.id) || [];
+      }
     }
   } catch (error) {
     results.errors.push(
@@ -263,9 +268,30 @@ export async function testOpenAICompatibility(port: number): Promise<{
     });
 
     if (response.ok) {
-      const data = await response.json();
-      results.chat = true;
-      results.chatResponse = data.choices?.[0]?.message?.content || '';
+      const data = (await response.json()) as unknown;
+
+      // Type-safe validation
+      if (
+        typeof data === 'object' &&
+        data !== null &&
+        'choices' in data &&
+        Array.isArray(data.choices) &&
+        data.choices.length > 0
+      ) {
+        const choice = data.choices[0];
+        if (
+          typeof choice === 'object' &&
+          choice !== null &&
+          'message' in choice &&
+          typeof choice.message === 'object' &&
+          choice.message !== null &&
+          'content' in choice.message &&
+          typeof choice.message.content === 'string'
+        ) {
+          results.chat = true;
+          results.chatResponse = choice.message.content;
+        }
+      }
     }
   } catch (error) {
     results.errors.push(
@@ -300,8 +326,29 @@ async function makeChatRequest(
   });
 
   if (response.ok) {
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content || '';
+    const data = (await response.json()) as unknown;
+
+    // Type-safe validation
+    if (
+      typeof data === 'object' &&
+      data !== null &&
+      'choices' in data &&
+      Array.isArray(data.choices) &&
+      data.choices.length > 0
+    ) {
+      const choice = data.choices[0];
+      if (
+        typeof choice === 'object' &&
+        choice !== null &&
+        'message' in choice &&
+        typeof choice.message === 'object' &&
+        choice.message !== null &&
+        'content' in choice.message &&
+        typeof choice.message.content === 'string'
+      ) {
+        return choice.message.content;
+      }
+    }
   }
   return '';
 }

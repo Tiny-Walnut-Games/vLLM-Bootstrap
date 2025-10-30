@@ -7,6 +7,9 @@
 import { test, expect } from '@playwright/test';
 import { launchModel, stopAllModels } from '../utils/model-utils';
 
+// Type-safe response validation with runtime type guards
+// No explicit interfaces needed - using type guards on unknown types
+
 // Authentication token for fallback server (matches fallback server config)
 const AUTH_TOKEN = 'fallback-token-12345';
 
@@ -118,12 +121,33 @@ test.describe('IDE Integration Validation', () => {
 
         expect(response.ok, `${request.name} request failed`).toBe(true);
 
-        const data = await response.json();
-        expect(data.choices, `${request.name} returned no choices`).toBeDefined();
-        expect(data.choices.length, `${request.name} returned empty choices`).toBeGreaterThan(0);
+        const data = (await response.json()) as unknown;
 
-        const content = data.choices[0].message.content;
-        expect(content, `${request.name} returned empty content`).toBeDefined();
+        // Type-safe validation
+        if (
+          typeof data !== 'object' ||
+          data === null ||
+          !('choices' in data) ||
+          !Array.isArray(data.choices) ||
+          data.choices.length === 0
+        ) {
+          throw new Error(`${request.name}: Invalid response structure`);
+        }
+
+        const choice = data.choices[0];
+        if (
+          typeof choice !== 'object' ||
+          choice === null ||
+          !('message' in choice) ||
+          typeof choice.message !== 'object' ||
+          choice.message === null ||
+          !('content' in choice.message) ||
+          typeof choice.message.content !== 'string'
+        ) {
+          throw new Error(`${request.name}: Invalid message content`);
+        }
+
+        const content = choice.message.content;
         expect(
           content.trim().length,
           `${request.name} returned very short content`,
@@ -179,8 +203,33 @@ test.describe('IDE Integration Validation', () => {
 
         expect(response.ok, `${scenario.name} failed`).toBe(true);
 
-        const data = await response.json();
-        const content = data.choices[0].message.content;
+        const data = (await response.json()) as unknown;
+
+        // Type-safe validation
+        if (
+          typeof data !== 'object' ||
+          data === null ||
+          !('choices' in data) ||
+          !Array.isArray(data.choices) ||
+          data.choices.length === 0
+        ) {
+          throw new Error(`${scenario.name}: Invalid response structure`);
+        }
+
+        const choice = data.choices[0];
+        if (
+          typeof choice !== 'object' ||
+          choice === null ||
+          !('message' in choice) ||
+          typeof choice.message !== 'object' ||
+          choice.message === null ||
+          !('content' in choice.message) ||
+          typeof choice.message.content !== 'string'
+        ) {
+          throw new Error(`${scenario.name}: Invalid message content`);
+        }
+
+        const content = choice.message.content;
 
         // Check if at least one expected pattern is present
         const hasExpectedPattern = scenario.expectedPatterns.some((pattern) =>
@@ -206,7 +255,7 @@ test.describe('IDE Integration Validation', () => {
           messages: [
             {
               role: 'user',
-              content: 'I\'m writing JavaScript. What parameters does Array.map() take?',
+              content: "I'm writing JavaScript. What parameters does Array.map() take?",
             },
           ],
           validate: (content: string) => {
@@ -272,10 +321,34 @@ test.describe('IDE Integration Validation', () => {
 
         expect(response.ok, `${request.name} request failed`).toBe(true);
 
-        const data = await response.json();
-        const content = data.choices[0].message.content;
+        const data = (await response.json()) as unknown;
 
-        expect(content, `${request.name} returned empty content`).toBeDefined();
+        // Type-safe validation
+        if (
+          typeof data !== 'object' ||
+          data === null ||
+          !('choices' in data) ||
+          !Array.isArray(data.choices) ||
+          data.choices.length === 0
+        ) {
+          throw new Error(`${request.name}: Invalid response structure`);
+        }
+
+        const choice = data.choices[0];
+        if (
+          typeof choice !== 'object' ||
+          choice === null ||
+          !('message' in choice) ||
+          typeof choice.message !== 'object' ||
+          choice.message === null ||
+          !('content' in choice.message) ||
+          typeof choice.message.content !== 'string'
+        ) {
+          throw new Error(`${request.name}: Invalid message content`);
+        }
+
+        const content = choice.message.content;
+
         expect(
           content.trim().length,
           `${request.name} returned very short content`,
@@ -332,9 +405,33 @@ test.describe('IDE Integration Validation', () => {
         expect(chunks, 'No streaming chunks received').toBeGreaterThan(0);
       } else {
         // Fall back to regular response validation
-        const data = await response.json();
-        expect(data.choices).toBeDefined();
-        expect(data.choices[0].message.content).toBeDefined();
+        const data = (await response.json()) as unknown;
+
+        // Type-safe validation
+        if (
+          typeof data !== 'object' ||
+          data === null ||
+          !('choices' in data) ||
+          !Array.isArray(data.choices) ||
+          data.choices.length === 0
+        ) {
+          throw new Error('Invalid response structure for fallback');
+        }
+
+        const choice = data.choices[0];
+        if (
+          typeof choice !== 'object' ||
+          choice === null ||
+          !('message' in choice) ||
+          typeof choice.message !== 'object' ||
+          choice.message === null ||
+          !('content' in choice.message) ||
+          typeof choice.message.content !== 'string'
+        ) {
+          throw new Error('Invalid message content for fallback');
+        }
+
+        expect(choice.message.content).toBeDefined();
       }
     });
   });
@@ -392,8 +489,33 @@ test.describe('IDE Integration Validation', () => {
 
         expect(response.ok, `${format.name} failed`).toBe(true);
 
-        const data = await response.json();
-        const content = data.choices[0].message.content;
+        const data = (await response.json()) as unknown;
+
+        // Type-safe validation
+        if (
+          typeof data !== 'object' ||
+          data === null ||
+          !('choices' in data) ||
+          !Array.isArray(data.choices) ||
+          data.choices.length === 0
+        ) {
+          throw new Error(`${format.name}: Invalid response structure`);
+        }
+
+        const choice = data.choices[0];
+        if (
+          typeof choice !== 'object' ||
+          choice === null ||
+          !('message' in choice) ||
+          typeof choice.message !== 'object' ||
+          choice.message === null ||
+          !('content' in choice.message) ||
+          typeof choice.message.content !== 'string'
+        ) {
+          throw new Error(`${format.name}: Invalid message content`);
+        }
+
+        const content = choice.message.content;
 
         responses.push({
           name: format.name,
@@ -436,12 +558,15 @@ test.describe('IDE Integration Validation', () => {
       ];
 
       for (const [index, headers] of authPatterns.entries()) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const fetchHeaders: any = {
+          'Content-Type': 'application/json',
+          ...headers,
+        };
+
         const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...headers,
-          },
+          headers: fetchHeaders,
           body: JSON.stringify({
             model: 'default',
             messages: [{ role: 'user', content: 'Hello' }],
@@ -452,8 +577,14 @@ test.describe('IDE Integration Validation', () => {
         // Local vLLM should accept all auth patterns (or ignore them)
         expect(response.ok, `Auth pattern ${index} failed`).toBe(true);
 
-        const data = await response.json();
-        expect(data.choices, `Auth pattern ${index} returned no choices`).toBeDefined();
+        const data = (await response.json()) as unknown;
+
+        // Type-safe validation
+        if (typeof data !== 'object' || data === null || !('choices' in data)) {
+          throw new Error(`Auth pattern ${index}: Invalid response structure`);
+        }
+
+        expect(data.choices).toBeDefined();
       }
     });
   });

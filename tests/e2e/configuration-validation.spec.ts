@@ -199,6 +199,7 @@ test.describe('Configuration Validation', () => {
     try {
       const pythonVersion = execSync('python3 --version', { encoding: 'utf8' });
       expect(pythonVersion.includes('Python 3'), 'Python 3 not found').toBe(true);
+      // eslint-disable-next-line no-console
       console.log(`✅ Found ${pythonVersion.trim()}`);
     } catch (error) {
       throw new Error('Python 3 is required but not found');
@@ -207,6 +208,7 @@ test.describe('Configuration Validation', () => {
     // Check virtual environment
     const venvPath = process.env.HOME + '/torch-env';
     if (existsSync(venvPath)) {
+      // eslint-disable-next-line no-console
       console.log('✅ Virtual environment found');
     } else {
       console.warn('⚠️ Virtual environment not found - run ./initial-bootstrap.sh');
@@ -215,6 +217,7 @@ test.describe('Configuration Validation', () => {
     // Check CUDA availability (optional)
     try {
       execSync('nvidia-smi', { encoding: 'utf8' });
+      // eslint-disable-next-line no-console
       console.log('✅ NVIDIA GPU detected');
     } catch (error) {
       console.warn('⚠️ NVIDIA GPU not detected - will use CPU fallback');
@@ -234,6 +237,7 @@ test.describe('Configuration Validation', () => {
             true,
           );
         }
+        // eslint-disable-next-line no-console
         console.log('✅ All required Python packages found');
       } catch (error) {
         console.warn('⚠️ Could not verify Python packages');
@@ -244,7 +248,9 @@ test.describe('Configuration Validation', () => {
   test('should validate HuggingFace authentication', async () => {
     try {
       const whoami = execSync('huggingface-cli whoami', { encoding: 'utf8', stdio: 'pipe' });
+      // eslint-disable-next-line no-console
       console.log('✅ HuggingFace authentication configured');
+      // eslint-disable-next-line no-console
       console.log(`   User: ${whoami.trim()}`);
     } catch (error) {
       console.warn('⚠️ HuggingFace authentication not configured');
@@ -317,6 +323,7 @@ test.describe('Configuration Validation', () => {
       );
     }
 
+    // eslint-disable-next-line no-console
     console.log(`✅ All scripts are version ${firstVersion}`);
   });
 
@@ -347,14 +354,36 @@ test.describe('Configuration Validation', () => {
 
     expect(response.ok, 'Chat template test failed').toBe(true);
 
-    const data = await response.json();
-    expect(data.choices, 'No choices returned from template test').toBeDefined();
-    expect(data.choices.length, 'Empty choices from template test').toBeGreaterThan(0);
+    const data = (await response.json()) as unknown;
 
-    const content = data.choices[0].message.content;
-    expect(content, 'Empty response from template test').toBeDefined();
+    // Type-safe validation
+    if (
+      typeof data !== 'object' ||
+      data === null ||
+      !('choices' in data) ||
+      !Array.isArray(data.choices) ||
+      data.choices.length === 0
+    ) {
+      throw new Error('Invalid response: no choices returned');
+    }
+
+    const choice = data.choices[0];
+    if (
+      typeof choice !== 'object' ||
+      choice === null ||
+      !('message' in choice) ||
+      typeof choice.message !== 'object' ||
+      choice.message === null ||
+      !('content' in choice.message) ||
+      typeof choice.message.content !== 'string'
+    ) {
+      throw new Error('Invalid response: message content is not a string');
+    }
+
+    const content = choice.message.content;
     expect(content.trim().length, 'Very short response from template test').toBeGreaterThan(0);
 
+    // eslint-disable-next-line no-console
     console.log(`✅ Chat template working - Response: ${content.trim()}`);
   });
 });

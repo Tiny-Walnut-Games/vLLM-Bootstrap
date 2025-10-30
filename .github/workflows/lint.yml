@@ -64,13 +64,13 @@ jobs:
   shellcheck:
     name: ShellCheck
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
-      
+        uses: actions/checkout@v4
+
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@v2.0.0
+        uses: ludeeus/action-shellcheck@v1.1.0
         with:
           scandir: './scripts'
           severity: warning

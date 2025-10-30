@@ -23,7 +23,7 @@
 
 ### New Documentation Files
 
-**KNOWN-ISSUES.md**
+#### KNOWN-ISSUES.md
 
 - WSL C: drive space limitations with 3 workarounds
 - Chat template compatibility notes
@@ -33,7 +33,7 @@
 - Diagnostic commands
 - KVM user tips
 
-**CONTRIBUTING.md**
+#### CONTRIBUTING.md
 
 - Hardware testing guidelines
 - Bug reporting process
@@ -41,14 +41,14 @@
 - Development setup instructions
 - Code style guidelines
 
-**RELEASE-NOTES-v0.1.0-alpha.md**
+#### RELEASE-NOTES-v0.1.0-alpha.md
 
 - Alpha release announcement
 - Quick start instructions
 - Testing checklist
 - Known issues summary
 
-**ALPHA-RELEASE-CHECKLIST.md**
+#### ALPHA-RELEASE-CHECKLIST.md
 
 - Release process steps
 - GitHub setup tasks
@@ -60,6 +60,9 @@
 - README.md: Alpha warning, badges, documentation links, testing table, footer
 - package.json: Version update
 - CHANGELOG.md: Alpha entry, updated v2025.10.10 description
+- .eslintrc.json: Configuration for code quality
+- .prettierrc: Formatting configuration
+- tsconfig.json: TypeScript configuration
 
 ## Technical Notes
 
