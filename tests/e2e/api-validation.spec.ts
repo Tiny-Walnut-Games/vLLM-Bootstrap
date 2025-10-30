@@ -13,6 +13,9 @@ import {
   testIDEIntegration 
 } from '../utils/model-utils';
 
+// Authentication token for fallback server (matches fallback server config)
+const AUTH_TOKEN = 'fallback-token-12345';
+
 test.describe('vLLM-Doctrine API Validation', () => {
   
   test.beforeEach(async () => {
@@ -119,7 +122,10 @@ test.describe('vLLM-Doctrine API Validation', () => {
         for (const testCase of testCases) {
           const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${AUTH_TOKEN}`
+            },
             body: JSON.stringify({
               model: 'default',
               messages: testCase.messages,
@@ -144,7 +150,10 @@ test.describe('vLLM-Doctrine API Validation', () => {
         const requests = Array.from({ length: 5 }, (_, i) => 
           fetch(`http://localhost:${port}/v1/chat/completions`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${AUTH_TOKEN}`
+            },
             body: JSON.stringify({
               model: 'default',
               messages: [{ role: 'user', content: `Test request ${i + 1}` }],
@@ -197,7 +206,10 @@ test.describe('vLLM-Doctrine API Validation', () => {
     // Test malformed JSON
     const malformedResponse = await fetch(`http://localhost:${port}/v1/chat/completions`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      },
       body: '{ invalid json }'
     });
     
@@ -206,7 +218,10 @@ test.describe('vLLM-Doctrine API Validation', () => {
     // Test missing required fields
     const missingFieldsResponse = await fetch(`http://localhost:${port}/v1/chat/completions`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      },
       body: JSON.stringify({
         model: 'default'
         // Missing messages field
@@ -218,7 +233,10 @@ test.describe('vLLM-Doctrine API Validation', () => {
     // Test invalid model name
     const invalidModelResponse = await fetch(`http://localhost:${port}/v1/chat/completions`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      },
       body: JSON.stringify({
         model: 'non-existent-model',
         messages: [{ role: 'user', content: 'test' }]

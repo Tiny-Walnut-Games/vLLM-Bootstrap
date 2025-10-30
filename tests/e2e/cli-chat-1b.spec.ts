@@ -17,9 +17,11 @@ const execAsync = promisify(exec);
 const FAST_TIER_PORT = 8100;
 const LAUNCH_TIMEOUT = 180000; // 3 minutes for model to launch
 const CHAT_TIMEOUT = 30000; // 30 seconds per chat request
+const AUTH_TOKEN = 'fallback-token-12345'; // Match fallback server default
 
 /**
- * Helper: Execute a curl command for chat completion
+ * Helper: Execute chat completion via safe HTTP client (not shell command)
+ * Uses native fetch to prevent command injection vulnerabilities
  */
 async function chatWithModel(prompt: string, maxTokens = 30): Promise<string> {
   try {
@@ -30,21 +32,46 @@ async function chatWithModel(prompt: string, maxTokens = 30): Promise<string> {
       temperature: 0.7
     };
 
-    const command = `curl -s -X POST http://localhost:${FAST_TIER_PORT}/v1/chat/completions \\
-      -H "Content-Type: application/json" \\
-      -d '${JSON.stringify(payload)}'`;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT);
 
-    const { stdout, stderr } = await execAsync(command, { timeout: CHAT_TIMEOUT });
-    
-    if (stderr) {
-      console.warn(`Chat stderr: ${stderr}`);
+    try {
+      const response = await fetch(`http://localhost:${FAST_TIER_PORT}/v1/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AUTH_TOKEN}`
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      // Validate response structure
+      if (!data.choices || !Array.isArray(data.choices) || data.choices.length === 0) {
+        throw new Error(`Invalid response structure: missing choices array`);
+      }
+
+      const content = data.choices[0]?.message?.content;
+      if (typeof content !== 'string') {
+        throw new Error(`Invalid response structure: message content is not a string`);
+      }
+
+      return content;
+    } finally {
+      clearTimeout(timeoutId);
     }
-
-    const response = JSON.parse(stdout);
-    return response.choices?.[0]?.message?.content || '';
   } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error(`Network error: Failed to connect to model on port ${FAST_TIER_PORT}. Is the server running?`);
+    }
     const msg = error instanceof Error ? error.message : String(error);
-    throw new Error(`Chat failed: ${msg}`);
+    throw new Error(`Chat request failed: ${msg}`);
   }
 }
 
@@ -55,11 +82,20 @@ async function isPortReady(port: number, timeout = 5000): Promise<boolean> {
   const startTime = Date.now();
   while (Date.now() - startTime < timeout) {
     try {
-      await execAsync(`curl -s -f http://localhost:${port}/health > /dev/null`);
-      return true;
+      const response = await fetch(`http://localhost:${port}/health`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${AUTH_TOKEN}`
+        },
+        signal: AbortSignal.timeout(2000)
+      });
+      if (response.ok) {
+        return true;
+      }
     } catch {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Connection failed, retry
     }
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
   return false;
 }
@@ -129,18 +165,24 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
   });
 
   test('should have health endpoint responding', async () => {
-    const response = await execAsync(`curl -s http://localhost:${FAST_TIER_PORT}/health`);
-    expect(response.stdout).toBeTruthy();
-    
-    // Health endpoint returns OK
-    const healthCheck = await execAsync(`curl -s -o /dev/null -w "%{http_code}" http://localhost:${FAST_TIER_PORT}/health`);
-    expect(healthCheck.stdout).toBe('200');
+    const response = await fetch(`http://localhost:${FAST_TIER_PORT}/health`, {
+      headers: {
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      }
+    });
+    expect(response.ok).toBe(true);
+    expect(response.status).toBe(200);
   });
 
   test('should list available models via API', async () => {
-    const response = await execAsync(`curl -s http://localhost:${FAST_TIER_PORT}/v1/models`);
-    const data = JSON.parse(response.stdout);
+    const response = await fetch(`http://localhost:${FAST_TIER_PORT}/v1/models`, {
+      headers: {
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      }
+    });
+    expect(response.ok).toBe(true);
     
+    const data = await response.json();
     expect(data.data).toBeDefined();
     expect(data.data.length).toBeGreaterThan(0);
     
@@ -269,23 +311,28 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
       temperature: 0.7
     };
 
-    const { stdout } = await execAsync(
-      `curl -s -X POST http://localhost:${FAST_TIER_PORT}/v1/chat/completions \\
-        -H "Content-Type: application/json" \\
-        -d '${JSON.stringify(payload)}'`
-    );
+    const response = await fetch(`http://localhost:${FAST_TIER_PORT}/v1/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    expect(response.ok).toBe(true);
 
     // Should be valid JSON
     let data;
-    expect(() => {
-      data = JSON.parse(stdout);
+    expect(async () => {
+      data = await response.json();
     }).not.toThrow();
 
     // Should have expected structure
-    expect(data.choices).toBeDefined();
-    expect(data.choices.length).toBeGreaterThan(0);
-    expect(data.choices[0].message).toBeDefined();
-    expect(data.choices[0].message.content).toBeDefined();
+    expect(data!.choices).toBeDefined();
+    expect(data!.choices.length).toBeGreaterThan(0);
+    expect(data!.choices[0].message).toBeDefined();
+    expect(data!.choices[0].message.content).toBeDefined();
   });
 
   test('should gracefully handle empty/whitespace prompts', async () => {
@@ -296,13 +343,17 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
       temperature: 0.7
     };
 
-    const { stdout } = await execAsync(
-      `curl -s -X POST http://localhost:${FAST_TIER_PORT}/v1/chat/completions \\
-        -H "Content-Type: application/json" \\
-        -d '${JSON.stringify(payload)}'`
-    );
+    const response = await fetch(`http://localhost:${FAST_TIER_PORT}/v1/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      },
+      body: JSON.stringify(payload)
+    });
 
-    const data = JSON.parse(stdout);
+    expect(response.ok).toBe(true);
+    const data = await response.json();
     
     // Should either handle gracefully or return a response
     expect(data).toBeDefined();

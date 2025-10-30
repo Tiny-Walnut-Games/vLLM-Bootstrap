@@ -33,6 +33,18 @@ MODEL_ROLE="fast"
 LAUNCH_MODEL=true
 CLEANUP_AFTER=false
 
+# Audit logging
+AUDIT_LOG="${HOME}/.config/llm-doctrine/test-audit.log"
+mkdir -p "$(dirname "$AUDIT_LOG")" 2>/dev/null || true
+
+audit_log() {
+  local action="$1"
+  local status="$2"
+  local details="${3:-}"
+  local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+  echo "$timestamp [${status}] [${action}] ${details}" >> "$AUDIT_LOG" 2>/dev/null || true
+}
+
 # Parse arguments
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -145,6 +157,7 @@ check_port_available() {
 launch_model() {
   if [ "$LAUNCH_MODEL" = false ]; then
     print_warning "Skipping model launch (--no-model flag)"
+    audit_log "MODEL_LAUNCH" "SKIPPED" "Launch disabled via --no-model flag"
     return 0
   fi
 
@@ -153,26 +166,58 @@ launch_model() {
   # Check if already running
   if check_port_available; then
     print_info "Reusing existing model on port $PORT"
+    audit_log "MODEL_LAUNCH" "REUSED" "Port $PORT already in use"
     return 0
   fi
 
   # Kill any existing processes
   print_info "Cleaning up any existing processes..."
   pkill -f "vllm.*$PORT" || true
+  pkill -f "fallback-openai-server.py.*$PORT" || true
   sleep 2
 
   # Check bootstrap exists
   if [ ! -d "$HOME/.config/llm-doctrine" ]; then
     print_error "Bootstrap directory not found: ~/.config/llm-doctrine"
-    print_error "Run initial-bootstrap.sh first"
+    print_error "Please run: ~/.config/llm-doctrine/initial-bootstrap.sh"
+    audit_log "MODEL_LAUNCH" "FAILED" "Bootstrap directory missing"
+    exit 1
+  fi
+
+  # Check logs directory exists and is writable
+  if [ ! -d "$HOME/.config/llm-doctrine/logs" ]; then
+    if ! mkdir -p "$HOME/.config/llm-doctrine/logs" 2>/dev/null; then
+      print_error "Failed to create logs directory"
+      audit_log "MODEL_LAUNCH" "FAILED" "Cannot create logs directory"
+      exit 1
+    fi
+  fi
+
+  # Check torch-env exists
+  if [ ! -d "$HOME/torch-env" ]; then
+    print_error "Virtual environment not found: ~/torch-env"
+    print_error "Please run: ~/.config/llm-doctrine/initial-bootstrap.sh"
+    audit_log "MODEL_LAUNCH" "FAILED" "Virtual environment missing"
     exit 1
   fi
 
   # Launch model
   print_info "Launching $MODEL_ROLE model on port $PORT..."
-  cd "$HOME/.config/llm-doctrine"
+  audit_log "MODEL_LAUNCH" "STARTED" "Model: $MODEL_ROLE, Port: $PORT"
   
-  source ~/torch-env/bin/activate
+  cd "$HOME/.config/llm-doctrine" || {
+    print_error "Failed to change to bootstrap directory"
+    audit_log "MODEL_LAUNCH" "FAILED" "Cannot cd to bootstrap directory"
+    exit 1
+  }
+  
+  # Source activation and start with proper error handling
+  if ! source "$HOME/torch-env/bin/activate" 2>&1; then
+    print_error "Failed to activate virtual environment"
+    audit_log "MODEL_LAUNCH" "FAILED" "Virtual environment activation failed"
+    exit 1
+  fi
+
   nohup python3 -m vllm.entrypoints.openai.api_server \
     --model Qwen/Qwen2.5-0.5B-Instruct \
     --port $PORT \
@@ -181,13 +226,24 @@ launch_model() {
 
   MODEL_PID=$!
   print_info "Model process started (PID: $MODEL_PID)"
+  audit_log "MODEL_LAUNCH" "PROCESS_STARTED" "PID: $MODEL_PID"
 
   # Wait for model to be ready
   print_info "Waiting up to ${TIMEOUT}s for model to become ready..."
   ELAPSED=0
   while [ $ELAPSED -lt $TIMEOUT ]; do
+    # Check if process still exists
+    if ! kill -0 "$MODEL_PID" 2>/dev/null; then
+      print_error "Model process exited prematurely (PID: $MODEL_PID)"
+      print_warning "Last 30 lines of log:"
+      tail -30 logs/fast_${PORT}.log || true
+      audit_log "MODEL_LAUNCH" "FAILED" "Process exited prematurely"
+      exit 1
+    fi
+
     if check_port_available; then
       print_success "Model is ready on port $PORT!"
+      audit_log "MODEL_LAUNCH" "SUCCESS" "Model ready on port $PORT (PID: $MODEL_PID)"
       return 0
     fi
     sleep 5
@@ -196,8 +252,9 @@ launch_model() {
   done
 
   print_error "Timeout waiting for model to start after ${TIMEOUT}s"
-  print_warning "Last 20 lines of log:"
-  tail -20 logs/fast_${PORT}.log || true
+  print_warning "Model process may still be initializing. Last 30 lines of log:"
+  tail -30 logs/fast_${PORT}.log || true
+  audit_log "MODEL_LAUNCH" "FAILED" "Timeout after ${TIMEOUT}s"
   exit 1
 }
 
@@ -206,24 +263,48 @@ verify_model() {
 
   if ! check_port_available; then
     print_error "Model not responding on port $PORT"
+    print_error "This could mean:"
+    print_error "  - Model failed to start (check logs with: tail logs/fast_${PORT}.log)"
+    print_error "  - Model is still loading (wait longer and retry)"
+    print_error "  - Port $PORT is already in use by another process"
     exit 1
   fi
 
   # Test health endpoint
   print_info "Testing health endpoint..."
-  if curl -s http://localhost:$PORT/health > /dev/null 2>&1; then
-    print_success "Health endpoint OK"
+  HEALTH_RESPONSE=$(curl -s -w "\n%{http_code}" http://localhost:$PORT/health 2>&1)
+  HEALTH_CODE=$(echo "$HEALTH_RESPONSE" | tail -n1)
+  HEALTH_BODY=$(echo "$HEALTH_RESPONSE" | head -n-1)
+  
+  if [ "$HEALTH_CODE" = "200" ]; then
+    print_success "Health endpoint OK (HTTP 200)"
   else
-    print_error "Health endpoint failed"
+    print_error "Health endpoint failed (HTTP $HEALTH_CODE)"
+    print_error "Response: $HEALTH_BODY"
     exit 1
   fi
 
-  # Test models endpoint
-  print_info "Testing models endpoint..."
-  if curl -s http://localhost:$PORT/v1/models | grep -q "default"; then
-    print_success "Models endpoint OK"
+  # Test models endpoint (with authentication)
+  print_info "Testing models endpoint with authentication..."
+  AUTH_TOKEN="fallback-token-12345"
+  MODELS_RESPONSE=$(curl -s -w "\n%{http_code}" \
+    -H "Authorization: Bearer $AUTH_TOKEN" \
+    http://localhost:$PORT/v1/models 2>&1)
+  MODELS_CODE=$(echo "$MODELS_RESPONSE" | tail -n1)
+  MODELS_BODY=$(echo "$MODELS_RESPONSE" | head -n-1)
+  
+  if [ "$MODELS_CODE" = "200" ]; then
+    if echo "$MODELS_BODY" | grep -q "default"; then
+      print_success "Models endpoint OK (returned 'default' model)"
+    else
+      print_error "Models endpoint returned invalid response"
+      print_error "Response: $MODELS_BODY"
+      exit 1
+    fi
   else
-    print_error "Models endpoint failed"
+    print_error "Models endpoint failed (HTTP $MODELS_CODE)"
+    print_error "Response: $MODELS_BODY"
+    print_error "Hint: The server may require authentication (Bearer token)"
     exit 1
   fi
 }
@@ -233,6 +314,8 @@ run_tests() {
 
   print_info "Starting Playwright tests..."
   print_info "Test file: tests/e2e/cli-chat-1b.spec.ts"
+  
+  audit_log "TEST_RUN" "STARTED" "CLI chat 1B tier tests started"
 
   # Run tests with detailed output
   npm run test:1b -- \
@@ -244,8 +327,10 @@ run_tests() {
 
   if [ $TEST_EXIT -eq 0 ]; then
     print_success "All tests passed!"
+    audit_log "TEST_RUN" "SUCCESS" "All tests passed"
   else
     print_error "Some tests failed (exit code: $TEST_EXIT)"
+    audit_log "TEST_RUN" "FAILED" "Tests failed with exit code: $TEST_EXIT"
   fi
 
   return $TEST_EXIT
@@ -276,9 +361,13 @@ cleanup() {
     print_header "Cleanup"
     print_info "Stopping model on port $PORT..."
     pkill -f "vllm.*$PORT" || true
+    pkill -f "fallback-openai-server.py.*$PORT" || true
+    sleep 1
     print_success "Model stopped"
+    audit_log "CLEANUP" "SUCCESS" "Model processes terminated"
   else
-    print_info "Model left running. Stop with: pkill -f vllm"
+    print_info "Model left running. Stop with: pkill -f 'vllm.*$PORT' || pkill -f 'fallback-openai.*$PORT'"
+    audit_log "CLEANUP" "SKIPPED" "Cleanup disabled"
   fi
 }
 
@@ -290,6 +379,9 @@ main() {
   print_header "1B Tier Test Runner"
   print_info "Testing vLLM-Doctrine 1B model on port $PORT"
   print_info "Platform: $(uname -s)"
+  
+  START_TIME=$(date '+%Y-%m-%d %H:%M:%S')
+  audit_log "TEST_SESSION" "STARTED" "Platform: $(uname -s), Port: $PORT, Time: $START_TIME"
 
   check_prerequisites
   install_dependencies
@@ -300,6 +392,7 @@ main() {
   else
     print_warning "Skipping model launch and verification"
     print_info "Tests will attempt to connect to existing model on port $PORT"
+    audit_log "MODEL_VERIFICATION" "SKIPPED" "Model verification disabled"
   fi
 
   # Run tests
@@ -311,6 +404,14 @@ main() {
 
   # Cleanup if requested
   cleanup
+
+  # Final audit log
+  END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
+  if [ $TEST_RESULT -eq 0 ]; then
+    audit_log "TEST_SESSION" "COMPLETED" "Time: $END_TIME, Status: SUCCESS, Exit Code: 0"
+  else
+    audit_log "TEST_SESSION" "COMPLETED" "Time: $END_TIME, Status: FAILED, Exit Code: $TEST_RESULT"
+  fi
 
   # Exit with test result
   exit $TEST_RESULT

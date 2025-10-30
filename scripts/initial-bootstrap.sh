@@ -31,36 +31,108 @@ echo "🏗️ Initial Bootstrap (v$DOCTRINE_VERSION): preparing the temple..."
 # --- System prep with dependency checks ---
 echo "📦 Checking system dependencies..."
 
+# Audit logging setup
+AUDIT_LOG="${HOME}/.config/llm-doctrine/audit.log"
+mkdir -p "$(dirname "$AUDIT_LOG")"
+
+audit_log() {
+  local action="$1"
+  local status="$2"
+  local details="${3:-}"
+  local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+  echo "$timestamp [${status}] [${action}] ${details}" >> "$AUDIT_LOG"
+}
+
 # Function to check if command exists
 command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+# ALLOWLIST: Only packages we explicitly allow for installation
+# This prevents privilege escalation attacks via package injection
+ALLOWED_PACKAGES=(
+  "python3"
+  "python3-venv"
+  "python3-dev"
+  "pip"
+  "git"
+  "curl"
+  "wget"
+  "tmux"
+  "netcat-openbsd"
+  "build-essential"
+  "gcc"
+  "g++"
+  "make"
+)
+
+# Function to validate package name against allowlist
+validate_package() {
+  local pkg="$1"
+  local allowed
+  for allowed in "${ALLOWED_PACKAGES[@]}"; do
+    if [ "$pkg" = "$allowed" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Check required dependencies
 MISSING_DEPS=""
+MISSING_CMDS=""
+
 for cmd in python3 pip git curl tmux nc; do
   if ! command_exists "$cmd"; then
-    MISSING_DEPS="$MISSING_DEPS $cmd"
+    MISSING_CMDS="$MISSING_CMDS $cmd"
+    # Map command to package name
+    case "$cmd" in
+      python3) MISSING_DEPS="$MISSING_DEPS python3" ;;
+      pip) MISSING_DEPS="$MISSING_DEPS python3-pip" ;;
+      git) MISSING_DEPS="$MISSING_DEPS git" ;;
+      curl) MISSING_DEPS="$MISSING_DEPS curl" ;;
+      tmux) MISSING_DEPS="$MISSING_DEPS tmux" ;;
+      nc) MISSING_DEPS="$MISSING_DEPS netcat-openbsd" ;;
+    esac
   fi
 done
 
-# Check for netcat variants
-if ! command_exists nc && ! command_exists netcat; then
-  MISSING_DEPS="$MISSING_DEPS netcat-openbsd"
-fi
-
+# Validate all packages before proceeding
 if [ -n "$MISSING_DEPS" ]; then
-  echo "⚠️  Missing dependencies:$MISSING_DEPS"
-  echo "🔄 Installing missing system dependencies..."
+  echo "⚠️  Missing dependencies:$MISSING_CMDS"
+  
+  # Validate each package against allowlist
+  for pkg in $MISSING_DEPS; do
+    if ! validate_package "$pkg"; then
+      echo "❌ SECURITY ERROR: Package '$pkg' not in approved installation list"
+      audit_log "PACKAGE_INSTALL" "BLOCKED" "Attempted to install non-allowlisted package: $pkg"
+      exit 1
+    fi
+  done
+  
+  echo "🔄 Installing system dependencies (validated)..."
   echo "📝 This may require sudo privileges. Please enter your password if prompted."
-  sudo apt update
-  sudo apt install -y$MISSING_DEPS || {
-    echo "❌ Failed to install dependencies. Please install manually:"
-    echo "   sudo apt update && sudo apt install -y$MISSING_DEPS"
+  audit_log "PACKAGE_INSTALL" "STARTED" "Packages: $MISSING_DEPS"
+  
+  # Install with proper quoting to prevent injection
+  if sudo apt-get update 2>/dev/null; then
+    if sudo apt-get install -y $MISSING_DEPS 2>/dev/null; then
+      echo "✅ Dependencies installed successfully"
+      audit_log "PACKAGE_INSTALL" "SUCCESS" "Packages installed: $MISSING_DEPS"
+    else
+      echo "❌ Failed to install dependencies. Please install manually:"
+      echo "   sudo apt-get update && sudo apt-get install -y $MISSING_DEPS"
+      audit_log "PACKAGE_INSTALL" "FAILED" "apt-get install failed for: $MISSING_DEPS"
+      exit 1
+    fi
+  else
+    echo "❌ Failed to update package list"
+    audit_log "PACKAGE_INSTALL" "FAILED" "apt-get update failed"
     exit 1
-  }
+  fi
 else
   echo "✅ All system dependencies found"
+  audit_log "DEPENDENCIES_CHECK" "SUCCESS" "All required dependencies present"
 fi
 
 # --- Virtual environment ---
@@ -268,7 +340,7 @@ for PORT in $(seq "$START" "$END"); do
 
     if [ "$FORCE_FALLBACK" -eq 1 ]; then
       echo "⚠️  Low-memory CPU-only system detected. Starting lightweight fallback server instead of vLLM."
-      nohup python3 ./fallback-openai-server.py --port "$PORT" --model "$MODEL" >> "$LOG_FILE" 2>&1 &
+      nohup python3 ./fallback-openai-server.py --port "$PORT" --model "$MODEL" --token "fallback-token-12345" >> "$LOG_FILE" 2>&1 &
       FALLBACK_PID=$!
       echo "ℹ️  Fallback server PID: $FALLBACK_PID"
       wait $FALLBACK_PID
@@ -308,7 +380,7 @@ for PORT in $(seq "$START" "$END"); do
       if kill -0 "$VLLM_PID" 2>/dev/null; then
         kill "$VLLM_PID" 2>/dev/null || true
       fi
-      nohup python3 ./fallback-openai-server.py --port "$PORT" --model "$MODEL" >> "$LOG_FILE" 2>&1 &
+      nohup python3 ./fallback-openai-server.py --port "$PORT" --model "$MODEL" --token "fallback-token-12345" >> "$LOG_FILE" 2>&1 &
       FALLBACK_PID=$!
       echo "ℹ️  Fallback server PID: $FALLBACK_PID"
       wait $FALLBACK_PID

@@ -48,16 +48,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
@@ -110,7 +110,7 @@ jobs:
           # Wait for health endpoint with timeout
           ELAPSED=0
           while [ $ELAPSED -lt 300 ]; do
-            if curl -s -f http://localhost:${{ matrix.tier.port }}/health > /dev/null 2>&1; then
+            if curl -s -f -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health > /dev/null 2>&1; then
               echo "✅ Model ready on port ${{ matrix.tier.port }}"
               break
             fi
@@ -121,7 +121,7 @@ jobs:
           
           if [ $ELAPSED -ge 300 ]; then
             echo "❌ Timeout waiting for model"
-            curl -v http://localhost:${{ matrix.tier.port }}/health || true
+            curl -v -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health || true
             exit 1
           fi
 
@@ -129,10 +129,10 @@ jobs:
         if: matrix.tier.skip == false
         run: |
           echo "Testing model health..."
-          curl -s http://localhost:${{ matrix.tier.port }}/health | jq . || curl -v http://localhost:${{ matrix.tier.port }}/health
+          curl -s -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health | jq . || curl -v -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/health
           
           echo "Testing models endpoint..."
-          curl -s http://localhost:${{ matrix.tier.port }}/v1/models | jq . || echo "Models endpoint failed"
+          curl -s -H "Authorization: Bearer fallback-token-12345" http://localhost:${{ matrix.tier.port }}/v1/models | jq . || echo "Models endpoint failed"
 
       - name: Run test for ${{ matrix.tier.name }}
         if: matrix.tier.skip == false

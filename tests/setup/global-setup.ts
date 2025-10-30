@@ -5,7 +5,11 @@ import { chromium, FullConfig } from '@playwright/test';
  * 
  * This setup validates that the testing environment is ready
  * and models are accessible before running the test suite.
+ * 
+ * Includes Bearer token authentication for secure fallback servers.
  */
+const AUTH_TOKEN = 'fallback-token-12345'; // Match fallback server default
+
 async function globalSetup(config: FullConfig) {
   console.log('🚀 vLLM-Doctrine E2E Test Setup');
   console.log('================================');
@@ -22,6 +26,7 @@ async function globalSetup(config: FullConfig) {
       try {
         console.log(`🔍 Checking for model on port ${port}...`);
         
+        // Health check (no auth required)
         const response = await page.request.get(`http://localhost:${port}/health`, {
           timeout: 2000
         });
@@ -30,9 +35,13 @@ async function globalSetup(config: FullConfig) {
           console.log(`✅ Model found on port ${port}`);
           modelsFound++;
           
-          // Get model info
+          // Get model info (with Bearer token for secure servers)
           try {
-            const modelsResponse = await page.request.get(`http://localhost:${port}/v1/models`);
+            const modelsResponse = await page.request.get(`http://localhost:${port}/v1/models`, {
+              headers: {
+                'Authorization': `Bearer ${AUTH_TOKEN}`
+              }
+            });
             if (modelsResponse.ok()) {
               const data = await modelsResponse.json();
               if (data.data && data.data.length > 0) {

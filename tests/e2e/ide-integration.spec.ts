@@ -7,6 +7,9 @@
 import { test, expect } from '@playwright/test';
 import { launchModel, stopAllModels } from '../utils/model-utils';
 
+// Authentication token for fallback server (matches fallback server config)
+const AUTH_TOKEN = 'fallback-token-12345';
+
 test.describe('IDE Integration Validation', () => {
   
   test.beforeEach(async () => {
@@ -99,7 +102,10 @@ test.describe('IDE Integration Validation', () => {
       for (const request of riderRequests) {
         const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${AUTH_TOKEN}`
+          },
           body: JSON.stringify(request.payload)
         });
         
@@ -145,7 +151,10 @@ test.describe('IDE Integration Validation', () => {
       for (const scenario of completionScenarios) {
         const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${AUTH_TOKEN}`
+          },
           body: JSON.stringify({
             model: 'default',
             messages: [
@@ -231,7 +240,10 @@ test.describe('IDE Integration Validation', () => {
       for (const request of vsRequests) {
         const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${AUTH_TOKEN}`
+          },
           body: JSON.stringify({
             model: 'default',
             messages: request.messages,
@@ -262,7 +274,10 @@ test.describe('IDE Integration Validation', () => {
       // Test streaming endpoint (if supported by vLLM)
       const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AUTH_TOKEN}`
+        },
         body: JSON.stringify({
           model: 'default',
           messages: [
@@ -345,7 +360,10 @@ test.describe('IDE Integration Validation', () => {
       for (const format of ideFormats) {
         const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${AUTH_TOKEN}`
+          },
           body: JSON.stringify({
             model: 'default',
             messages: format.messages,

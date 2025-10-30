@@ -12,6 +12,9 @@ const fetch = globalThis.fetch || require('node-fetch');
 
 const execAsync = promisify(exec);
 
+// Authentication token for fallback server (matches fallback server config)
+const AUTH_TOKEN = 'fallback-token-12345';
+
 export interface ModelTier {
   name: string;
   role: 'fast' | 'edit' | 'qa' | 'plan';
@@ -83,7 +86,10 @@ export const MODEL_TIERS: ModelTier[] = [
 async function checkPortHealth(port: number): Promise<boolean> {
   try {
     const response = await fetch(`http://localhost:${port}/health`, {
-      timeout: 5000
+      timeout: 5000,
+      headers: {
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      }
     });
     return response.ok;
   } catch (error) {
@@ -179,7 +185,10 @@ export async function stopAllModels(): Promise<void> {
 export async function isPortAvailable(port: number): Promise<boolean> {
   try {
     const response = await fetch(`http://localhost:${port}/health`, {
-      timeout: 3000
+      timeout: 3000,
+      headers: {
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      }
     });
     return response.ok;
   } catch (error) {
@@ -214,7 +223,11 @@ export async function testOpenAICompatibility(port: number): Promise<{
   
   // Test health endpoint
   try {
-    const response = await fetch(`${baseUrl}/health`);
+    const response = await fetch(`${baseUrl}/health`, {
+      headers: {
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      }
+    });
     results.health = response.ok;
   } catch (error) {
     results.errors.push(`Health check failed: ${error instanceof Error ? error.message : String(error)}`);
@@ -222,7 +235,11 @@ export async function testOpenAICompatibility(port: number): Promise<{
   
   // Test models endpoint
   try {
-    const response = await fetch(`${baseUrl}/v1/models`);
+    const response = await fetch(`${baseUrl}/v1/models`, {
+      headers: {
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      }
+    });
     if (response.ok) {
       const data = await response.json();
       results.models = true;
@@ -238,6 +255,7 @@ export async function testOpenAICompatibility(port: number): Promise<{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AUTH_TOKEN}`
       },
       body: JSON.stringify({
         model: 'default',
@@ -272,7 +290,10 @@ async function makeChatRequest(
 ): Promise<string> {
   const response = await fetch(baseUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${AUTH_TOKEN}`
+    },
     body: JSON.stringify({
       model: 'default',
       messages,

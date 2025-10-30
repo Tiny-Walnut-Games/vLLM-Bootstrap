@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+// Authentication token for fallback server (matches fallback server config)
+const AUTH_TOKEN = 'fallback-token-12345';
+
 /**
  * vLLM-Doctrine New User Journey E2E Tests
  * 
@@ -210,12 +213,16 @@ test.describe('Browser-based Model API Testing', () => {
   const modelPort = 8500;
   
   test('Health Check Endpoint', async ({ request }) => {
-    const response = await request.get(`http://localhost:${modelPort}/health`);
+    const response = await request.get(`http://localhost:${modelPort}/health`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+    });
     expect(response.ok()).toBeTruthy();
   });
 
   test('Models Endpoint Returns Valid JSON', async ({ request }) => {
-    const response = await request.get(`http://localhost:${modelPort}/v1/models`);
+    const response = await request.get(`http://localhost:${modelPort}/v1/models`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+    });
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -226,6 +233,7 @@ test.describe('Browser-based Model API Testing', () => {
 
   test('Chat Completion Works', async ({ request }) => {
     const response = await request.post(`http://localhost:${modelPort}/v1/chat/completions`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
       data: {
         model: 'default',
         messages: [
@@ -257,6 +265,7 @@ test.describe('Browser-based Model API Testing', () => {
     ];
 
     const response = await request.post(`http://localhost:${modelPort}/v1/chat/completions`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
       data: {
         model: 'default',
         messages: testMessages,

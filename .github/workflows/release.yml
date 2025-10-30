@@ -19,12 +19,12 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20.x'
           cache: 'npm'
@@ -62,7 +62,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       
@@ -104,7 +104,7 @@ jobs:
           cat release-notes.md
       
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.0.0
         with:
           name: Release v${{ steps.version.outputs.version }}
           body_path: release-notes.md
@@ -116,7 +116,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Upload release artifacts
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.0.0
         with:
           files: |
             scripts/*.sh
@@ -132,7 +132,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       - name: Post release announcement
         run: |

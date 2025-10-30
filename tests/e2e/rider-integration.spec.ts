@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+// Authentication token for fallback server (matches fallback server config)
+const AUTH_TOKEN = 'fallback-token-12345';
+
 /**
  * JetBrains Rider AI Assistant Integration Tests
  * 
@@ -24,7 +27,9 @@ test.describe('Rider AI Assistant Integration', () => {
     console.log('🔍 Verifying OpenAI API compatibility...');
     
     // Test the /v1/models endpoint structure
-    const modelsResponse = await request.get(`${baseUrl}/v1/models`);
+    const modelsResponse = await request.get(`${baseUrl}/v1/models`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+    });
     expect(modelsResponse.ok()).toBeTruthy();
     
     const modelsData = await modelsResponse.json();
@@ -63,6 +68,7 @@ test.describe('Rider AI Assistant Integration', () => {
     };
 
     const response = await request.post(`${baseUrl}/v1/chat/completions`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
       data: chatRequest
     });
 
@@ -106,6 +112,7 @@ test.describe('Rider AI Assistant Integration', () => {
     };
 
     const response = await request.post(`${baseUrl}/v1/chat/completions`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
       data: chatRequest
     });
 
@@ -171,6 +178,7 @@ test.describe('Rider AI Assistant Integration', () => {
       console.log(`  Testing ${testCase.language} code generation...`);
       
       const response = await request.post(`${baseUrl}/v1/chat/completions`, {
+        headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
         data: {
           model: 'default',
           messages: [
@@ -208,6 +216,7 @@ test.describe('Rider AI Assistant Integration', () => {
     
     // Test malformed request
     const malformedResponse = await request.post(`${baseUrl}/v1/chat/completions`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
       data: {
         // Missing required fields
         messages: [],
@@ -218,7 +227,9 @@ test.describe('Rider AI Assistant Integration', () => {
     expect(malformedResponse.status()).toBe(400);
     
     // Test invalid endpoint
-    const invalidResponse = await request.get(`${baseUrl}/v1/invalid-endpoint`);
+    const invalidResponse = await request.get(`${baseUrl}/v1/invalid-endpoint`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+    });
     expect(invalidResponse.status()).toBe(404);
     
     console.log('✅ Error handling works correctly');
@@ -230,6 +241,7 @@ test.describe('Rider AI Assistant Integration', () => {
     const startTime = Date.now();
     
     const response = await request.post(`${baseUrl}/v1/chat/completions`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
       data: {
         model: 'default',
         messages: [

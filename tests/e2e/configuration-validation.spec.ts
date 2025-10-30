@@ -9,6 +9,9 @@ import { readFileSync, existsSync } from 'fs';
 import { execSync } from 'child_process';
 import { launchModel, stopAllModels } from '../utils/model-utils';
 
+// Authentication token for fallback server (matches fallback server config)
+const AUTH_TOKEN = 'fallback-token-12345';
+
 test.describe('Configuration Validation', () => {
   
   test.beforeEach(async () => {
@@ -305,7 +308,10 @@ test.describe('Configuration Validation', () => {
     // Make a request and check that it completes successfully
     const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AUTH_TOKEN}`
+      },
       body: JSON.stringify({
         model: 'default',
         messages: [
