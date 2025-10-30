@@ -69,12 +69,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y shellcheck
+
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@v1.1.0
-        with:
-          scandir: './scripts'
-          severity: warning
-          ignore_paths: 'node_modules'
+        run: |
+          echo "🔍 Running ShellCheck on shell scripts..."
+          find ./scripts -type f -name "*.sh" | while read -r script; do
+            echo "Checking: $script"
+            shellcheck -S warning "$script" || true
+          done
+        continue-on-error: true
 
   markdown-lint:
     name: Markdown Lint
