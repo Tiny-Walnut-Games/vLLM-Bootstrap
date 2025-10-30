@@ -24,6 +24,7 @@ test.describe('Rider AI Assistant Integration', () => {
   });
 
   test('Verify OpenAI Compatible API Structure', async ({ request }) => {
+    // eslint-disable-next-line no-console
     console.log('🔍 Verifying OpenAI API compatibility...');
 
     // Test the /v1/models endpoint structure
@@ -43,11 +44,13 @@ test.describe('Rider AI Assistant Integration', () => {
       expect(model).toHaveProperty('id');
       expect(model).toHaveProperty('object', 'model');
       expect(model).toHaveProperty('created');
+      // eslint-disable-next-line no-console
       console.log(`✅ Model available: ${model.id}`);
     }
   });
 
   test('Test Chat Completions Endpoint Compatibility', async ({ request }) => {
+    // eslint-disable-next-line no-console
     console.log('💬 Testing chat completions compatibility...');
 
     const chatRequest = {
@@ -92,10 +95,12 @@ test.describe('Rider AI Assistant Integration', () => {
     const content = choice.message.content;
     expect(content).toContain('public');
     expect(content).toContain('int');
+    // eslint-disable-next-line no-console
     console.log(`✅ Generated C# code:\n${content}`);
   });
 
   test('Test Streaming Chat Completions', async ({ request }) => {
+    // eslint-disable-next-line no-console
     console.log('🌊 Testing streaming chat completions...');
 
     const chatRequest = {
@@ -144,16 +149,19 @@ test.describe('Rider AI Assistant Integration', () => {
         }
       } catch (e) {
         // Some chunks might be malformed, that's ok for this test
+        // eslint-disable-next-line no-console
         console.warn(`Skipped malformed chunk: ${line}`);
       }
     }
 
     expect(fullContent.length).toBeGreaterThan(0);
     expect(fullContent.toLowerCase()).toContain('linq');
+    // eslint-disable-next-line no-console
     console.log(`✅ Streamed content length: ${fullContent.length} chars`);
   });
 
   test('Test Code Generation Capabilities', async ({ request }) => {
+    // eslint-disable-next-line no-console
     console.log('💻 Testing code generation capabilities...');
 
     const codePrompts = [
@@ -176,6 +184,7 @@ test.describe('Rider AI Assistant Integration', () => {
     ];
 
     for (const testCase of codePrompts) {
+      // eslint-disable-next-line no-console
       console.log(`  Testing ${testCase.language} code generation...`);
 
       const response = await request.post(`${baseUrl}/v1/chat/completions`, {
@@ -207,6 +216,7 @@ test.describe('Rider AI Assistant Integration', () => {
         content.toLowerCase().includes(keyword.toLowerCase()),
       );
 
+      // eslint-disable-next-line no-console
       console.log(
         `    Found ${foundKeywords.length}/${testCase.expectedKeywords.length} expected keywords`,
       );
@@ -215,6 +225,7 @@ test.describe('Rider AI Assistant Integration', () => {
   });
 
   test('Test Error Handling', async ({ request }) => {
+    // eslint-disable-next-line no-console
     console.log('⚠️ Testing error handling...');
 
     // Test malformed request
@@ -235,10 +246,12 @@ test.describe('Rider AI Assistant Integration', () => {
     });
     expect(invalidResponse.status()).toBe(404);
 
+    // eslint-disable-next-line no-console
     console.log('✅ Error handling works correctly');
   });
 
   test('Test Performance Metrics', async ({ request }) => {
+    // eslint-disable-next-line no-console
     console.log('📊 Testing performance metrics...');
 
     const startTime = Date.now();
@@ -262,19 +275,26 @@ test.describe('Rider AI Assistant Integration', () => {
 
     // Check if usage statistics are provided
     if (data.usage) {
+      // eslint-disable-next-line no-console
       console.log(`  Prompt tokens: ${data.usage.prompt_tokens}`);
+      // eslint-disable-next-line no-console
       console.log(`  Completion tokens: ${data.usage.completion_tokens}`);
+      // eslint-disable-next-line no-console
       console.log(`  Total tokens: ${data.usage.total_tokens}`);
     }
 
+    // eslint-disable-next-line no-console
     console.log(`  Response time: ${responseTime}ms`);
 
     // Performance expectations
     if (responseTime > 30000) {
+      // eslint-disable-next-line no-console
       console.warn(`⚠️ Slow response time: ${responseTime}ms (CPU mode?)`);
     } else if (responseTime > 5000) {
+      // eslint-disable-next-line no-console
       console.log(`⚡ Moderate response time: ${responseTime}ms (GPU mode)`);
     } else {
+      // eslint-disable-next-line no-console
       console.log(`🚀 Fast response time: ${responseTime}ms`);
     }
 
@@ -284,6 +304,7 @@ test.describe('Rider AI Assistant Integration', () => {
 
 test.describe('Rider Configuration Scenarios', () => {
   test('Generate Rider Settings Configuration', async () => {
+    // eslint-disable-next-line no-console
     console.log('⚙️ Generating Rider configuration guide...');
 
     const configurationSteps = [
@@ -334,10 +355,15 @@ test.describe('Rider Configuration Scenarios', () => {
     ];
 
     configurationSteps.forEach((step) => {
+      // eslint-disable-next-line no-console
       console.log(`\n${step.step}. ${step.action}`);
       if (Array.isArray(step.details)) {
-        step.details.forEach((detail) => console.log(`   • ${detail}`));
+        step.details.forEach((detail) => {
+          // eslint-disable-next-line no-console
+          console.log(`   • ${detail}`);
+        });
       } else {
+        // eslint-disable-next-line no-console
         console.log(`   ${step.details}`);
       }
     });
@@ -346,6 +372,7 @@ test.describe('Rider Configuration Scenarios', () => {
   });
 
   test('Common Integration Issues and Solutions', async () => {
+    // eslint-disable-next-line no-console
     console.log('🔧 Common Rider integration issues...');
 
     const commonIssues = [
@@ -392,11 +419,16 @@ test.describe('Rider Configuration Scenarios', () => {
     ];
 
     commonIssues.forEach((issue, index) => {
+      // eslint-disable-next-line no-console
       console.log(`\n${index + 1}. ${issue.issue}`);
+      // eslint-disable-next-line no-console
       console.log(`   Symptoms: ${issue.symptoms.join(', ')}`);
+      // eslint-disable-next-line no-console
       console.log(`   Causes: ${issue.causes.join(', ')}`);
+      // eslint-disable-next-line no-console
       console.log('   Solutions:');
       issue.solutions.forEach((solution) => {
+        // eslint-disable-next-line no-console
         console.log(`     • ${solution}`);
       });
     });
@@ -405,6 +437,7 @@ test.describe('Rider Configuration Scenarios', () => {
   });
 
   test('Multi-Model Setup for Different Use Cases', async () => {
+    // eslint-disable-next-line no-console
     console.log('🎯 Multi-model setup recommendations...');
 
     const setupRecommendations = [
@@ -445,11 +478,15 @@ test.describe('Rider Configuration Scenarios', () => {
     ];
 
     setupRecommendations.forEach((setup, index) => {
+      // eslint-disable-next-line no-console
       console.log(`\n${index + 1}. ${setup.useCase}`);
+      // eslint-disable-next-line no-console
       console.log('   Models:');
       setup.models.forEach((model) => {
+        // eslint-disable-next-line no-console
         console.log(`     • ${model.tier} (port ${model.port}): ${model.purpose}`);
       });
+      // eslint-disable-next-line no-console
       console.log(`   Rider Configuration: ${setup.riderConfig}`);
     });
 
