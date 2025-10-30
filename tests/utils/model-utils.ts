@@ -42,11 +42,7 @@ export const MODEL_TIERS: ModelTier[] = [
     tier: '4B',
     portStart: 8300,
     portEnd: 8499,
-    models: [
-      'microsoft/phi-3.5-mini-instruct',
-      'google/gemma-3-4b',
-      'cerebras/Cerebras-GPT-2.7B',
-    ],
+    models: ['microsoft/phi-3.5-mini-instruct', 'google/gemma-3-4b', 'cerebras/Cerebras-GPT-2.7B'],
     expectedTemplate: 'phi3',
   },
   {
@@ -99,10 +95,7 @@ async function checkPortHealth(port: number): Promise<boolean> {
 /**
  * Scan port range for an available model server
  */
-async function findAvailablePort(
-  portStart: number,
-  portEnd: number,
-): Promise<number | null> {
+async function findAvailablePort(portStart: number, portEnd: number): Promise<number | null> {
   for (let port = portStart; port <= portEnd; port++) {
     const isHealthy = await checkPortHealth(port);
     if (isHealthy) {
@@ -131,10 +124,7 @@ async function cleanupExistingProcesses(): Promise<void> {
 /**
  * Launch a model server for the specified tier
  */
-export async function launchModel(
-  role: ModelTier['role'],
-  timeout = 120000,
-): Promise<number> {
+export async function launchModel(role: ModelTier['role'], timeout = 120000): Promise<number> {
   console.log(`🚀 Launching ${role} model...`);
 
   await cleanupExistingProcesses();
@@ -253,12 +243,7 @@ export async function testOpenAICompatibility(port: number): Promise<{
       const data = (await response.json()) as unknown;
 
       // Type-safe validation
-      if (
-        typeof data === 'object' &&
-        data !== null &&
-        'data' in data &&
-        Array.isArray(data.data)
-      ) {
+      if (typeof data === 'object' && data !== null && 'data' in data && Array.isArray(data.data)) {
         results.models = true;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         results.modelList = (data.data as any[]).map((m: any) => m.id) || [];

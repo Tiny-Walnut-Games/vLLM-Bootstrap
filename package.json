@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "playwright test",
+    "test:ci": "playwright test tests/e2e/configuration-validation.spec.ts --reporter=html --reporter=json --reporter=junit",
     "test:1b": "playwright test tests/e2e/cli-chat-1b.spec.ts --reporter=html --reporter=json --reporter=junit",
     "test:api": "playwright test tests/e2e/api-validation.spec.ts",
     "test:model": "playwright test tests/e2e/mental-model.spec.ts",

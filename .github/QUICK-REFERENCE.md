@@ -3,38 +3,45 @@
 ## 🎯 What Changed?
 
 ### 1️⃣ Security: Fixed Command Injection
+
 **File**: `scripts/initial-bootstrap.sh`
+
 - ✅ Package installation now safe from injection attacks
 - ✅ Uses array expansion instead of string splitting
 
 ### 2️⃣ Security: Externalized Tokens
+
 **Files**: 13 files updated
+
 - ✅ No hardcoded secrets in code
 - ✅ Uses environment variables: `$FALLBACK_AUTH_TOKEN`
 - ✅ Defaults provided for backward compatibility
 
 ### 3️⃣ CI/CD: Updated Versions
+
 **File**: `.github/workflows/lint.yml`
+
 - ✅ GitHub Actions versions standardized to @v5
 
 ---
 
 ## 📊 Statistics
 
-| Metric | Result |
-|--------|--------|
-| Files Modified | 13 |
-| Vulnerabilities Fixed | 2 |
-| Hardcoded Secrets Removed | 17 |
-| Documentation Pages Added | 4 |
-| Backward Compatibility | ✅ 100% |
-| Test Coverage | ✅ 100% |
+| Metric                    | Result  |
+| ------------------------- | ------- |
+| Files Modified            | 13      |
+| Vulnerabilities Fixed     | 2       |
+| Hardcoded Secrets Removed | 17      |
+| Documentation Pages Added | 4       |
+| Backward Compatibility    | ✅ 100% |
+| Test Coverage             | ✅ 100% |
 
 ---
 
 ## 🚀 For Developers
 
 ### Local Development
+
 ```bash
 # Just works! Uses defaults
 npm test
@@ -45,6 +52,7 @@ npm test
 ```
 
 ### WSL/Ubuntu Scripts
+
 ```bash
 # Just works! Uses defaults
 ./scripts/initial-bootstrap.sh
@@ -60,12 +68,14 @@ export FALLBACK_AUTH_TOKEN="my-token"
 ## 🔐 For DevOps/Release Engineers
 
 ### GitHub Actions with Secrets
+
 ```yaml
 env:
   FALLBACK_AUTH_TOKEN: ${{ secrets.FALLBACK_AUTH_TOKEN }}
 ```
 
 ### Set GitHub Secret
+
 1. Go to: Settings > Secrets and variables > Actions
 2. Click: New repository secret
 3. Name: `FALLBACK_AUTH_TOKEN`
@@ -75,19 +85,20 @@ env:
 
 ## 📁 New Documentation Files
 
-| File | Purpose | Length |
-|------|---------|--------|
-| `.github/SECURITY_IMPROVEMENTS.md` | Detailed security fixes | 200+ lines |
-| `.github/PIPELINE-VALIDATION.md` | Pipeline architecture | 300+ lines |
-| `.github/PIPELINE-STRENGTHENING-SUMMARY.md` | Release summary | 250+ lines |
-| `.github/PIPELINE-STRENGTHENING-CHECKLIST.md` | Verification checklist | 400+ lines |
-| `.env.example` | Environment variables | 60+ lines |
+| File                                          | Purpose                 | Length     |
+| --------------------------------------------- | ----------------------- | ---------- |
+| `.github/SECURITY_IMPROVEMENTS.md`            | Detailed security fixes | 200+ lines |
+| `.github/PIPELINE-VALIDATION.md`              | Pipeline architecture   | 300+ lines |
+| `.github/PIPELINE-STRENGTHENING-SUMMARY.md`   | Release summary         | 250+ lines |
+| `.github/PIPELINE-STRENGTHENING-CHECKLIST.md` | Verification checklist  | 400+ lines |
+| `.env.example`                                | Environment variables   | 60+ lines  |
 
 ---
 
 ## ✅ Verification
 
 ### Check Security Fixes
+
 ```bash
 # View the fixed package installation
 grep -A 15 "VALIDATED_DEPS" scripts/initial-bootstrap.sh
@@ -97,6 +108,7 @@ grep -n "FALLBACK_AUTH_TOKEN" tests/setup/global-setup.ts
 ```
 
 ### Check Environment Variables
+
 ```bash
 # In shell scripts
 grep "FALLBACK_TOKEN=" scripts/initial-bootstrap.sh

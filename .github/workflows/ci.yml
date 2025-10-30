@@ -28,20 +28,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+      - name: Run TypeScript linting
+        run: npm run lint
 
-      - name: Run linting
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run format check
+        run: npm run format:check
+
+      - name: Run configuration validation tests
         run: |
-          # Check for common issues in shell scripts
-          if command -v shellcheck &> /dev/null; then
-            find scripts -name "*.sh" -exec shellcheck {} \;
-          else
-            echo "shellcheck not available, skipping shell script linting"
-          fi
-
-      - name: Run tests
-        run: npm test
+          npx playwright install --with-deps chromium
+          npx playwright test tests/e2e/configuration-validation.spec.ts --reporter=html --reporter=json --reporter=junit
         env:
           CI: true
 

@@ -36,18 +36,15 @@ async function chatWithModel(prompt: string, maxTokens = 30): Promise<string> {
     const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT);
 
     try {
-      const response = await fetch(
-        `http://localhost:${FAST_TIER_PORT}/v1/chat/completions`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${AUTH_TOKEN}`,
-          },
-          body: JSON.stringify(payload),
-          signal: controller.signal,
+      const response = await fetch(`http://localhost:${FAST_TIER_PORT}/v1/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${AUTH_TOKEN}`,
         },
-      );
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -76,9 +73,7 @@ async function chatWithModel(prompt: string, maxTokens = 30): Promise<string> {
         !('content' in choice.message) ||
         typeof choice.message.content !== 'string'
       ) {
-        throw new Error(
-          'Invalid response structure: message content is not a string',
-        );
+        throw new Error('Invalid response structure: message content is not a string');
       }
 
       return choice.message.content;
@@ -202,14 +197,11 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
   });
 
   test('should list available models via API', async () => {
-    const response = await fetch(
-      `http://localhost:${FAST_TIER_PORT}/v1/models`,
-      {
-        headers: {
-          Authorization: `Bearer ${AUTH_TOKEN}`,
-        },
+    const response = await fetch(`http://localhost:${FAST_TIER_PORT}/v1/models`, {
+      headers: {
+        Authorization: `Bearer ${AUTH_TOKEN}`,
       },
-    );
+    });
     expect(response.ok).toBe(true);
 
     const data = (await response.json()) as unknown;
@@ -257,8 +249,7 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
     expect(response.trim().length).toBeGreaterThan(0);
 
     // Response should contain "4" or "four"
-    const hasCorrectAnswer =
-      response.includes('4') || response.toLowerCase().includes('four');
+    const hasCorrectAnswer = response.includes('4') || response.toLowerCase().includes('four');
 
     expect(hasCorrectAnswer).toBe(true);
   });
@@ -273,17 +264,13 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
     // Response should look like Python code (contains def, function syntax)
     const lowerResponse = response.toLowerCase();
     const hasFunctionDef =
-      response.includes('def ') ||
-      response.includes('function') ||
-      lowerResponse.includes('def');
+      response.includes('def ') || response.includes('function') || lowerResponse.includes('def');
 
     expect(hasFunctionDef).toBe(true);
 
     // Should have some kind of addition or parameter handling
     const hasAddLogic =
-      response.includes('+') ||
-      response.includes('add') ||
-      response.includes('sum');
+      response.includes('+') || response.includes('add') || response.includes('sum');
 
     expect(hasAddLogic).toBe(true);
   });
@@ -310,9 +297,7 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
     const prompts = ['Say yes', 'Say no', 'Say maybe'];
 
     // Send all requests in parallel
-    const responses = await Promise.all(
-      prompts.map((p) => chatWithModel(p, 20)),
-    );
+    const responses = await Promise.all(prompts.map((p) => chatWithModel(p, 20)));
 
     // All should have responses
     expect(responses.length).toBe(3);
@@ -330,17 +315,14 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
       temperature: 0.7,
     };
 
-    const response = await fetch(
-      `http://localhost:${FAST_TIER_PORT}/v1/chat/completions`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${AUTH_TOKEN}`,
-        },
-        body: JSON.stringify(payload),
+    const response = await fetch(`http://localhost:${FAST_TIER_PORT}/v1/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${AUTH_TOKEN}`,
       },
-    );
+      body: JSON.stringify(payload),
+    });
 
     expect(response.ok).toBe(true);
 
@@ -363,17 +345,14 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
       temperature: 0.7,
     };
 
-    const response = await fetch(
-      `http://localhost:${FAST_TIER_PORT}/v1/chat/completions`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${AUTH_TOKEN}`,
-        },
-        body: JSON.stringify(payload),
+    const response = await fetch(`http://localhost:${FAST_TIER_PORT}/v1/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${AUTH_TOKEN}`,
       },
-    );
+      body: JSON.stringify(payload),
+    });
 
     expect(response.ok).toBe(true);
     const data = (await response.json()) as Record<string, unknown>;
@@ -386,9 +365,7 @@ test.describe('1B Tier (Fast) - CLI Chat Validation', () => {
       Array.isArray((data as Record<string, unknown>)?.choices)
     ) {
       // If it responds, response should be defined
-      expect(
-        ((data as Record<string, unknown>)?.choices as unknown[])[0],
-      ).toBeDefined();
+      expect(((data as Record<string, unknown>)?.choices as unknown[])[0]).toBeDefined();
     }
   });
 
