@@ -1,0 +1,81 @@
+{
+  "config": {
+    "configFile": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\playwright.config.ts",
+    "rootDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\tests\\setup\\global-setup.ts",
+    "globalTeardown": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\tests\\setup\\global-teardown.ts",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "test-reports/html"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-reports/results.json"
+        }
+      ],
+      [
+        "line",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "api-tests",
+        "name": "api-tests",
+        "testDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.(test|spec)\\.ts/"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.0",
+    "workers": 1,
+    "webServer": {
+      "command": "echo \"vLLM models should be started manually before running tests\"",
+      "port": 8500,
+      "reuseExistingServer": true,
+      "timeout": 5000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer exited early.",
+      "stack": "Error: Process from config.webServer exited early."
+    }
+  ],
+  "stats": {
+    "startTime": "2025-11-06T15:17:20.975Z",
+    "duration": 40.26900000000023,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
