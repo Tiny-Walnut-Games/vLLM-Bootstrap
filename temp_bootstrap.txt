@@ -845,3 +845,4 @@ echo "   - Test connection and start chatting!"
 echo ""
 echo "📖 For complete guide, see: docs/guides/complete-setup.md"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+

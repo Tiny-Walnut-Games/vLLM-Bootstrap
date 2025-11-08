@@ -1,0 +1,291 @@
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import { ModelStatus } from './types';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
+
+const execAsync = promisify(exec);
+
+interface HFAuthStatus {
+  authenticated: boolean;
+  username?: string;
+}
+
+interface ModelDownloadStatus {
+  downloaded: boolean;
+  modelPath?: string;
+  size?: string;
+}
+
+export class ModelService {
+  async listModels(): Promise<ModelStatus[]> {
+    try {
+      const { stdout } = await execAsync('wsl bash -c "tmux list-sessions 2>/dev/null"');
+      const sessions = stdout.trim().split('\n').filter(Boolean);
+      
+      const models: ModelStatus[] = [];
+      
+      for (const session of sessions) {
+        const match = session.match(/^vllm-(.+?):/);
+        if (match) {
+          const role = match[1];
+          const port = await this.getPortForRole(role);
+          
+          models.push({
+            name: role,
+            role,
+            status: 'running',
+            port,
+            uptime: this.parseUptime(session)
+          });
+        }
+      }
+      
+      return models;
+    } catch {
+      return [];
+    }
+  }
+
+  async checkHFAuth(): Promise<HFAuthStatus> {
+    try {
+      const { stdout } = await execAsync(
+        'wsl bash -c "source ~/torch-env/bin/activate 2>/dev/null && huggingface-cli whoami 2>&1"',
+        { timeout: 10000 }
+      );
+      
+      if (stdout.includes('Not logged in') || stdout.includes('command not found')) {
+        return { authenticated: false };
+      }
+      
+      const match = stdout.match(/username:\s*(.+)/);
+      return {
+        authenticated: true,
+        username: match ? match[1].trim() : undefined
+      };
+    } catch {
+      return { authenticated: false };
+    }
+  }
+
+  async authenticateHF(token: string): Promise<{ success: boolean; message: string }> {
+    try {
+      if (!token || typeof token !== 'string' || token.length === 0) {
+        return {
+          success: false,
+          message: 'Invalid token provided'
+        };
+      }
+
+      const sanitizedToken = token.replace(/[^a-zA-Z0-9_-]/g, '');
+      if (sanitizedToken.length !== token.length) {
+        return {
+          success: false,
+          message: 'Token contains invalid characters'
+        };
+      }
+
+      console.log('[ModelService] Checking if huggingface-hub is installed...');
+      try {
+        await execAsync('wsl bash -c "huggingface-cli --version"', { timeout: 5000 });
+        console.log('[ModelService] huggingface-cli is available');
+      } catch {
+        console.log('[ModelService] huggingface-cli not found, installing huggingface-hub...');
+        await execAsync(
+          'wsl bash -c "source ~/torch-env/bin/activate 2>/dev/null && pip install huggingface-hub --upgrade || pip install huggingface-hub --upgrade"',
+          { timeout: 30000 }
+        );
+        console.log('[ModelService] huggingface-hub installation complete');
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
+      console.log('[ModelService] Attempting HF authentication...');
+      
+      await execAsync(
+        `wsl bash -c "source ~/torch-env/bin/activate 2>/dev/null && echo '${sanitizedToken}' | huggingface-cli login --token"`,
+        { timeout: 15000 }
+      );
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const verifyStatus = await this.checkHFAuth();
+      console.log('[ModelService] HF verification result:', verifyStatus);
+      
+      if (!verifyStatus.authenticated) {
+        console.warn('[ModelService] Authentication verification failed despite login attempt');
+        return {
+          success: false,
+          message: 'Token was provided but authentication verification failed. The token may be invalid.'
+        };
+      }
+      
+      console.log(`[ModelService] HF authentication successful for user: ${verifyStatus.username}`);
+      return {
+        success: true,
+        message: `Successfully authenticated with HuggingFace as ${verifyStatus.username || 'user'}`
+      };
+    } catch (error) {
+      console.error('[ModelService] HF authentication error:', error);
+      return {
+        success: false,
+        message: `Failed to authenticate with HuggingFace: ${error instanceof Error ? error.message : 'Unknown error'}`
+      };
+    }
+  }
+
+  private sanitizeModelName(modelName: string): string {
+    if (!/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(modelName)) {
+      throw new Error('Invalid model name format. Expected: org/model-name');
+    }
+    return modelName;
+  }
+
+  async downloadModel(modelName: string): Promise<ModelDownloadStatus> {
+    try {
+      const sanitizedModelName = this.sanitizeModelName(modelName);
+      const hubDirName = sanitizedModelName.replace('/', '--');
+      
+      const { stdout: checkOutput } = await execAsync(
+        `wsl bash -c "ls ~/.cache/huggingface/hub/ 2>/dev/null | grep -i '${hubDirName}' || echo ''"`
+      );
+      
+      if (checkOutput.trim()) {
+        const dirName = checkOutput.trim().replace(/[^a-zA-Z0-9_.-]/g, '');
+        const { stdout: sizeOutput } = await execAsync(
+          `wsl bash -c "du -sh ~/.cache/huggingface/hub/${dirName} 2>/dev/null | cut -f1"`
+        );
+        
+        return {
+          downloaded: true,
+          modelPath: `~/.cache/huggingface/hub/${dirName}`,
+          size: sizeOutput.trim()
+        };
+      }
+      
+      console.log(`Downloading model: ${sanitizedModelName}`);
+      await execAsync(
+        `wsl bash -c "python3 -c 'from huggingface_hub import snapshot_download; snapshot_download(\\\"${sanitizedModelName}\\\", local_dir_use_symlinks=True)'"`
+      );
+      
+      return await this.downloadModel(sanitizedModelName);
+    } catch (error) {
+      throw new Error('Failed to download model');
+    }
+  }
+
+  async getModelNameForRole(role: string): Promise<string> {
+    try {
+      const modelsConf = await readFile(
+        join(__dirname, '../../../scripts/models.conf'),
+        'utf-8'
+      );
+      
+      const roleSection = modelsConf.split(`[${role}]`)[1]?.split('[')[0];
+      if (!roleSection) {
+        throw new Error(`Role ${role} not found in models.conf`);
+      }
+      
+      const defaultLine = roleSection
+        .split('\n')
+        .find(line => line.includes('default') && line.includes('='));
+      
+      if (!defaultLine) {
+        throw new Error(`No default model found for role ${role}`);
+      }
+      
+      const modelName = defaultLine.split('=')[1].split('#')[0].trim();
+      return modelName;
+    } catch (error) {
+      console.warn(`Could not read models.conf: ${error}`);
+      return `default-${role}-model`;
+    }
+  }
+
+  async startModel(role: string, modelName?: string): Promise<ModelStatus> {
+    try {
+      const sessionName = `vllm-${role}`;
+      
+      const actualModelName = modelName || await this.getModelNameForRole(role);
+      
+      const authStatus = await this.checkHFAuth();
+      if (!authStatus.authenticated) {
+        throw new Error('HuggingFace authentication required. Please provide HF_TOKEN.');
+      }
+      
+      const sanitizedRole = role.replace(/[^a-z]/g, '');
+      if (sanitizedRole !== role) {
+        throw new Error('Invalid role name');
+      }
+
+      console.log(`Checking if model ${actualModelName} is downloaded...`);
+      const downloadStatus = await this.downloadModel(actualModelName);
+      console.log(`Model status: ${downloadStatus.downloaded ? 'cached' : 'downloading'}`);
+      
+      const { stdout } = await execAsync(
+        `wsl bash -c "cd ~/.config/llm-doctrine && tmux new-session -d -s ${sessionName} './daily-bootstrap.sh ${sanitizedRole}'"`
+      );
+      
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const port = await this.getPortForRole(role);
+      
+      return {
+        name: actualModelName,
+        role,
+        status: 'starting',
+        port
+      };
+    } catch (error) {
+      throw new Error(`Failed to start model: ${error}`);
+    }
+  }
+
+  async stopModel(role: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const sessionName = `vllm-${role}`;
+      await execAsync(`wsl bash -c "tmux kill-session -t ${sessionName}"`);
+      
+      return {
+        success: true,
+        message: `Model ${role} stopped successfully`
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to stop model: ${error}`
+      };
+    }
+  }
+
+  async getModelLogs(role: string, lines: number = 100): Promise<string> {
+    try {
+      const { stdout } = await execAsync(
+        `wsl bash -c "tail -n ${lines} ~/.config/llm-doctrine/logs/${role}*.log 2>/dev/null || echo 'No logs found'"`
+      );
+      return stdout;
+    } catch {
+      return 'No logs available';
+    }
+  }
+
+  private async getPortForRole(role: string): Promise<number | undefined> {
+    try {
+      const portsConf = await readFile(
+        join(__dirname, '../../../scripts/ports.conf'),
+        'utf-8'
+      );
+      
+      const match = portsConf.match(new RegExp(`${role}\\s+(\\d+)`, 'i'));
+      return match ? parseInt(match[1], 10) : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+
+  private parseUptime(sessionLine: string): number {
+    const match = sessionLine.match(/\(created (.+?)\)/);
+    if (!match) return 0;
+    
+    return 0;
+  }
+}
