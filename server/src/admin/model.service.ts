@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { ModelStatus } from './types';
-import { readFile } from 'fs/promises';
+import { readFile, mkdir, writeFile, chmod } from 'fs/promises';
 import { join } from 'path';
 import { modelsConfigService } from './models-config.service';
 
@@ -114,10 +114,12 @@ export class ModelService {
       console.log('[ModelService] Attempting HF authentication...');
       
       try {
-        await execAsync(
-          `bash -c "mkdir -p ~/.cache/huggingface && echo '${sanitizedToken}' > ~/.cache/huggingface/token && chmod 600 ~/.cache/huggingface/token"`,
-          { timeout: 5000 }
-        );
+        // The following steps replace the bash command with native fs operations
+        const cacheDir = `${process.env.HOME || process.env.USERPROFILE}/.cache/huggingface`;
+        await mkdir(cacheDir, { recursive: true });
+        const tokenPath = `${cacheDir}/token`;
+        await writeFile(tokenPath, sanitizedToken, { encoding: 'utf8', mode: 0o600 });
+        await chmod(tokenPath, 0o600); // Ensure permissions (mode in writeFile does not always work cross-platform)
         console.log('[ModelService] Token saved to cache successfully');
       } catch (loginError) {
         console.error('[ModelService] Login command failed:', loginError);
