@@ -32,5 +32,9 @@
     "ai-assistant",
     "playwright",
     "testing"
-  ]
+  ],
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "tmux": "^1.0.0"
+  }
 }
