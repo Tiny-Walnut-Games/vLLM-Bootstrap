@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { authenticateToken, requireRole, AuthRequest } from '../middleware/auth';
-import { createRateLimiter } from '../middleware/rateLimit';
 import { SystemService } from './system.service';
 import { ModelService } from './model.service';
 import { ModeService } from './mode.service';
@@ -14,10 +13,6 @@ router.use(requireRole('admin'));
 const systemService = new SystemService();
 const modelService = new ModelService();
 const modeService = new ModeService();
-
-const hfAuthLimiter = createRateLimiter(900000, 10);
-const modelOpsLimiter = createRateLimiter(900000, 20);
-const apiLimiter = createRateLimiter(900000, 60);
 
 router.get('/health', (req, res) => {
   console.log('[Admin] Health check hit');
@@ -34,7 +29,8 @@ router.get('/system/status', async (req, res) => {
   }
 });
 
-router.get('/hf/auth/status', hfAuthLimiter, async (req, res) => {
+router.get('/hf/auth/status', async (req, res) => {
+  console.log('[Admin] GET /hf/auth/status');
   try {
     const status = await modelService.checkHFAuth();
     res.json(status);
@@ -44,7 +40,8 @@ router.get('/hf/auth/status', hfAuthLimiter, async (req, res) => {
   }
 });
 
-router.post('/hf/auth/login', hfAuthLimiter, async (req, res) => {
+router.post('/hf/auth/login', async (req, res) => {
+  console.log('[Admin] POST /hf/auth/login - token length:', req.body?.token?.length || 0);
   try {
     const { token } = req.body;
     if (!token) {
@@ -92,9 +89,11 @@ router.post('/vllm/bootstrap', async (req, res) => {
   }
 });
 
-router.get('/models/status', modelOpsLimiter, async (req, res) => {
+router.get('/models/status', async (req, res) => {
+  console.log('[Admin] GET /models/status');
   try {
     const models = await modelService.listModels();
+    console.log('[Admin] Models found:', models);
     res.json(models);
   } catch (error) {
     console.error('[Admin] Error getting models:', error);
@@ -102,20 +101,23 @@ router.get('/models/status', modelOpsLimiter, async (req, res) => {
   }
 });
 
-router.post('/models/:role/start', modelOpsLimiter, async (req, res) => {
+router.post('/models/:role/start', async (req, res) => {
+  console.log('[Admin] POST /models/:role/start', { role: req.params.role, model: req.body?.modelName });
   try {
     const { role } = req.params;
     const { modelName } = req.body;
     
+    console.log(`[Admin] Starting model - role: ${role}, name: ${modelName}`);
     const model = await modelService.startModel(role, modelName);
+    console.log('[Admin] Model start result:', model);
     res.json(model);
   } catch (error) {
     console.error('[Admin] Error starting model:', error);
-    res.status(500).json({ error: `Failed to start model: ${error instanceof Error ? error.message : String(error)}` });
+    res.status(500).json({ error: `Failed to start model: ${error}` });
   }
 });
 
-router.post('/models/:role/stop', modelOpsLimiter, async (req, res) => {
+router.post('/models/:role/stop', async (req, res) => {
   try {
     const { role } = req.params;
     const result = await modelService.stopModel(role);
@@ -125,7 +127,7 @@ router.post('/models/:role/stop', modelOpsLimiter, async (req, res) => {
       message: result.message
     });
   } catch (error) {
-    res.status(500).json({ error: `Failed to stop model: ${error instanceof Error ? error.message : String(error)}` });
+    res.status(500).json({ error: `Failed to stop model: ${error}` });
   }
 });
 

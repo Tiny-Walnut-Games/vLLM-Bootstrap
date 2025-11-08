@@ -9,18 +9,12 @@ export interface TerminalOutput {
 }
 
 const SENSITIVE_PATTERNS = [
-  /hf_[a-zA-Z0-9_]{39,}/gi,
-  /sk-[a-zA-Z0-9]{20,}/gi,
-  /token["\s=]*[:\s]*['""`]?([a-zA-Z0-9_-]{20,})['""`]?/gi,
-  /api[_-]?key["\s=]*[:\s]*['""`]?([a-zA-Z0-9_-]{20,})['""`]?/gi,
-  /password["\s=]*[:\s]*['""`]?([^\s'""`\n,}]{8,})['""`]?/gi,
-  /Bearer\s+([a-zA-Z0-9._-]+)/gi,
-  /Authorization["\s=]*[:\s]*Bearer\s+([a-zA-Z0-9._-]+)/gi,
-  /Authorization["\s=]*[:\s]*['""`]?([a-zA-Z0-9_-]{20,})['""`]?/gi,
-  /secret["\s=]*[:\s]*['""`]?([a-zA-Z0-9_-]{20,})['""`]?/gi,
-  /aws_secret_access_key["\s=]*[:\s]*['""`]?([a-zA-Z0-9_/+=]{40,})['""`]?/gi,
-  /private[_-]?key["\s=]*[:\s]*['""`]?-----BEGIN[^\n]+/gi,
-  /certificate["\s=]*[:\s]*['""`]?-----BEGIN[^\n]+/gi,
+  /hf_[a-zA-Z0-9]{39}/gi,
+  /token["\s=]*[:\s]*['""]?([a-zA-Z0-9_-]{20,})['""]?/gi,
+  /api[_-]?key["\s=]*[:\s]*['""]?([a-zA-Z0-9_-]{20,})['""]?/gi,
+  /password["\s=]*[:\s]*['""]?([^\s'""\n,}]{8,})['""]?/gi,
+  /Bearer\s+([a-zA-Z0-9_-]+)/gi,
+  /Authorization["\s=]*[:\s]*['""]?([a-zA-Z0-9_-]{20,})['""]?/gi,
 ];
 
 export class TerminalService {

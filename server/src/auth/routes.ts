@@ -76,7 +76,7 @@ router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-router.get('/verify', createRateLimiter(900000, 30), authenticateToken, (req: AuthRequest, res: Response): void => {
+router.get('/verify', authenticateToken, (req: AuthRequest, res: Response): void => {
   res.status(200).json({
     userId: req.user?.userId,
     username: req.user?.username,

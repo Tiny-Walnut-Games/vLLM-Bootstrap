@@ -1,12 +1,11 @@
-import { exec, spawn, execFile } from 'child_process';
+import { exec } from 'child_process';
 import { promisify } from 'util';
 import { ModelStatus } from './types';
-import { readFile } from 'fs/promises';
+import { readFile, mkdir, writeFile, chmod } from 'fs/promises';
 import { join } from 'path';
 import { modelsConfigService } from './models-config.service';
 
 const execAsync = promisify(exec);
-const execFileAsync = promisify(execFile);
 
 interface HFAuthStatus {
   authenticated: boolean;
@@ -78,13 +77,6 @@ export class ModelService {
         };
       }
 
-      if (!token.startsWith('hf_') || token.length < 20) {
-        return {
-          success: false,
-          message: 'Invalid HuggingFace token format. Tokens must start with "hf_" and be at least 20 characters.'
-        };
-      }
-
       const sanitizedToken = token.replace(/[^a-zA-Z0-9_-]/g, '');
       if (sanitizedToken.length !== token.length) {
         return {
@@ -93,60 +85,83 @@ export class ModelService {
         };
       }
 
+      console.log('[ModelService] Checking if huggingface-hub is installed...');
       let cliAvailable = false;
       
       try {
         await execAsync('bash -c "(hf --version || huggingface-cli --version) 2>/dev/null"', { timeout: 5000 });
+        console.log('[ModelService] huggingface-cli is available');
         cliAvailable = true;
-      } catch {
+      } catch (installCheckError) {
+        console.log('[ModelService] huggingface-cli not found, installing huggingface-hub...');
         try {
           await execAsync(
             'bash -c "source ~/torch-env/bin/activate && python -m pip install huggingface-hub --upgrade --quiet"',
             { timeout: 60000 }
           );
+          console.log('[ModelService] huggingface-hub installation complete');
           await new Promise(resolve => setTimeout(resolve, 1000));
           cliAvailable = true;
-        } catch {
+        } catch (pipError) {
+          console.error('[ModelService] Failed to install huggingface-hub:', pipError);
           return {
             success: false,
             message: 'Failed to install huggingface-hub. Ensure pip and virtual environment are working.'
           };
         }
       }
+
+      console.log('[ModelService] Attempting HF authentication...');
       
       try {
-        await execAsync('bash -c "mkdir -p ~/.cache/huggingface"', { timeout: 5000 });
+        // The following steps replace the bash command with native fs operations
+        const cacheDir = `${process.env.HOME || process.env.USERPROFILE}/.cache/huggingface`;
+        await mkdir(cacheDir, { recursive: true });
+        const tokenPath = `${cacheDir}/token`;
+        await writeFile(tokenPath, sanitizedToken, { encoding: 'utf8', mode: 0o600 });
+        await chmod(tokenPath, 0o600); // Ensure permissions (mode in writeFile does not always work cross-platform)
+        console.log('[ModelService] Token saved to cache successfully');
+      } catch (loginError) {
+        console.error('[ModelService] Login command failed:', loginError);
+        return {
+          success: false,
+          message: 'Failed to execute login command. Check your WSL setup and HuggingFace connectivity.'
+        };
+      }
+      
+      try {
+        const verifyToken = await execAsync(
+          'bash -c "test -f ~/.cache/huggingface/token && cat ~/.cache/huggingface/token"',
+          { timeout: 5000 }
+        );
         
-        const { home } = require('os').userInfo();
-        const tokenPath = join(home, '.cache/huggingface/token');
-        const fs = require('fs').promises;
-        await fs.writeFile(tokenPath, sanitizedToken);
-        await fs.chmod(tokenPath, 0o600);
-        
-        const savedToken = await fs.readFile(tokenPath, 'utf-8');
-        if (!savedToken.includes('hf_')) {
+        if (!verifyToken.stdout.includes('hf_')) {
+          console.warn('[ModelService] Token file does not contain valid token format');
           return {
             success: false,
             message: 'Token could not be properly saved'
           };
         }
-      } catch (error) {
-        console.error('[ModelService] Token save error:', error);
+        
+        console.log('[ModelService] Token successfully saved and verified');
+      } catch (verifyError) {
+        console.error('[ModelService] Token verification failed:', verifyError);
         return {
           success: false,
-          message: 'Failed to save token. Check file permissions and disk space.'
+          message: 'Token could not be saved to cache'
         };
       }
       
+      console.log('[ModelService] HF authentication successful');
       return {
         success: true,
         message: 'Successfully authenticated with HuggingFace'
       };
     } catch (error) {
-      console.error('[ModelService] HF authentication error:', error instanceof Error ? error.message : String(error));
+      console.error('[ModelService] HF authentication unexpected error:', error instanceof Error ? error.message : String(error));
       return {
         success: false,
-        message: 'Unexpected error during authentication'
+        message: `Unexpected error during authentication: ${error instanceof Error ? error.message : 'Unknown error'}`
       };
     }
   }
@@ -230,11 +245,6 @@ export class ModelService {
 
   async startModel(role: string, modelName?: string): Promise<ModelStatus> {
     try {
-      const roleRegex = /^[a-z]+$/;
-      if (!roleRegex.test(role)) {
-        throw new Error('Invalid role name. Must contain only lowercase letters.');
-      }
-
       const sessionName = `vllm-${role}`;
       
       const actualModelName = modelName || await this.getModelNameForRole(role);
@@ -243,12 +253,19 @@ export class ModelService {
       if (!authStatus.authenticated) {
         throw new Error('HuggingFace authentication required. Please provide HF_TOKEN.');
       }
-
-      const downloadStatus = await this.downloadModel(actualModelName);
       
-      await execAsync(`bash -c "cd ~/.config/llm-doctrine && tmux new-session -d -s ${role.replace(/[^a-z]/g, '')} ./daily-bootstrap.sh ${role.replace(/[^a-z]/g, '')}"`, {
-        timeout: 10000
-      });
+      const sanitizedRole = role.replace(/[^a-z]/g, '');
+      if (sanitizedRole !== role) {
+        throw new Error('Invalid role name');
+      }
+
+      console.log(`Checking if model ${actualModelName} is downloaded...`);
+      const downloadStatus = await this.downloadModel(actualModelName);
+      console.log(`Model status: ${downloadStatus.downloaded ? 'cached' : 'downloading'}`);
+      
+      const { stdout } = await execAsync(
+        `bash -c "cd ~/.config/llm-doctrine && tmux new-session -d -s ${sessionName} './daily-bootstrap.sh ${sanitizedRole}'"`
+      );
       
       await new Promise(resolve => setTimeout(resolve, 2000));
       
@@ -261,22 +278,14 @@ export class ModelService {
         port
       };
     } catch (error) {
-      throw new Error(`Failed to start model: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(`Failed to start model: ${error}`);
     }
   }
 
   async stopModel(role: string): Promise<{ success: boolean; message: string }> {
     try {
-      const roleRegex = /^[a-z]+$/;
-      if (!roleRegex.test(role)) {
-        return {
-          success: false,
-          message: 'Invalid role name'
-        };
-      }
-
-      const sanitizedRole = role.replace(/[^a-z]/g, '');
-      await execAsync(`bash -c "tmux kill-session -t vllm-${sanitizedRole}"`, { timeout: 5000 });
+      const sessionName = `vllm-${role}`;
+      await execAsync(`bash -c "tmux kill-session -t ${sessionName}"`);
       
       return {
         success: true,
@@ -285,30 +294,18 @@ export class ModelService {
     } catch (error) {
       return {
         success: false,
-        message: `Failed to stop model: ${error instanceof Error ? error.message : String(error)}`
+        message: `Failed to stop model: ${error}`
       };
     }
   }
 
   async getModelLogs(role: string, lines: number = 100): Promise<string> {
     try {
-      const roleRegex = /^[a-z]+$/;
-      if (!roleRegex.test(role)) {
-        throw new Error('Invalid role name');
-      }
-
-      if (lines < 1 || lines > 1000) {
-        lines = 100;
-      }
-
-      const sanitizedRole = role.replace(/[^a-z]/g, '');
       const { stdout } = await execAsync(
-        `bash -c "tail -n ${lines} ~/.config/llm-doctrine/logs/${sanitizedRole}*.log 2>/dev/null || echo 'No logs found'"`,
-        { timeout: 5000 }
+        `bash -c "tail -n ${lines} ~/.config/llm-doctrine/logs/${role}*.log 2>/dev/null || echo 'No logs found'"`
       );
       return stdout;
-    } catch (error) {
-      console.error('[ModelService] Error getting logs:', error);
+    } catch {
       return 'No logs available';
     }
   }
