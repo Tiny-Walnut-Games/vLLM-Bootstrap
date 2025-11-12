@@ -83,6 +83,16 @@ export class SystemService {
 
   async bootstrapVLLM(): Promise<{ success: boolean; message: string }> {
     try {
+      const isWindows = process.platform === 'win32';
+      
+      if (isWindows) {
+        console.warn('[SystemService] Bootstrap not supported on Windows');
+        return {
+          success: false,
+          message: 'Bootstrap requires Linux/Unix environment. Please use WSL or native Linux.'
+        };
+      }
+
       const { stdout, stderr } = await execAsync(
         'bash -c "cd ~/.config/llm-doctrine && ./initial-bootstrap.sh"',
         { timeout: 600000 }

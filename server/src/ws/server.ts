@@ -69,20 +69,32 @@ export function createWebSocketServer(httpServer: HttpServer): Server {
       }
 
       try {
-        const stopStream = await terminalService.streamPane(
-          (output) => {
-            socket.emit('terminal_output', output);
-          },
-          (error) => {
-            socket.emit('terminal_error', { message: error.message });
-          },
-          300
-        );
+        let stopStream: (() => void) | null = null;
+        try {
+          stopStream = await terminalService.streamPane(
+            (output) => {
+              socket.emit('terminal_output', output);
+            },
+            (error) => {
+              socket.emit('terminal_error', { message: error.message });
+            },
+            300
+          );
+          socket.terminalStream = stopStream;
+        } catch (streamError) {
+          const streamMsg = streamError instanceof Error ? streamError.message : 'Unknown error';
+          console.warn('[WebSocket] Terminal streaming failed, attempting log file fallback:', streamMsg);
+          socket.emit('terminal_ready', { 
+            status: 'log-only',
+            message: 'Terminal streaming unavailable. Displaying server log file instead.'
+          });
+          return;
+        }
 
-        socket.terminalStream = stopStream;
         socket.emit('terminal_ready', { status: 'streaming' });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
+        console.error('[WebSocket] Terminal subscription error:', message);
         socket.emit('terminal_error', { message });
       }
     });

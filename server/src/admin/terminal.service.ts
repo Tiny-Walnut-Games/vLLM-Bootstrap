@@ -1,5 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { readFile, stat } from 'fs/promises';
+import { join } from 'path';
 
 const execAsync = promisify(exec);
 
@@ -17,9 +19,21 @@ const SENSITIVE_PATTERNS = [
   /Authorization["\s=]*[:\s]*['""]?([a-zA-Z0-9_-]{20,})['""]?/gi,
 ];
 
+const isTmuxAvailable = async (): Promise<boolean> => {
+  try {
+    await execAsync('tmux -V', { timeout: 2000 });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 export class TerminalService {
   private tmuxSession = 'vllm-bootstrap-server';
   private tmuxWindow = '0';
+  private lastLogRead = 0;
+  private logFile = process.env.SERVER_LOG_FILE || './server.log';
+  private isWindows = process.platform === 'win32';
 
   sanitizeOutput(text: string): string {
     let sanitized = text;
@@ -33,6 +47,10 @@ export class TerminalService {
 
   async capturePane(): Promise<TerminalOutput> {
     try {
+      if (this.isWindows) {
+        return await this.captureLogFile();
+      }
+
       const { stdout } = await execAsync(
         `tmux capture-pane -t ${this.tmuxSession}:${this.tmuxWindow} -p`,
         { maxBuffer: 1024 * 1024 * 10 }
@@ -47,6 +65,23 @@ export class TerminalService {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       throw new Error(`Failed to capture pane: ${message}`);
+    }
+  }
+
+  private async captureLogFile(): Promise<TerminalOutput> {
+    try {
+      const content = await readFile(this.logFile, 'utf-8');
+      const lines = content.split('\n').slice(-500);
+      const data = lines.join('\n');
+      const sanitized = this.sanitizeOutput(data);
+
+      return {
+        data: sanitized,
+        timestamp: Date.now()
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to read log file: ${message}`);
     }
   }
 
@@ -75,6 +110,10 @@ export class TerminalService {
 
   async sendCommand(command: string): Promise<void> {
     try {
+      if (this.isWindows) {
+        throw new Error('Command sending not supported on Windows. Terminal is read-only.');
+      }
+
       await execAsync(
         `tmux send-keys -t ${this.tmuxSession}:${this.tmuxWindow} "${command}" Enter`,
         { shell: '/bin/bash' }

@@ -1,11 +1,34 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { ModelStatus } from './types';
-import { readFile, mkdir, writeFile, chmod } from 'fs/promises';
+import { readFile, mkdir, writeFile, chmod, readdir, stat } from 'fs/promises';
 import { join } from 'path';
 import { modelsConfigService } from './models-config.service';
+import { homedir } from 'os';
 
 const execAsync = promisify(exec);
+
+const getPlatformShell = () => {
+  return process.platform === 'win32' ? { shell: 'powershell.exe', isWindows: true } : { shell: '/bin/bash', isWindows: false };
+};
+
+const executeCommand = async (command: string, timeout: number = 30000) => {
+  const { shell, isWindows } = getPlatformShell();
+  const options: any = { timeout, maxBuffer: 1024 * 1024 * 10 };
+  
+  if (isWindows) {
+    options.shell = shell;
+  }
+  
+  try {
+    return await execAsync(command, options);
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ETIMEDOUT') {
+      throw new Error(`Command timed out after ${timeout}ms: ${command}`);
+    }
+    throw error;
+  }
+};
 
 interface HFAuthStatus {
   authenticated: boolean;
@@ -21,7 +44,14 @@ interface ModelDownloadStatus {
 export class ModelService {
   async listModels(): Promise<ModelStatus[]> {
     try {
-      const { stdout } = await execAsync('bash -c "tmux list-sessions 2>/dev/null"');
+      const { isWindows } = getPlatformShell();
+      
+      if (isWindows) {
+        console.log('[ModelService] Windows detected, tmux unavailable - returning empty models list');
+        return [];
+      }
+
+      const { stdout } = await execAsync('bash -c "tmux list-sessions 2>/dev/null"', { timeout: 5000 });
       const sessions = stdout.trim().split('\n').filter(Boolean);
       
       const models: ModelStatus[] = [];
@@ -50,14 +80,18 @@ export class ModelService {
 
   async checkHFAuth(): Promise<HFAuthStatus> {
     try {
-      const { stdout } = await execAsync(
-        'bash -c "test -f ~/.cache/huggingface/token && cat ~/.cache/huggingface/token"',
-        { timeout: 5000 }
-      );
+      const { isWindows } = getPlatformShell();
+      const tokenPath = join(homedir(), '.cache', 'huggingface', 'token');
       
-      if (stdout.includes('hf_')) {
-        console.log('[ModelService] HF authentication check: token found');
-        return { authenticated: true };
+      try {
+        const content = await readFile(tokenPath, 'utf-8');
+        if (content.includes('hf_')) {
+          console.log('[ModelService] HF authentication check: token found');
+          return { authenticated: true };
+        }
+      } catch {
+        console.log('[ModelService] HF authentication check: no token file found at', tokenPath);
+        return { authenticated: false };
       }
       
       console.log('[ModelService] HF authentication check: no valid token found');
@@ -85,41 +119,30 @@ export class ModelService {
         };
       }
 
-      console.log('[ModelService] Checking if huggingface-hub is installed...');
+      console.log('[ModelService] Saving HuggingFace token to cache...');
       let cliAvailable = false;
       
       try {
-        await execAsync('bash -c "(hf --version || huggingface-cli --version) 2>/dev/null"', { timeout: 5000 });
-        console.log('[ModelService] huggingface-cli is available');
-        cliAvailable = true;
+        console.log('[ModelService] Skipping CLI check on this platform');
+        cliAvailable = false;
       } catch (installCheckError) {
-        console.log('[ModelService] huggingface-cli not found, installing huggingface-hub...');
-        try {
-          await execAsync(
-            'bash -c "source ~/torch-env/bin/activate && python -m pip install huggingface-hub --upgrade --quiet"',
-            { timeout: 60000 }
-          );
-          console.log('[ModelService] huggingface-hub installation complete');
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          cliAvailable = true;
-        } catch (pipError) {
-          console.error('[ModelService] Failed to install huggingface-hub:', pipError);
-          return {
-            success: false,
-            message: 'Failed to install huggingface-hub. Ensure pip and virtual environment are working.'
-          };
-        }
+        console.log('[ModelService] Installation check skipped');
       }
 
       console.log('[ModelService] Attempting HF authentication...');
       
       try {
-        // The following steps replace the bash command with native fs operations
-        const cacheDir = `${process.env.HOME || process.env.USERPROFILE}/.cache/huggingface`;
+        const cacheDir = join(homedir(), '.cache', 'huggingface');
         await mkdir(cacheDir, { recursive: true });
-        const tokenPath = `${cacheDir}/token`;
+        const tokenPath = join(cacheDir, 'token');
         await writeFile(tokenPath, sanitizedToken, { encoding: 'utf8', mode: 0o600 });
-        await chmod(tokenPath, 0o600); // Ensure permissions (mode in writeFile does not always work cross-platform)
+        
+        try {
+          await chmod(tokenPath, 0o600);
+        } catch (chmodError) {
+          console.warn('[ModelService] chmod not fully supported on this platform');
+        }
+        
         console.log('[ModelService] Token saved to cache successfully');
       } catch (loginError) {
         console.error('[ModelService] Login command failed:', loginError);
@@ -130,12 +153,10 @@ export class ModelService {
       }
       
       try {
-        const verifyToken = await execAsync(
-          'bash -c "test -f ~/.cache/huggingface/token && cat ~/.cache/huggingface/token"',
-          { timeout: 5000 }
-        );
+        const tokenPath = join(homedir(), '.cache', 'huggingface', 'token');
+        const verifyToken = await readFile(tokenPath, 'utf-8');
         
-        if (!verifyToken.stdout.includes('hf_')) {
+        if (!verifyToken.includes('hf_')) {
           console.warn('[ModelService] Token file does not contain valid token format');
           return {
             success: false,
@@ -177,34 +198,80 @@ export class ModelService {
     try {
       const sanitizedModelName = this.sanitizeModelName(modelName);
       const hubDirName = sanitizedModelName.replace('/', '--');
+      const hubCachePath = join(homedir(), '.cache', 'huggingface', 'hub');
       
-      const { stdout: checkOutput } = await execAsync(
-        `bash -c "ls ~/.cache/huggingface/hub/ 2>/dev/null | grep -i '${hubDirName}' || echo ''"`
-      );
-      
-      if (checkOutput.trim()) {
-        const dirName = checkOutput.trim().replace(/[^a-zA-Z0-9_.-]/g, '');
-        const { stdout: sizeOutput } = await execAsync(
-          `bash -c "du -sh ~/.cache/huggingface/hub/${dirName} 2>/dev/null | cut -f1"`
-        );
+      try {
+        const files = await this.getDirectoryContents(hubCachePath);
+        const matchingDir = files.find(f => f.toLowerCase().includes(hubDirName.toLowerCase()));
         
-        return {
-          downloaded: true,
-          modelPath: `~/.cache/huggingface/hub/${dirName}`,
-          size: sizeOutput.trim()
-        };
+        if (matchingDir) {
+          const modelPath = join(hubCachePath, matchingDir);
+          const size = await this.getDirectorySize(modelPath);
+          
+          return {
+            downloaded: true,
+            modelPath,
+            size
+          };
+        }
+      } catch (readError) {
+        console.log('[ModelService] Could not read hub cache directory:', readError);
       }
       
-      console.log(`Downloading model: ${sanitizedModelName}`);
-      await execAsync(
-        `bash -c "source ~/torch-env/bin/activate && python3 -c 'from huggingface_hub import snapshot_download; snapshot_download(\\\"${sanitizedModelName}\\\", local_dir_use_symlinks=True)'"`,
-        { timeout: 300000 }
-      );
-      
-      return await this.downloadModel(sanitizedModelName);
+      return {
+        downloaded: false,
+        modelPath: undefined,
+        size: undefined
+      };
     } catch (error) {
       console.error('[ModelService] Model download error:', error instanceof Error ? error.message : String(error));
-      throw new Error('Failed to download model');
+      return {
+        downloaded: false,
+        modelPath: undefined,
+        size: undefined
+      };
+    }
+  }
+
+  private async getDirectoryContents(dirPath: string): Promise<string[]> {
+    try {
+      return await readdir(dirPath);
+    } catch {
+      return [];
+    }
+  }
+
+  private async getDirectorySize(dirPath: string): Promise<string> {
+    try {
+      const getSize = async (path: string): Promise<number> => {
+        try {
+          const statInfo = await stat(path);
+          if (statInfo.isDirectory()) {
+            const files = await readdir(path);
+            const sizes = await Promise.all(
+              files.map(file => getSize(join(path, file)))
+            );
+            return sizes.reduce((total, size) => total + size, 0);
+          }
+          return statInfo.size;
+        } catch {
+          return 0;
+        }
+      };
+      
+      const bytes = await getSize(dirPath);
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let size = bytes;
+      let unitIndex = 0;
+      
+      while (size >= 1024 && unitIndex < units.length - 1) {
+        size /= 1024;
+        unitIndex++;
+      }
+      
+      return `${size.toFixed(2)} ${units[unitIndex]}`;
+    } catch {
+      return 'unknown';
     }
   }
 
@@ -263,8 +330,15 @@ export class ModelService {
       const downloadStatus = await this.downloadModel(actualModelName);
       console.log(`Model status: ${downloadStatus.downloaded ? 'cached' : 'downloading'}`);
       
+      const { isWindows } = getPlatformShell();
+      if (isWindows) {
+        console.log('[ModelService] Windows detected - model startup not supported via tmux');
+        throw new Error('Model startup requires Linux/Unix environment. tmux is not available on Windows.');
+      }
+
       const { stdout } = await execAsync(
-        `bash -c "cd ~/.config/llm-doctrine && tmux new-session -d -s ${sessionName} './daily-bootstrap.sh ${sanitizedRole}'"`
+        `bash -c "cd ~/.config/llm-doctrine && tmux new-session -d -s ${sessionName} './daily-bootstrap.sh ${sanitizedRole}'"`,
+        { timeout: 10000 }
       );
       
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -284,8 +358,17 @@ export class ModelService {
 
   async stopModel(role: string): Promise<{ success: boolean; message: string }> {
     try {
+      const { isWindows } = getPlatformShell();
+      
+      if (isWindows) {
+        return {
+          success: false,
+          message: 'Model management not supported on Windows'
+        };
+      }
+
       const sessionName = `vllm-${role}`;
-      await execAsync(`bash -c "tmux kill-session -t ${sessionName}"`);
+      await execAsync(`bash -c "tmux kill-session -t ${sessionName} 2>/dev/null || true"`, { timeout: 5000 });
       
       return {
         success: true,
@@ -301,8 +384,15 @@ export class ModelService {
 
   async getModelLogs(role: string, lines: number = 100): Promise<string> {
     try {
+      const { isWindows } = getPlatformShell();
+      
+      if (isWindows) {
+        return 'Model logs not available on Windows';
+      }
+
       const { stdout } = await execAsync(
-        `bash -c "tail -n ${lines} ~/.config/llm-doctrine/logs/${role}*.log 2>/dev/null || echo 'No logs found'"`
+        `bash -c "tail -n ${lines} ~/.config/llm-doctrine/logs/${role}*.log 2>/dev/null || echo 'No logs found'"`,
+        { timeout: 5000 }
       );
       return stdout;
     } catch {

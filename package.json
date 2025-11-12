@@ -35,6 +35,7 @@
   ],
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "dos2unix": "^1.1.2",
     "tmux": "^1.0.0"
   }
 }
