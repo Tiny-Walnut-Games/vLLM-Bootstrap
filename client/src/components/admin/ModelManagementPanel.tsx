@@ -9,7 +9,17 @@ interface Props {
 }
 
 export const ModelManagementPanel: React.FC<Props> = ({ models, onStart, onStop, onViewLogs }) => {
-  const commonRoles = ['qa', 'dev', 'prod'];
+  const commonRoles = ['fast', 'edit', 'qa', 'plan'];
+  
+  const getRoleLabel = (role: string): string => {
+    const labels: { [key: string]: string } = {
+      fast: 'Fast (1B)',
+      edit: 'Edit (4B)',
+      qa: 'QA (7B)',
+      plan: 'Plan (15B)'
+    };
+    return labels[role] || role;
+  };
   
   const getModelStatus = (role: string) => {
     return models.find(m => m.role === role);
@@ -35,7 +45,7 @@ export const ModelManagementPanel: React.FC<Props> = ({ models, onStart, onStop,
                 }`} />
                 
                 <div>
-                  <div className="font-medium text-gray-900 capitalize">{role} Model</div>
+                  <div className="font-medium text-gray-900">{getRoleLabel(role)} Model</div>
                   <div className="text-sm text-gray-600">
                     {model ? (
                       <>

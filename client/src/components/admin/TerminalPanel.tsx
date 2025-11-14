@@ -41,8 +41,8 @@ export const TerminalPanel: React.FC<TerminalPanelProps> = ({ onClose }) => {
 
     terminal.writeln('[Connecting to terminal...]');
 
-    const protocol = window.location.protocol === 'https:' ? 'https' : 'http';
-    const socketUrl = `${protocol}://${window.location.host}`;
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const socketUrl = `${protocol}://${window.location.hostname}:3001`;
 
     const socket = io(socketUrl, {
       auth: { token },

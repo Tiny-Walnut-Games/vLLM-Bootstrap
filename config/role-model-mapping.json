@@ -10,5 +10,9 @@
   "planner": {
     "tier": "15B",
     "model": "bigcode/starcoder2-15b"
+  },
+  "fast": {
+    "tier": "1B",
+    "model": "meta-llama/Llama-3.2-1B"
   }
 }

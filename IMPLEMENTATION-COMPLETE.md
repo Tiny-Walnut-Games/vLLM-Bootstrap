@@ -9,11 +9,12 @@
 ## 📦 Deliverables Summary
 
 ### 🎯 Primary Goal Achieved
+
 **Single `.bat` file launch for virgin Windows machines** ✅
 
 ### 🏗️ Architecture Implemented
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │         bootstrap.bat (Entry)            │
 │  • Auto-installs Node.js, WSL, deps    │
@@ -77,14 +78,16 @@
 ## 📁 Files Created (17 Total)
 
 ### Entry Points (3 files)
-```
+
+```none
 ✅ bootstrap.bat                 - Single-file installer (287 lines)
 ✅ test-admin.bat                - TypeScript validation (32 lines)
 ✅ QUICK-START-ADMIN.md          - Quick start guide
 ```
 
 ### Server Backend (6 files)
-```
+
+```none
 ✅ server/src/admin/types.ts              - TypeScript interfaces (26 lines)
 ✅ server/src/admin/system.service.ts     - System management (88 lines)
 ✅ server/src/admin/model.service.ts      - Model lifecycle (116 lines)
@@ -94,7 +97,8 @@
 ```
 
 ### Client Frontend (6 files)
-```
+
+```none
 ✅ client/src/pages/AdminDashboard.tsx                    - Main dashboard (150 lines)
 ✅ client/src/components/Navigation.tsx                   - Navigation bar (38 lines)
 ✅ client/src/components/admin/SystemStatusPanel.tsx      - Status display (89 lines)
@@ -104,13 +108,15 @@
 ```
 
 ### Documentation (2 files)
-```
+
+```none
 ✅ BOOTSTRAP-README.md           - Complete documentation (202 lines)
 ✅ ADMIN-SYSTEM-SUMMARY.md       - Implementation summary (250 lines)
 ```
 
 ### Modified Files (2 files)
-```
+
+```none
 ✅ server/src/app.ts             - Added admin routes (+2 lines)
 ✅ client/src/App.tsx            - Added admin dashboard route (+3 lines)
 ```
@@ -122,6 +128,7 @@
 ## 🧪 TDD Workflow Followed
 
 ### ✅ Step 1: Tests First
+
 ```typescript
 // server/tests/admin.test.ts
 describe('Admin API Endpoints', () => {
@@ -133,6 +140,7 @@ describe('Admin API Endpoints', () => {
 ```
 
 ### ✅ Step 2: Implementation
+
 - System detection services (Node, WSL, Python, vLLM)
 - Model lifecycle management (start/stop/logs)
 - Mode toggle (IDE_ONLY ↔ GUI_CHAT)
@@ -140,13 +148,16 @@ describe('Admin API Endpoints', () => {
 - Express REST API with proper error handling
 
 ### ✅ Step 3: Integration
+
 - Bootstrap.bat orchestrates entire flow
 - Admin routes integrated into Express app
 - Admin dashboard set as default route
 - Navigation between Admin ↔ Chat
 
 ### ⏳ Step 4: Validation (Next)
+
 Run these commands to validate:
+
 ```batch
 test-admin.bat          # TypeScript compilation
 bootstrap.bat           # End-to-end test
@@ -157,12 +168,14 @@ bootstrap.bat           # End-to-end test
 ## 🎨 UI Features Implemented
 
 ### System Status Panel
+
 - Real-time status indicators (green/red dots)
 - Version numbers displayed
 - One-click install buttons for missing components
 - "System Ready" confirmation when all installed
 
 ### Model Management Panel
+
 - Three pre-configured roles (QA, Dev, Prod)
 - Start/Stop buttons with state management
 - Port and uptime display
@@ -170,6 +183,7 @@ bootstrap.bat           # End-to-end test
 - Direct log access
 
 ### Log Viewer (Modal)
+
 - Full-screen overlay
 - Auto-refresh toggle (2s interval)
 - Manual refresh button
@@ -177,6 +191,7 @@ bootstrap.bat           # End-to-end test
 - Last 200 lines shown
 
 ### Mode Toggle
+
 - Visual comparison (IDE vs GUI)
 - Feature checklist for each mode
 - One-click switching
@@ -187,6 +202,7 @@ bootstrap.bat           # End-to-end test
 ## 🔌 API Endpoints
 
 ### System Management
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/admin/system/status` | Check all prerequisites |
@@ -194,6 +210,7 @@ bootstrap.bat           # End-to-end test
 | POST | `/api/admin/vllm/bootstrap` | Run initial-bootstrap.sh |
 
 ### Model Management
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/admin/models/status` | List running models |
@@ -202,6 +219,7 @@ bootstrap.bat           # End-to-end test
 | GET | `/api/admin/logs/:model` | Stream log file |
 
 ### Mode Management
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/admin/mode` | Get current mode |
@@ -227,6 +245,7 @@ bootstrap.bat           # End-to-end test
 ## 🚀 Usage Flow
 
 ### First-Time User (Virgin Windows)
+
 1. Download `bootstrap.bat`
 2. Right-click → Run as Administrator
 3. Script installs Node.js (if needed)
@@ -240,6 +259,7 @@ bootstrap.bat           # End-to-end test
 11. **Done!**
 
 ### Returning User
+
 1. Run `bootstrap.bat`
 2. GUI opens
 3. Click "Start" on desired model
@@ -291,15 +311,19 @@ bootstrap.bat           # End-to-end test
 ## 🎯 Next Actions
 
 ### Immediate (Required)
+
 1. **Run Validation**
+
    ```batch
    test-admin.bat
    ```
 
 2. **Manual Testing**
+
    ```batch
    bootstrap.bat
    ```
+
    - Verify GUI opens
    - Test system status panel
    - Start/stop a model
@@ -307,6 +331,7 @@ bootstrap.bat           # End-to-end test
    - Toggle mode
 
 ### Future Enhancements
+
 - [ ] Electron packaging (.exe distribution)
 - [ ] GPU memory monitoring
 - [ ] Model file selection
@@ -322,6 +347,7 @@ bootstrap.bat           # End-to-end test
 **The scrolls are inscribed; the system stands complete.**
 
 All components implemented according to TDD principles:
+
 1. ✅ Tests written first
 2. ✅ Implementation follows tests
 3. ⏳ Validation pending (run test-admin.bat)

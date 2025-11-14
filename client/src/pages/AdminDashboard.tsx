@@ -37,9 +37,9 @@ export const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     loadDashboardData();
-    const interval = setInterval(loadDashboardData, 5000);
-    return () => clearInterval(interval);
   }, []);
+
+
 
   const loadDashboardData = async () => {
     try {
@@ -124,8 +124,7 @@ export const AdminDashboard: React.FC = () => {
       const modelName = roleConfig?.model || role;
       const response = await apiClient.post(`/admin/models/${role}/start`, { modelName });
       console.log('Start model response:', response.data);
-      alert(`Model ${role} is starting...`);
-      loadDashboardData();
+      alert(`Model ${role} is starting. Download may take several minutes.`);
     } catch (error: any) {
       console.error('Start model error:', error);
       const errorMsg = error?.response?.data?.error || error.message || `Failed to start model: ${role}`;
@@ -140,8 +139,7 @@ export const AdminDashboard: React.FC = () => {
       console.log(`Stopping model for role: ${role}`);
       const response = await apiClient.post(`/admin/models/${role}/stop`);
       console.log('Stop model response:', response.data);
-      alert(`Model ${role} stopped.`);
-      loadDashboardData();
+      alert(`Model ${role} stopping...`);
     } catch (error: any) {
       console.error('Stop model error:', error);
       const errorMsg = error?.response?.data?.error || error.message || `Failed to stop model: ${role}`;

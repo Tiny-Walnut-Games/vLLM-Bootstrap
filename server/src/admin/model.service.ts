@@ -5,6 +5,7 @@ import { readFile, mkdir, writeFile, chmod, readdir, stat } from 'fs/promises';
 import { join } from 'path';
 import { modelsConfigService } from './models-config.service';
 import { homedir } from 'os';
+import { sanitizeRoleName, sanitizeModelName, sanitizeToken } from '../utils/security';
 
 const execAsync = promisify(exec);
 
@@ -60,6 +61,11 @@ export class ModelService {
         const match = session.match(/^vllm-(.+?):/);
         if (match) {
           const role = match[1];
+          
+          if (role === 'bootstrap-server') {
+            continue;
+          }
+          
           const port = await this.getPortForRole(role);
           
           models.push({
@@ -111,12 +117,12 @@ export class ModelService {
         };
       }
 
-      const sanitizedToken = token.replace(/[^a-zA-Z0-9_-]/g, '');
-      if (sanitizedToken.length !== token.length) {
-        return {
-          success: false,
-          message: 'Token contains invalid characters'
-        };
+      let sanitizedToken: string;
+      try {
+        sanitizedToken = sanitizeToken(token);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Token validation failed';
+        return { success: false, message };
       }
 
       console.log('[ModelService] Saving HuggingFace token to cache...');
@@ -187,16 +193,13 @@ export class ModelService {
     }
   }
 
-  private sanitizeModelName(modelName: string): string {
-    if (!/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(modelName)) {
-      throw new Error('Invalid model name format. Expected: org/model-name');
-    }
-    return modelName;
+  private sanitizeDownloadModelName(modelName: string): string {
+    return sanitizeModelName(modelName);
   }
 
   async downloadModel(modelName: string): Promise<ModelDownloadStatus> {
     try {
-      const sanitizedModelName = this.sanitizeModelName(modelName);
+      const sanitizedModelName = this.sanitizeDownloadModelName(modelName);
       const hubDirName = sanitizedModelName.replace('/', '--');
       const hubCachePath = join(homedir(), '.cache', 'huggingface', 'hub');
       
@@ -312,23 +315,26 @@ export class ModelService {
 
   async startModel(role: string, modelName?: string): Promise<ModelStatus> {
     try {
-      const sessionName = `vllm-${role}`;
+      const sanitizedRole = sanitizeRoleName(role);
+      const sessionName = `vllm-${sanitizedRole}`;
       
-      const actualModelName = modelName || await this.getModelNameForRole(role);
+      let actualModelName = modelName || await this.getModelNameForRole(sanitizedRole);
+      
+      if (!actualModelName || actualModelName === sanitizedRole || !actualModelName.includes('/')) {
+        console.log(`[ModelService] Model name "${actualModelName}" invalid or not found, looking up configured model for role: ${sanitizedRole}`);
+        actualModelName = await this.getModelNameForRole(sanitizedRole);
+      }
+      
+      actualModelName = sanitizeModelName(actualModelName);
       
       const authStatus = await this.checkHFAuth();
       if (!authStatus.authenticated) {
         throw new Error('HuggingFace authentication required. Please provide HF_TOKEN.');
       }
-      
-      const sanitizedRole = role.replace(/[^a-z]/g, '');
-      if (sanitizedRole !== role) {
-        throw new Error('Invalid role name');
-      }
 
-      console.log(`Checking if model ${actualModelName} is downloaded...`);
+      console.log(`[ModelService] Checking if model ${actualModelName} is downloaded...`);
       const downloadStatus = await this.downloadModel(actualModelName);
-      console.log(`Model status: ${downloadStatus.downloaded ? 'cached' : 'downloading'}`);
+      console.log(`[ModelService] Model status: ${downloadStatus.downloaded ? 'cached' : 'downloading'}`);
       
       const { isWindows } = getPlatformShell();
       if (isWindows) {
@@ -337,27 +343,29 @@ export class ModelService {
       }
 
       const { stdout } = await execAsync(
-        `bash -c "cd ~/.config/llm-doctrine && tmux new-session -d -s ${sessionName} './daily-bootstrap.sh ${sanitizedRole}'"`,
-        { timeout: 10000 }
+        `bash -c "cd ~/.config/llm-doctrine && tmux new-session -d -s '${sessionName}' './daily-bootstrap.sh ${sanitizedRole}'"`,
+        { timeout: 10000, shell: '/bin/bash' }
       );
       
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const port = await this.getPortForRole(role);
+      const port = await this.getPortForRole(sanitizedRole);
       
       return {
         name: actualModelName,
-        role,
+        role: sanitizedRole,
         status: 'starting',
         port
       };
     } catch (error) {
-      throw new Error(`Failed to start model: ${error}`);
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to start model: ${message}`);
     }
   }
 
   async stopModel(role: string): Promise<{ success: boolean; message: string }> {
     try {
+      const sanitizedRole = sanitizeRoleName(role);
       const { isWindows } = getPlatformShell();
       
       if (isWindows) {
@@ -367,17 +375,21 @@ export class ModelService {
         };
       }
 
-      const sessionName = `vllm-${role}`;
-      await execAsync(`bash -c "tmux kill-session -t ${sessionName} 2>/dev/null || true"`, { timeout: 5000 });
+      const sessionName = `vllm-${sanitizedRole}`;
+      await execAsync(`bash -c "tmux kill-session -t '${sessionName}' 2>/dev/null || true"`, { 
+        timeout: 5000,
+        shell: '/bin/bash'
+      });
       
       return {
         success: true,
-        message: `Model ${role} stopped successfully`
+        message: `Model ${sanitizedRole} stopped successfully`
       };
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       return {
         success: false,
-        message: `Failed to stop model: ${error}`
+        message: `Failed to stop model: ${message}`
       };
     }
   }

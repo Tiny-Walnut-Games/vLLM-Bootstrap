@@ -169,10 +169,10 @@ export const ModelConfigurationPanel: React.FC<Props> = ({ onConfigUpdated }) =>
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">-- Select Role --</option>
-            <option value="qa">QA (General Questions)</option>
-            <option value="embedder">Embedder (Text Embeddings)</option>
-            <option value="planner">Planner (Complex Tasks)</option>
-            <option value="custom">Custom Role</option>
+            <option value="fast">Fast (1B - Autocomplete/Boilerplate)</option>
+            <option value="edit">Edit (4B - Light Editing)</option>
+            <option value="qa">QA (7B - General Assistant)</option>
+            <option value="plan">Plan (15B - Deep Planning)</option>
           </select>
         </div>
 

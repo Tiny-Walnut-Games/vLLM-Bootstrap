@@ -9,12 +9,14 @@
 ## ✅ Validation Checklist
 
 ### For Configuration Changes
+
 - [x] Environment variable setup is documented in .env.example
 - [x] No sensitive data committed to repository
 - [x] Configuration follows existing patterns
 - [x] Backwards compatible with existing setup
 
 ### For All Changes
+
 - [x] No breaking changes introduced
 - [x] Changes follow existing code style and conventions
 - [x] Security best practices applied
@@ -25,24 +27,29 @@
 ### What Changed
 
 #### 1. **Fixed Vite Configuration TypeScript Error** (`client/vite.config.ts`)
+
 - **Issue**: `https: getHttpsConfig()` returned `ServerOptions | false`, but Vite's config expects only `ServerOptions`
 - **Solution**: Use conditional spread operator to only include `https` property when config is valid
 - **Impact**: Resolves TypeScript compilation error preventing client build
 
 #### 2. **Fixed Model Port Assignment** (`server/src/admin/model.service.ts`)
-- **Issue**: `getPortForRole()` was attempting to match role names (e.g., "qa") directly against `ports.conf`, which uses tier names (1B, 4B, 7B, 15B)
-- **Solution**: 
+
+- **Issue**: `getPortForRole()` was attempting to match role names (e.g., "qa") directly against `ports.conf`,-
+ which uses tier names (1B, 4B, 7B, 15B)
+- **Solution**:
   - Lookup role → tier mapping from `role-model-mapping.json`
   - Match tier against port ranges in `ports.conf`
   - Return start port for the assigned tier
 - **Impact**: Models now correctly receive assigned ports (e.g., qa/1B gets port 8100)
 
 #### 3. **Removed Exposed HuggingFace Token** (`config/role-model-mapping.json`)
+
 - **Issue**: HF_TOKEN was hardcoded in repository (security vulnerability)
 - **Solution**: Removed token from file
 - **Impact**: Prevents token exposure in git history
 
-#### 4. **Added Secure Token Management** 
+#### 4. **Added Secure Token Management**
+
 - **Files Modified**:
   - `.gitignore` - Excludes `config/role-model-mapping.json` from commits
   - `.env.example` - Documents token configuration options
@@ -63,6 +70,7 @@
 ### How to Test
 
 #### Test Port Assignment
+
 ```bash
 # Start server with environment variables set
 export HF_TOKEN="your-token-here"
@@ -74,6 +82,7 @@ npm run dev
 ```
 
 #### Test Client Build
+
 ```bash
 cd client
 npm install
@@ -81,6 +90,7 @@ npm run build  # Should complete without TypeScript errors
 ```
 
 #### Test Configuration
+
 ```bash
 # Verify .env setup
 cp server/.env.example server/.env
@@ -89,7 +99,8 @@ cp server/.env.example server/.env
 
 ### Breaking Changes
 
-**None** - All changes are backwards compatible. Configuration files will continue to work as before, with tokens now sourced from environment variables.
+**None** - All changes are backwards compatible. Configuration files will continue to work as before,
+but with tokens now sourced from environment variables.
 
 ## 🎯 Related Issues
 
@@ -107,7 +118,8 @@ cp server/.env.example server/.env
 ## 📸 Example Output
 
 **Before Fix (Port Assignment)**:
-```
+
+```none
 [Admin] Model start result: {
   name: 'meta-llama/Llama-3.2-1B',
   role: 'qa',
@@ -117,7 +129,8 @@ cp server/.env.example server/.env
 ```
 
 **After Fix**:
-```
+
+```none
 [Admin] Model start result: {
   name: 'meta-llama/Llama-3.2-1B',
   role: 'qa',
@@ -129,12 +142,14 @@ cp server/.env.example server/.env
 ## 🌟 Additional Notes
 
 ### Security Implementation
+
 - Tokens never appear in version control
 - `.env` file is gitignored and managed locally
 - Production deployments use platform secrets (GitHub Secrets, K8s Secrets, etc.)
 - Clear separation: JSON files store non-sensitive config (model names, tiers), env vars store secrets
 
 ### Configuration Reference
+
 ```env
 # HuggingFace credentials (.env file)
 HF_TOKEN=hf_xxxxxxxxxxxxx
@@ -146,12 +161,14 @@ MODEL_PLANNER_TOKEN=hf_xxxxxxxxxxxxx
 ```
 
 ### Migration for Existing Users
+
 1. If you had a token in `config/role-model-mapping.json`, add it to your `.env` file
 2. No other changes required - backward compatible
 
 ---
 
 **Reviewer Notes:**
+
 - All changes are low-risk and focused on stability
 - No functional changes to API or core logic
 - Security improvements follow industry best practices

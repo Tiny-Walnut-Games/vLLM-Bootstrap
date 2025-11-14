@@ -11,7 +11,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   useEffect(() => {
     verifyAuth();
-  }, [verifyAuth]);
+  }, []);
 
   if (isLoading) {
     return (

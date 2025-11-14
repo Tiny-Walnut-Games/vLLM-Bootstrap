@@ -38,7 +38,7 @@
 
 ## Architecture Flow
 
-```
+```flowchart LR
 Virgin Windows Machine
         ↓
   bootstrap.bat
@@ -59,30 +59,36 @@ vLLM Models (tmux sessions)
 ## API Endpoints Implemented
 
 ### System Management
+
 - `GET /api/admin/system/status` - Check Node, WSL, Python, vLLM
 - `POST /api/admin/wsl/install` - Install WSL + Ubuntu
 - `POST /api/admin/vllm/bootstrap` - Run initial-bootstrap.sh
 
 ### Model Management
+
 - `GET /api/admin/models/status` - List running models
 - `POST /api/admin/models/:role/start` - Start model (qa, dev, prod)
 - `POST /api/admin/models/:role/stop` - Kill tmux session
 - `GET /api/admin/logs/:model` - Stream log file
 
 ### Mode Management
+
 - `GET /api/admin/mode` - Get current mode
 - `POST /api/admin/mode/toggle` - Toggle IDE_ONLY ↔ GUI_CHAT
 
 ## Testing Checklist
 
 ### Pre-Flight Checks
+
 - [ ] TypeScript compiles without errors
+
   ```batch
   cd server && npm run typecheck
   cd client && npm run typecheck
   ```
 
 - [ ] Dependencies installed
+
   ```batch
   npm install
   cd server && npm install
@@ -94,7 +100,7 @@ vLLM Models (tmux sessions)
 1. **Fresh Install Flow**
    - [ ] Run `bootstrap.bat` on machine with Node.js installed
    - [ ] Verify both servers start
-   - [ ] Admin GUI opens in browser at http://localhost:5173
+   - [ ] Admin GUI opens in browser at <http://localhost:5173>
 
 2. **System Status Panel**
    - [ ] Displays Node.js version (green)
@@ -137,11 +143,13 @@ vLLM Models (tmux sessions)
 ## Next Steps
 
 ### Phase 1: Validation (This Step)
+
 1. Run `test-admin.bat` to verify TypeScript
 2. Run `bootstrap.bat` to test end-to-end
 3. Manually verify all UI components work
 
 ### Phase 2: Enhancement (Future)
+
 1. Add progress bars for long operations
 2. GPU memory usage display
 3. Model switching (different model files)
@@ -150,6 +158,7 @@ vLLM Models (tmux sessions)
 6. Notification system
 
 ### Phase 3: Polish (Future)
+
 1. Electron packaging (standalone .exe)
 2. Auto-updater
 3. Telemetry (opt-in)
@@ -158,7 +167,7 @@ vLLM Models (tmux sessions)
 
 ## File Manifest
 
-```
+```text
 New Files Created:
 ├── bootstrap.bat                                    (287 lines)
 ├── test-admin.bat                                   (32 lines)
@@ -195,10 +204,12 @@ Total: 14 new files, 2 modified files, ~1,600 lines of code
 ## Support
 
 ### Log Locations
+
 - Install log: `%TEMP%\vllm-bootstrap-install.log`
 - vLLM logs: `~/.config/llm-doctrine/logs/*.log` (in WSL)
 
 ### Debug Commands
+
 ```batch
 wsl --status
 wsl bash -c "tmux ls"
@@ -208,18 +219,22 @@ netstat -ano | findstr :8500
 
 ### Common Issues
 
-**Bootstrap hangs during npm install**
+#### **Bootstrap hangs during npm install**
+
 - Run manually: `npm install --verbose`
 
-**WSL install fails with access denied**
+#### **WSL install fails with access denied**
+
 - Run cmd.exe as Administrator
 - Re-run bootstrap.bat
 
-**Models won't start**
+#### **Models won't start**
+
 - Check vLLM installed: `wsl bash -c "pip show vllm"`
 - Run bootstrap: Click "Run vLLM Bootstrap" in UI
 
-**GUI won't load**
+#### **GUI won't load**
+
 - Check both servers running
 - Verify ports 3001 (server) and 5173 (client)
 

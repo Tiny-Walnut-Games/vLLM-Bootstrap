@@ -2,8 +2,29 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import { readFile, stat } from 'fs/promises';
 import { join } from 'path';
+import { escapeShellArg } from '../utils/security';
 
 const execAsync = promisify(exec);
+
+const ALLOWED_COMMANDS = [
+  'pwd',
+  'ls',
+  'cd',
+  'echo',
+  'cat',
+  'tail',
+  'head',
+  'grep',
+  'ps',
+  'kill',
+  'ps aux',
+  'nvidia-smi',
+  'python3',
+  'pip',
+  'source',
+  'activate',
+  'status'
+];
 
 export interface TerminalOutput {
   data: string;
@@ -114,10 +135,29 @@ export class TerminalService {
         throw new Error('Command sending not supported on Windows. Terminal is read-only.');
       }
 
-      await execAsync(
-        `tmux send-keys -t ${this.tmuxSession}:${this.tmuxWindow} "${command}" Enter`,
-        { shell: '/bin/bash' }
-      );
+      if (!command || typeof command !== 'string') {
+        throw new Error('Invalid command: command must be a non-empty string');
+      }
+
+      const trimmedCommand = command.trim();
+      const commandBase = trimmedCommand.split(/\s+/)[0];
+
+      if (!ALLOWED_COMMANDS.some(allowed => allowed.includes(commandBase))) {
+        throw new Error(
+          `Command not allowed: "${commandBase}". Allowed commands: ${ALLOWED_COMMANDS.join(', ')}`
+        );
+      }
+
+      if (trimmedCommand.includes(';') || trimmedCommand.includes('|') || 
+          trimmedCommand.includes('&&') || trimmedCommand.includes('$(') ||
+          trimmedCommand.includes('`') || trimmedCommand.includes('\n')) {
+        throw new Error('Command contains forbidden characters (pipes, semicolons, subshells, newlines)');
+      }
+
+      const escapedCommand = escapeShellArg(trimmedCommand);
+      const tmuxCmd = `tmux send-keys -t ${this.tmuxSession}:${this.tmuxWindow} ${escapedCommand} Enter`;
+
+      await execAsync(tmuxCmd, { shell: '/bin/bash', timeout: 5000 });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       throw new Error(`Failed to send command: ${message}`);

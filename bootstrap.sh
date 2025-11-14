@@ -443,18 +443,9 @@ fi
 _log ""
 _log "Log file: $LOG_FILE"
 _log ""
-_log "To stop the servers, run:"
-_log "  tmux kill-session -t vllm-bootstrap-server:0"
-_log ""
-_log "To view logs:"
-_log "  tmux capture-pane -t vllm-bootstrap-server:0 -p -S -50"
-_log ""
-
-# Play a default system sound notification (if possible)
-if command -v paplay &>/dev/null; then
-  New-BurntToastNotification -Text "vLLM Bootstrap Complete" -Sound Default
-elif command -v afplay &>/dev/null; then
-  afplay /System/Library/Sounds/Glass.aiff
-fi
-
 _log "🎉 Enjoy your local LLM setup!🎉"
+_log ""
+_log "Attaching to servers (press Ctrl+B then D to detach)..."
+sleep 2
+
+tmux attach-session -t vllm-bootstrap-server:0

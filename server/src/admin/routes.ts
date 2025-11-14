@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticateToken, requireRole, AuthRequest } from '../middleware/auth';
+import { commandLimiter, strictLimiter } from '../middleware/rateLimit';
 import { SystemService } from './system.service';
 import { ModelService } from './model.service';
 import { ModeService } from './mode.service';
@@ -40,7 +41,7 @@ router.get('/hf/auth/status', async (req, res) => {
   }
 });
 
-router.post('/hf/auth/login', async (req, res) => {
+router.post('/hf/auth/login', strictLimiter, async (req, res) => {
   console.log('[Admin] POST /hf/auth/login - token length:', req.body?.token?.length || 0);
   try {
     const { token } = req.body;
@@ -101,7 +102,7 @@ router.get('/models/status', async (req, res) => {
   }
 });
 
-router.post('/models/:role/start', async (req, res) => {
+router.post('/models/:role/start', commandLimiter, async (req, res) => {
   console.log('[Admin] POST /models/:role/start', { role: req.params.role, model: req.body?.modelName });
   try {
     const { role } = req.params;
@@ -112,12 +113,13 @@ router.post('/models/:role/start', async (req, res) => {
     console.log('[Admin] Model start result:', model);
     res.json(model);
   } catch (error) {
-    console.error('[Admin] Error starting model:', error);
-    res.status(500).json({ error: `Failed to start model: ${error}` });
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('[Admin] Error starting model:', message);
+    res.status(500).json({ error: `Failed to start model: ${message}` });
   }
 });
 
-router.post('/models/:role/stop', async (req, res) => {
+router.post('/models/:role/stop', commandLimiter, async (req, res) => {
   try {
     const { role } = req.params;
     const result = await modelService.stopModel(role);
@@ -127,7 +129,8 @@ router.post('/models/:role/stop', async (req, res) => {
       message: result.message
     });
   } catch (error) {
-    res.status(500).json({ error: `Failed to stop model: ${error}` });
+    const message = error instanceof Error ? error.message : String(error);
+    res.status(500).json({ error: `Failed to stop model: ${message}` });
   }
 });
 

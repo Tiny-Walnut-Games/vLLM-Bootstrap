@@ -35,7 +35,7 @@ async function start() {
       console.log(`Protocol: ${protocol.toUpperCase()}`);
       console.log(`Health check: ${protocol}://localhost:${PORT}/health`);
       console.log(`WebSocket: ${wsProtocol}://localhost:${PORT}`);
-      console.log(`Admin panel: ${protocol}://localhost:3173`);
+      console.log(`Admin panel: ${protocol}://localhost:5173`);
     });
 
     process.on('SIGTERM', () => {

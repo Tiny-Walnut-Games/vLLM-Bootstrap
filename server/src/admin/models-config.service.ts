@@ -90,20 +90,26 @@ class ModelsConfigService {
     const config = await this.loadModelsConf();
     const mapping: RoleModelMapping = {};
 
+    if (config['1B']?.default) {
+      mapping['fast'] = {
+        tier: '1B',
+        model: config['1B'].default
+      };
+    }
+    if (config['4B']?.default) {
+      mapping['edit'] = {
+        tier: '4B',
+        model: config['4B'].default
+      };
+    }
     if (config['7B']?.default) {
       mapping['qa'] = {
         tier: '7B',
         model: config['7B'].default
       };
     }
-    if (config['4B']?.default) {
-      mapping['embedder'] = {
-        tier: '4B',
-        model: config['4B'].default
-      };
-    }
     if (config['15B']?.default) {
-      mapping['planner'] = {
+      mapping['plan'] = {
         tier: '15B',
         model: config['15B'].default
       };

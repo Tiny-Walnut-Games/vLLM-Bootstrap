@@ -1,6 +1,6 @@
 # 🚀 vLLM-Bootstrap: One-Click Installation
 
-**Single-file bootstrap for virgin Windows machines**
+---**Single-file bootstrap for virgin Windows machines**
 
 ## Quick Start
 
@@ -56,13 +56,15 @@ The bootstrap script automatically:
 
 ### 🎛️ Operation Modes
 
-**IDE Mode**
+-**IDE Mode**
+
 - Runs vLLM server only
 - OpenAI-compatible API at `http://localhost:8500/v1`
 - Minimal overhead
 - Perfect for JetBrains Rider, VS Code, etc.
 
-**GUI Chat Mode**
+-**GUI Chat Mode**
+
 - Runs vLLM server + web chat interface
 - Full authentication system
 - Browser-based interaction
@@ -70,7 +72,7 @@ The bootstrap script automatically:
 
 ## Architecture
 
-```
+```flowchart LR
 bootstrap.bat  (Entry point)
      ↓
 [Installs Prerequisites]
@@ -85,14 +87,16 @@ vLLM (Running in tmux)
 ## API Endpoints
 
 ### System Management
-```
+
+```http
 GET  /api/admin/system/status     - Get installation status
 POST /api/admin/wsl/install       - Install WSL + Ubuntu
 POST /api/admin/vllm/bootstrap    - Run initial vLLM setup
 ```
 
 ### Model Management
-```
+
+```http
 GET  /api/admin/models/status     - List all models
 POST /api/admin/models/:role/start - Start model by role
 POST /api/admin/models/:role/stop  - Stop running model
@@ -100,7 +104,8 @@ GET  /api/admin/logs/:model        - Stream model logs
 ```
 
 ### Mode Management
-```
+
+```http
 GET  /api/admin/mode              - Get current mode
 POST /api/admin/mode/toggle       - Toggle IDE/GUI mode
 ```
@@ -123,26 +128,34 @@ Client: `http://localhost:5173`
 ## Troubleshooting
 
 ### Node.js Installation Fails
+
 ```batch
 winget install OpenJS.NodeJS.LTS
 ```
+
 Then re-run `bootstrap.bat`
 
 ### WSL Installation Fails
+
 ```batch
 wsl --install -d Ubuntu
 ```
+
 Restart Windows, then re-run `bootstrap.bat`
 
 ### Port Already in Use
+
 Check running processes:
+
 ```batch
 netstat -ano | findstr :8500
 taskkill /PID <process_id> /F
 ```
 
 ### vLLM Bootstrap Fails
+
 Check WSL environment:
+
 ```batch
 wsl bash -c "python3 --version"
 wsl bash -c "which pip"
@@ -151,25 +164,28 @@ wsl bash -c "which pip"
 ## Development
 
 ### Run Tests
+
 ```bash
 cd server
 npm test
 ```
 
 ### Build Production
+
 ```bash
 cd server && npm run build
 cd client && npm run build
 ```
 
 ### Start Production
+
 ```bash
 cd server && npm start
 ```
 
 ## File Structure
 
-```
+```text
 vLLM-Bootstrap/
 ├── bootstrap.bat           # Single-file installer
 ├── server/                 # Express API

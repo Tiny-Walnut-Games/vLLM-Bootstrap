@@ -7,7 +7,9 @@
 
 ## 🎉 Achievement Summary
 
-Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap, enabling secure remote access to locally-hosted language models with JWT-based authentication, rate limiting, and a modern React interface.
+Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap.
+Enabling secure remote access to locally-hosted language models.
+Supporting JWT-based authentication, rate limiting, and a modern React interface.
 
 ---
 
@@ -16,6 +18,7 @@ Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap
 ### Backend Server (`/server`)
 
 **Authentication System**:
+
 - JWT access tokens (15min default, configurable)
 - JWT refresh tokens (7 days default)
 - bcrypt password hashing (10 rounds)
@@ -23,6 +26,7 @@ Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap
 - Protected API endpoints
 
 **Security Features**:
+
 - Rate limiting per IP/endpoint
 - CORS protection
 - Helmet security headers
@@ -30,17 +34,20 @@ Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap
 - Configurable auth secrets
 
 **API Proxy**:
+
 - OpenAI-compatible interface
 - Forward requests to vLLM backend
 - Streaming support (server-side ready)
 - Error handling and retries
 
 **WebSocket Server**:
+
 - Socket.io integration
 - Token-based authentication
 - Real-time streaming (ready for UI integration)
 
 **Testing**:
+
 - Jest test framework
 - 13/19 tests passing (68%)
 - Authentication flow tests
@@ -50,16 +57,19 @@ Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap
 ### Frontend Client (`/client`)
 
 **Pages**:
+
 - **LoginPage**: Login/register with validation
 - **ChatPage**: Model selection and chat interface
 - **ProtectedRoute**: Authentication guard
 
 **State Management**:
+
 - Zustand stores (authStore, chatStore)
 - Automatic token refresh
 - Persistent auth state
 
 **Features**:
+
 - Model selector dropdown
 - Message send/receive
 - Chat history display
@@ -67,6 +77,7 @@ Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap
 - Loading states
 
 **Styling**:
+
 - Tailwind CSS (dark theme)
 - Responsive design
 - Modern UI components
@@ -94,7 +105,7 @@ Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap
 
 ## Architecture
 
-```
+```none
 ┌─────────────────────────────────────────┐
 │          React Client (Port 5173)        │
 │  ┌─────────────────────────────────────┐│
@@ -129,7 +140,8 @@ Successfully implemented a **complete authenticated web GUI** for vLLM-Bootstrap
 ## Files Created
 
 ### Server (20+ files)
-```
+
+```none
 server/
 ├── src/
 │   ├── app.ts                 # Express app setup
@@ -159,7 +171,8 @@ server/
 ```
 
 ### Client (15+ files)
-```
+
+```none
 client/
 ├── src/
 │   ├── main.tsx              # Entry point
@@ -185,7 +198,8 @@ client/
 ```
 
 ### Documentation (4 files)
-```
+
+```none
 ├── GUI-SETUP.md              # Complete setup guide
 ├── DEPLOYMENT.md             # Production deployment
 ├── GUI-CHANGELOG.md          # Implementation summary
@@ -201,6 +215,7 @@ client/
 ### Server Tests: 13/19 Passing (68%)
 
 **✅ Passing (13)**:
+
 - User registration validation
 - Login with valid/invalid credentials
 - Token refresh flow
@@ -209,11 +224,13 @@ client/
 - Rate limiting (disabled in test mode)
 
 **❌ Failing (6)**:
+
 - Token verification (cross-suite)
 - Proxy with auth (token issue)
 - WebSocket authentication (timeout)
 
-**Root Cause**: Test infrastructure - each test suite creates isolated app instance, causing token incompatibility. Does **not** affect production.
+**Root Cause**: Test infrastructure - each test suite creates isolated app instance, causing token incompatibility.
+Does **not** affect production.
 
 ### Type Safety: 100%
 
@@ -225,6 +242,7 @@ client/
 ## Key Features
 
 ### ✅ Authentication
+
 - Secure registration with password requirements
 - Login with JWT tokens
 - Automatic token refresh
@@ -232,6 +250,7 @@ client/
 - Protected routes
 
 ### ✅ Security
+
 - bcrypt password hashing
 - JWT with expiry
 - Rate limiting
@@ -240,6 +259,7 @@ client/
 - Input validation
 
 ### ✅ Chat Interface
+
 - Model selection dropdown
 - Send/receive messages
 - Conversation history
@@ -248,6 +268,7 @@ client/
 - Clear chat button
 
 ### ✅ Remote Hosting Ready
+
 - Token-based auth for external access
 - Configurable CORS
 - Rate limiting per user
@@ -277,7 +298,7 @@ npm run dev
 ### First Time Setup
 
 1. **Register Account**:
-   - Visit http://localhost:5173
+   - Visit <http://localhost:5173>
    - Click "Register"
    - Username: min 3 chars
    - Password: min 8 chars, must have upper, lower, number
@@ -314,6 +335,7 @@ cd client && npm run build
 Perfect for: Your use case - friend hosts, you connect
 
 **On GPU Machine**:
+
 ```bash
 cd server
 npm run build
@@ -323,6 +345,7 @@ sudo ufw allow from <your-ip> to any port 3000
 ```
 
 **On Your Machine**:
+
 ```bash
 # Update client API baseURL to friend's IP
 cd client && npm run build
@@ -399,13 +422,13 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete guide.
 2. **Fix Test Suite**: Resolve token persistence issues
 3. **Add Logging**: Comprehensive audit trail
 
-### Short Term
+   ### Short Term
 
 4. **Persistent Storage**: Database migration
 5. **WebSocket UI**: Integrate streaming in client
 6. **Chat History**: Save conversations
 
-### Long Term
+   ### Long Term
 
 7. **Admin Panel**: User management UI
 8. **Usage Analytics**: Track model usage
@@ -432,7 +455,8 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete guide.
 
 ## Impact
 
-This milestone transforms vLLM-Bootstrap from a **CLI testing tool** into a **production-ready web application** suitable for:
+This milestone transforms vLLM-Bootstrap from a **CLI testing tool**
+into a **production-ready web application** suitable for:
 
 ✅ Personal LLM hosting with GPU-powered friends  
 ✅ Small team collaboration  

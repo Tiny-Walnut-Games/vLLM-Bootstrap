@@ -5,6 +5,7 @@
 **Two complementary bootstrap systems have been implemented:**
 
 ### 1. **`bootstrap.bat`** (Windows Entry Point)
+
 - Runs on Windows Command Prompt
 - **Checks Windows prerequisites:**
   - Node.js installation (installs via winget if needed)
@@ -13,6 +14,7 @@
 - All Python, PyTorch, vLLM, and Node.js servers run **within WSL**, not Windows
 
 ### 2. **`bootstrap.sh`** (Complete Setup in WSL)
+
 - Runs entirely within WSL/Linux environment
 - **Performs all tasks from `initial-bootstrap.sh`:**
   - System package installation
@@ -35,7 +37,7 @@
 
 ## Architecture
 
-```
+```flowchart
 Windows                          WSL/Linux
 ─────────────────────────────────────────────────────────────
 User runs: bootstrap.bat
@@ -72,19 +74,22 @@ wsl bash bootstrap.sh ────────→ bootstrap.sh executes in WSL
 
 ## Usage
 
-### On Windows:
+### On Windows
+
 ```batch
 bootstrap.bat
 ```
 
 This will:
+
 1. Install/check Node.js
 2. Install/check WSL
 3. Launch `bootstrap.sh` inside WSL
 4. All setup happens in Linux environment
 5. GUI opens automatically in browser
 
-### On Linux/WSL (standalone):
+### On Linux/WSL (standalone)
+
 ```bash
 ./bootstrap.sh
 ```
@@ -94,17 +99,22 @@ Same behavior, runs entirely in Linux.
 ## Configuration Files Created
 
 ### `daily-bootstrap.sh`
+
 Launches a model with role-based sizing:
+
 ```bash
 ./daily-bootstrap.sh {fast|edit|qa|plan}
 ```
+
 - `fast` → 1B model (8100-8299)
 - `edit` → 4B model (8300-8499)
 - `qa` → 7B model (8500-8699)
 - `plan` → 15B model (8700-8899)
 
 ### `models.conf`
+
 Model definitions for each tier (editable):
+
 ```ini
 [1B]
 default = meta-llama/Llama-3.2-1B
@@ -113,7 +123,9 @@ alt2 = HuggingFaceTB/SmolLM2-1.7B-Instruct
 ```
 
 ### `ports.conf`
+
 Port range allocations (editable):
+
 ```ini
 [ranges]
 1B = 8100-8299
@@ -123,26 +135,33 @@ Port range allocations (editable):
 ```
 
 ### `chat-templates.conf`
+
 Maps model IDs to vLLM chat templates (editable):
+
 ```ini
 meta-llama/Llama-3.2-1B = llama3
 microsoft/phi-3.5-mini-instruct = phi3
 ```
 
 ### `test-connection.sh`
+
 Validates a running model:
+
 ```bash
 ./test-connection.sh 8500
 ```
+
 Tests: health, models list, chat completion.
 
 ## Dependencies
 
 ### Windows Requirements
+
 - Node.js (auto-installed if missing)
 - WSL 2 (auto-installed if missing)
 
 ### WSL Requirements (installed by `bootstrap.sh`)
+
 - Python 3
 - PyTorch (GPU-aware)
 - vLLM
@@ -160,6 +179,7 @@ tmux capture-pane -t vllm-bootstrap-server -p
 ```
 
 To stop:
+
 ```bash
 tmux kill-session -t vllm-bootstrap-server
 ```
@@ -177,6 +197,7 @@ tmux kill-session -t vllm-bootstrap-server
 ## Next Steps (via GUI)
 
 Users configure:
+
 - Model selection per tier
 - Port ranges
 - GPU memory utilization
@@ -192,6 +213,7 @@ Users configure:
 ## Testing
 
 After bootstrap completes:
+
 ```bash
 # Validate configuration
 ./validate-config.sh

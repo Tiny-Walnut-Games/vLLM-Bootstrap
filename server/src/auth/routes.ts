@@ -5,7 +5,7 @@ import { authenticateToken, AuthRequest } from '../middleware/auth';
 import { createRateLimiter } from '../middleware/rateLimit';
 
 const router = Router();
-const getAuthLimiter = () => createRateLimiter(900000, 5);
+const getAuthLimiter = () => createRateLimiter(15 * 60 * 1000, 10);
 
 const registerSchema = z.object({
   username: z.string().min(3).max(50),
