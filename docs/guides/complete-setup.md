@@ -118,6 +118,43 @@ Extract/copy all scripts to `~/.config/llm-doctrine`:
 - `test-connection.sh`
 - `README.txt`
 
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Destination directory
+DEST="$HOME/.config/llm-doctrine"
+
+# Ensure destination exists
+mkdir -p "$DEST"
+
+# Source directory (adjust if your scripts live elsewhere)
+SRC="$E:/Tiny_Walnut_Games/vLLM-Bootstrap"
+
+# Files to copy
+FILES=(
+  "initial-bootstrap.sh"
+  "daily-bootstrap.sh"
+  "models.conf"
+  "ports.conf"
+  "chat-templates.conf"
+  "test-connection.sh"
+  "README.txt"
+)
+
+# Copy each file
+for f in "${FILES[@]}"; do
+  if [[ -f "$SRC/$f" ]]; then
+    cp "$SRC/$f" "$DEST/"
+    echo "Copied $f → $DEST/"
+  else
+    echo "Warning: $f not found in $SRC"
+  fi
+done
+
+echo "All requested files processed."
+```
+
 ### Step 4: Make Scripts Executable
 
 ```bash

@@ -1,6 +1,7 @@
 # 🎯 vLLM-Doctrine Milestones
 
-This document provides a quick reference for project milestones. For the full roadmap with detailed goals and timelines, see [ROADMAP.md](ROADMAP.md).
+This document provides a quick reference for project milestones.
+For the full roadmap with detailed goals and timelines, see [ROADMAP.md](ROADMAP.md).
 
 ---
 
@@ -8,17 +9,19 @@ This document provides a quick reference for project milestones. For the full ro
 
 To track progress effectively, create these milestones in your GitHub repository:
 
-**Settings → Issues → Milestones → New Milestone**
+-**Settings → Issues → Milestones → New Milestone**
 
 ---
 
 ## Milestone Definitions
 
 ### v0.1.0-alpha (Current)
+
 **Status:** ✅ Released  
 **Focus:** Initial release with core functionality
 
 **Key Deliverables:**
+
 - Core E2E test suite
 - Cross-platform deployment scripts
 - Basic documentation
@@ -27,11 +30,13 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v0.2.0-alpha
+
 **Status:** 🚧 In Progress  
 **Target:** Q2 2025  
 **Focus:** Documentation & Stability
 
 **Key Deliverables:**
+
 - Complete user guides
 - Complete reference documentation
 - Troubleshooting guides
@@ -43,11 +48,13 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v0.3.0-beta
+
 **Status:** 📋 Planned  
 **Target:** Q3 2025  
 **Focus:** Multi-Model Support
 
 **Key Deliverables:**
+
 - Multi-model test suite
 - Model-specific configurations
 - Performance benchmarking
@@ -59,11 +66,13 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v0.4.0-beta
+
 **Status:** 📋 Planned  
 **Target:** Q4 2025  
 **Focus:** Advanced Features
 
 **Key Deliverables:**
+
 - Multi-GPU support
 - Quantization helpers
 - Advanced Rider integration
@@ -75,11 +84,13 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v0.5.0-rc
+
 **Status:** 📋 Planned  
 **Target:** Q1 2026  
 **Focus:** Production Readiness
 
 **Key Deliverables:**
+
 - Security audit
 - Production deployment guide
 - Monitoring and alerting
@@ -91,11 +102,13 @@ To track progress effectively, create these milestones in your GitHub repository
 ---
 
 ### v1.0.0
+
 **Status:** 🎯 Goal  
 **Target:** When Ready  
 **Focus:** General Availability
 
 **Key Deliverables:**
+
 - Stable API
 - Comprehensive documentation
 - Active community support
@@ -108,7 +121,7 @@ To track progress effectively, create these milestones in your GitHub repository
 
 ## How to Use Milestones
 
-### For Maintainers:
+### For Maintainers
 
 1. **Create milestones in GitHub** using the definitions above
 2. **Assign issues to milestones** as they're created or triaged
@@ -116,7 +129,7 @@ To track progress effectively, create these milestones in your GitHub repository
 4. **Update milestone descriptions** with links to key issues
 5. **Close milestones** when all exit criteria are met
 
-### For Contributors:
+### For Contributors
 
 1. **Check current milestone** to see what's being worked on
 2. **Filter issues by milestone** to find relevant work
