@@ -48,13 +48,13 @@ export default defineConfig({
   globalSetup: require.resolve('./tests/setup/global-setup.ts'),
   globalTeardown: require.resolve('./tests/setup/global-teardown.ts'),
 
-  /* Development server configuration */
-  webServer: {
-    command: 'echo "vLLM models should be started manually before running tests"',
-    port: 8500,
-    reuseExistingServer: true,
-    timeout: 5000,
-  },
+  /* Development server configuration - disabled for bootstrap testing */
+  // webServer: {
+  //   command: 'echo "vLLM models should be started manually before running tests"',
+  //   port: 8500,
+  //   reuseExistingServer: true,
+  //   timeout: 5000,
+  // },
 
   /* Test timeout */
   timeout: 120000, // 2 minutes per test (models can be slow)

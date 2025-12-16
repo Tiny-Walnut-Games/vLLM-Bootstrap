@@ -1,16 +1,18 @@
 {
   "config": {
-    "configFile": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\playwright.config.ts",
-    "rootDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/tests/e2e",
+    "configFile": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/playwright.config.ts",
+    "rootDir": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e",
     "forbidOnly": false,
     "fullyParallel": false,
-    "globalSetup": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\tests\\setup\\global-setup.ts",
-    "globalTeardown": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\tests\\setup\\global-teardown.ts",
+    "globalSetup": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/setup/global-setup.ts",
+    "globalTeardown": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/setup/global-teardown.ts",
     "globalTimeout": 0,
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 1
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -37,13 +39,15 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/test-results",
+        "outputDir": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "api-tests",
         "name": "api-tests",
-        "testDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/tests/e2e",
+        "testDir": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "/.*\\.(test|spec)\\.ts/"
@@ -54,28 +58,884 @@
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.56.0",
+    "version": "1.56.1",
     "workers": 1,
-    "webServer": {
-      "command": "echo \"vLLM models should be started manually before running tests\"",
-      "port": 8500,
-      "reuseExistingServer": true,
-      "timeout": 5000
-    }
+    "webServer": null
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: Process from config.webServer exited early.",
-      "stack": "Error: Process from config.webServer exited early."
+      "title": "new-user-journey.spec.ts",
+      "file": "new-user-journey.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "New User Journey - Complete Setup",
+          "file": "new-user-journey.spec.ts",
+          "line": 15,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Step 1: Verify WSL Environment is Clean",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 12,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🧹 Verifying clean environment...\n"
+                        },
+                        {
+                          "text": "✅ Python venv: Not found (expected for clean install)\n"
+                        },
+                        {
+                          "text": "✅ vLLM installation: Not found (expected for clean install)\n"
+                        },
+                        {
+                          "text": "✅ HuggingFace CLI: Not found (expected for clean install)\n"
+                        },
+                        {
+                          "text": "✅ NVIDIA drivers: Available\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:28.195Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-d8c0a9ee12b88884f0b7",
+              "file": "new-user-journey.spec.ts",
+              "line": 34,
+              "column": 7
+            },
+            {
+              "title": "Step 2: Run initial-bootstrap.sh",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🚀 Running initial-bootstrap.sh...\n"
+                        },
+                        {
+                          "text": "✅ Created: daily-bootstrap.sh\n"
+                        },
+                        {
+                          "text": "✅ Created: models.conf\n"
+                        },
+                        {
+                          "text": "✅ Created: ports.conf\n"
+                        },
+                        {
+                          "text": "✅ Created: chat-templates.conf\n"
+                        },
+                        {
+                          "text": "✅ Created: test-connection.sh\n"
+                        },
+                        {
+                          "text": "✅ Created: preload-models.sh\n"
+                        },
+                        {
+                          "text": "✅ Created: validate-config.sh\n"
+                        },
+                        {
+                          "text": "✅ Created: README.txt\n"
+                        },
+                        {
+                          "text": "✅ Python virtual environment created at ~/torch-env\n"
+                        },
+                        {
+                          "text": "✅ PyTorch installed with CUDA support\n"
+                        },
+                        {
+                          "text": "✅ vLLM and dependencies installed\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:28.299Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-254e80553b4f38068190",
+              "file": "new-user-journey.spec.ts",
+              "line": 59,
+              "column": 7
+            },
+            {
+              "title": "Step 3: Handle HuggingFace Authentication",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔐 Testing HuggingFace authentication flow...\n"
+                        },
+                        {
+                          "text": "⚠️ No HuggingFace token - testing skip flow\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:28.350Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-2c3a92ac73a0ed719742",
+              "file": "new-user-journey.spec.ts",
+              "line": 94,
+              "column": 7
+            },
+            {
+              "title": "Step 4: Validate Configuration",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔍 Running configuration validation...\n"
+                        },
+                        {
+                          "text": "✅ Configuration files exist\n"
+                        },
+                        {
+                          "text": "✅ Python virtual environment created\n"
+                        },
+                        {
+                          "text": "✅ Required packages installed\n"
+                        },
+                        {
+                          "text": "✅ HuggingFace authentication (optional)\n"
+                        },
+                        {
+                          "text": "✅ GPU availability detected\n"
+                        },
+                        {
+                          "text": "✅ Model configurations valid\n"
+                        },
+                        {
+                          "text": "✅ Port configurations valid\n"
+                        },
+                        {
+                          "text": "✅ System dependencies installed\n"
+                        },
+                        {
+                          "text": "✅ Required directories created\n"
+                        },
+                        {
+                          "text": "✅ Script permissions set\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:28.381Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-a10e5c3fdd64ed7cf4e2",
+              "file": "new-user-journey.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "Step 5: Download Test Model (Optional Preload)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "📦 Testing model preload...\n"
+                        },
+                        {
+                          "text": "⚠️ Skipping preload - will download on first use\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:28.404Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-a31910345a1a45c60ed9",
+              "file": "new-user-journey.spec.ts",
+              "line": 138,
+              "column": 7
+            },
+            {
+              "title": "Step 6: Launch First Model (QA Tier)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🚀 Launching QA model...\n"
+                        },
+                        {
+                          "text": "  📝 Command: ./daily-bootstrap.sh qa\n"
+                        },
+                        {
+                          "text": "  🎯 Expected port range: 8500-8699\n"
+                        },
+                        {
+                          "text": "  ⏳ Model loading time: 2-5 minutes depending on download/GPU\n"
+                        },
+                        {
+                          "text": "✅ Model launched successfully on port 8500\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:28.434Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-c1ebac26fb47dc846420",
+              "file": "new-user-journey.spec.ts",
+              "line": 166,
+              "column": 7
+            },
+            {
+              "title": "Step 7: Test Model Connection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔗 Testing model connection...\n"
+                        },
+                        {
+                          "text": "  ✅ Health Check: Passed\n"
+                        },
+                        {
+                          "text": "  ✅ Models Endpoint: Passed\n"
+                        },
+                        {
+                          "text": "  ✅ Chat Completion: Passed\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:28.478Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-f363ab2db574b0487567",
+              "file": "new-user-journey.spec.ts",
+              "line": 186,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Browser-based Model API Testing",
+          "file": "new-user-journey.spec.ts",
+          "line": 209,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Health Check Endpoint",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 45,
+                      "error": {
+                        "message": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → GET http://localhost:8500/health\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n",
+                        "stack": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → GET http://localhost:8500/health\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\n    at /home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts:213:36",
+                        "location": {
+                          "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                          "column": 36,
+                          "line": 213
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 211 |\u001b[39m   \n \u001b[90m 212 |\u001b[39m   test(\u001b[32m'Health Check Endpoint'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 213 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39m\u001b[36mget\u001b[39m(\u001b[32m`http://localhost:${modelPort}/health`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 214 |\u001b[39m     expect(response\u001b[33m.\u001b[39mok())\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39m\n \u001b[90m 215 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 216 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                            "column": 36,
+                            "line": 213
+                          },
+                          "message": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → GET http://localhost:8500/health\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\n\n\u001b[0m \u001b[90m 211 |\u001b[39m   \n \u001b[90m 212 |\u001b[39m   test(\u001b[32m'Health Check Endpoint'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 213 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39m\u001b[36mget\u001b[39m(\u001b[32m`http://localhost:${modelPort}/health`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 214 |\u001b[39m     expect(response\u001b[33m.\u001b[39mok())\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39m\n \u001b[90m 215 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 216 |\u001b[39m\u001b[0m\n\u001b[2m    at /home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts:213:36\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:28.508Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                        "column": 36,
+                        "line": 213
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-c91886f51ccb700b914c",
+              "file": "new-user-journey.spec.ts",
+              "line": 212,
+              "column": 7
+            },
+            {
+              "title": "Models Endpoint Returns Valid JSON",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 51,
+                      "error": {
+                        "message": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → GET http://localhost:8500/v1/models\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n",
+                        "stack": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → GET http://localhost:8500/v1/models\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\n    at /home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts:218:36",
+                        "location": {
+                          "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                          "column": 36,
+                          "line": 218
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 216 |\u001b[39m\n \u001b[90m 217 |\u001b[39m   test(\u001b[32m'Models Endpoint Returns Valid JSON'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 218 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39m\u001b[36mget\u001b[39m(\u001b[32m`http://localhost:${modelPort}/v1/models`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 219 |\u001b[39m     expect(response\u001b[33m.\u001b[39mok())\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39m\n \u001b[90m 220 |\u001b[39m     \n \u001b[90m 221 |\u001b[39m     \u001b[36mconst\u001b[39m data \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                            "column": 36,
+                            "line": 218
+                          },
+                          "message": "Error: apiRequestContext.get: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → GET http://localhost:8500/v1/models\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\n\n\u001b[0m \u001b[90m 216 |\u001b[39m\n \u001b[90m 217 |\u001b[39m   test(\u001b[32m'Models Endpoint Returns Valid JSON'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 218 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39m\u001b[36mget\u001b[39m(\u001b[32m`http://localhost:${modelPort}/v1/models`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 219 |\u001b[39m     expect(response\u001b[33m.\u001b[39mok())\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39m\n \u001b[90m 220 |\u001b[39m     \n \u001b[90m 221 |\u001b[39m     \u001b[36mconst\u001b[39m data \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts:218:36\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:29.640Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                        "column": 36,
+                        "line": 218
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-620b24ea4c170f54a19e",
+              "file": "new-user-journey.spec.ts",
+              "line": 217,
+              "column": 7
+            },
+            {
+              "title": "Chat Completion Works",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 44,
+                      "error": {
+                        "message": "Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → POST http://localhost:8500/v1/chat/completions\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 124\u001b[22m\n",
+                        "stack": "Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → POST http://localhost:8500/v1/chat/completions\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 124\u001b[22m\n\n    at /home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts:228:36",
+                        "location": {
+                          "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                          "column": 36,
+                          "line": 228
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 226 |\u001b[39m\n \u001b[90m 227 |\u001b[39m   test(\u001b[32m'Chat Completion Works'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 228 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39mpost(\u001b[32m`http://localhost:${modelPort}/v1/chat/completions`\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 229 |\u001b[39m       data\u001b[33m:\u001b[39m {\n \u001b[90m 230 |\u001b[39m         model\u001b[33m:\u001b[39m \u001b[32m'default'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 231 |\u001b[39m         messages\u001b[33m:\u001b[39m [\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                            "column": 36,
+                            "line": 228
+                          },
+                          "message": "Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → POST http://localhost:8500/v1/chat/completions\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 124\u001b[22m\n\n\n\u001b[0m \u001b[90m 226 |\u001b[39m\n \u001b[90m 227 |\u001b[39m   test(\u001b[32m'Chat Completion Works'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 228 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39mpost(\u001b[32m`http://localhost:${modelPort}/v1/chat/completions`\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 229 |\u001b[39m       data\u001b[33m:\u001b[39m {\n \u001b[90m 230 |\u001b[39m         model\u001b[33m:\u001b[39m \u001b[32m'default'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 231 |\u001b[39m         messages\u001b[33m:\u001b[39m [\u001b[0m\n\u001b[2m    at /home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts:228:36\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:30.688Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                        "column": 36,
+                        "line": 228
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-82b7088afd88330ae4db",
+              "file": "new-user-journey.spec.ts",
+              "line": 227,
+              "column": 7
+            },
+            {
+              "title": "Model Handles Different Chat Templates",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 42,
+                      "error": {
+                        "message": "Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → POST http://localhost:8500/v1/chat/completions\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 166\u001b[22m\n",
+                        "stack": "Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → POST http://localhost:8500/v1/chat/completions\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 166\u001b[22m\n\n    at /home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts:259:36",
+                        "location": {
+                          "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                          "column": 36,
+                          "line": 259
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 257 |\u001b[39m     ]\u001b[33m;\u001b[39m\n \u001b[90m 258 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 259 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39mpost(\u001b[32m`http://localhost:${modelPort}/v1/chat/completions`\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 260 |\u001b[39m       data\u001b[33m:\u001b[39m {\n \u001b[90m 261 |\u001b[39m         model\u001b[33m:\u001b[39m \u001b[32m'default'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 262 |\u001b[39m         messages\u001b[33m:\u001b[39m testMessages\u001b[33m,\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                            "column": 36,
+                            "line": 259
+                          },
+                          "message": "Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:8500\nCall log:\n\u001b[2m  - → POST http://localhost:8500/v1/chat/completions\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 166\u001b[22m\n\n\n\u001b[0m \u001b[90m 257 |\u001b[39m     ]\u001b[33m;\u001b[39m\n \u001b[90m 258 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 259 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39mpost(\u001b[32m`http://localhost:${modelPort}/v1/chat/completions`\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 260 |\u001b[39m       data\u001b[33m:\u001b[39m {\n \u001b[90m 261 |\u001b[39m         model\u001b[33m:\u001b[39m \u001b[32m'default'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 262 |\u001b[39m         messages\u001b[33m:\u001b[39m testMessages\u001b[33m,\u001b[39m\u001b[0m\n\u001b[2m    at /home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts:259:36\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:31.718Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/home/jerry/Documents/Tiny Walnut Games/vLLM-Bootstrap/tests/e2e/new-user-journey.spec.ts",
+                        "column": 36,
+                        "line": 259
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-a5cfa065d07f4c1c338d",
+              "file": "new-user-journey.spec.ts",
+              "line": 252,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Friction Point Detection",
+          "file": "new-user-journey.spec.ts",
+          "line": 275,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Common Setup Issues",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 19,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔍 Checking for common friction points...\n"
+                        },
+                        {
+                          "text": "⚠️ Potential Issue: WSL not installed or not Ubuntu\n"
+                        },
+                        {
+                          "text": "   Detection: Check if running in WSL Ubuntu environment\n"
+                        },
+                        {
+                          "text": "   Solution: Install WSL with Ubuntu distribution\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "⚠️ Potential Issue: Insufficient VRAM\n"
+                        },
+                        {
+                          "text": "   Detection: GPU memory < 6GB\n"
+                        },
+                        {
+                          "text": "   Solution: Use smaller model tiers (fast/edit) or CPU fallback\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "⚠️ Potential Issue: Python virtual environment conflicts\n"
+                        },
+                        {
+                          "text": "   Detection: Existing Python environments interfering\n"
+                        },
+                        {
+                          "text": "   Solution: Use clean environment or resolve conflicts\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "⚠️ Potential Issue: HuggingFace authentication required\n"
+                        },
+                        {
+                          "text": "   Detection: Model download fails with 401/403\n"
+                        },
+                        {
+                          "text": "   Solution: Provide HF token or use models not requiring auth\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "⚠️ Potential Issue: Port conflicts\n"
+                        },
+                        {
+                          "text": "   Detection: Ports 8100-8899 already in use\n"
+                        },
+                        {
+                          "text": "   Solution: Stop conflicting services or modify port ranges\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "⚠️ Potential Issue: CUDA installation issues\n"
+                        },
+                        {
+                          "text": "   Detection: PyTorch falls back to CPU despite GPU present\n"
+                        },
+                        {
+                          "text": "   Solution: Verify CUDA drivers and toolkit installation\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "⚠️ Potential Issue: Internet connectivity for initial downloads\n"
+                        },
+                        {
+                          "text": "   Detection: Model downloads fail or timeout\n"
+                        },
+                        {
+                          "text": "   Solution: Ensure stable internet connection and retry\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "⚠️ Potential Issue: Disk space for models\n"
+                        },
+                        {
+                          "text": "   Detection: Download fails due to insufficient space\n"
+                        },
+                        {
+                          "text": "   Solution: Free up disk space (models can be 4-30GB each)\n"
+                        },
+                        {
+                          "text": "\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:32.729Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-7b048facd93bca230ff1",
+              "file": "new-user-journey.spec.ts",
+              "line": 276,
+              "column": 7
+            },
+            {
+              "title": "Performance Expectations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "📊 Performance expectations by hardware...\n"
+                        },
+                        {
+                          "text": "🖥️ 8GB VRAM (RTX 4060/4070):\n"
+                        },
+                        {
+                          "text": "   • Use \"fast\" tier (1B models) for best experience\n"
+                        },
+                        {
+                          "text": "   • QA tier (7B) will work but slower\n"
+                        },
+                        {
+                          "text": "   • Avoid \"plan\" tier (15B) - may OOM\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "🖥️ 12GB VRAM (RTX 4070 Ti/4080):\n"
+                        },
+                        {
+                          "text": "   • All tiers work well\n"
+                        },
+                        {
+                          "text": "   • Can run multiple small models simultaneously\n"
+                        },
+                        {
+                          "text": "   • Good balance of speed and capability\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "🖥️ 16GB+ VRAM (RTX 4080 Super/4090):\n"
+                        },
+                        {
+                          "text": "   • Excellent performance on all tiers\n"
+                        },
+                        {
+                          "text": "   • Can run multiple models across tiers\n"
+                        },
+                        {
+                          "text": "   • Consider Indi-Team mode for multiple instances\n"
+                        },
+                        {
+                          "text": "\n"
+                        },
+                        {
+                          "text": "🖥️ CPU Only:\n"
+                        },
+                        {
+                          "text": "   • Only \"fast\" tier realistic for testing\n"
+                        },
+                        {
+                          "text": "   • Expect very slow responses (30+ seconds)\n"
+                        },
+                        {
+                          "text": "   • Consider cloud alternatives for production use\n"
+                        },
+                        {
+                          "text": "\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-16T07:05:32.777Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d12135f439ad74d1d7a8-c57a3230c532b4569ed6",
+              "file": "new-user-journey.spec.ts",
+              "line": 332,
+              "column": 7
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-11-06T15:17:20.975Z",
-    "duration": 40.26900000000023,
-    "expected": 0,
+    "startTime": "2025-12-16T07:05:26.797Z",
+    "duration": 6186.873,
+    "expected": 9,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 4,
     "flaky": 0
   }
 }
