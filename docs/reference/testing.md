@@ -256,6 +256,93 @@ A successful test should achieve:
 ✅ **Rider Integration:** Can connect and get responses in IDE  
 ✅ **Performance:** Responses within expected time ranges  
 
+---
+
+## 🏛️ Council Mode Validation
+
+Council mode means running all four tiers simultaneously. The tests below validate readiness
+for and health of a full council deployment.
+
+### Pre-flight Council Check
+
+Before launching all four channels, verify the system meets minimum requirements:
+
+```bash
+# Check GPU VRAM (24GB+ recommended for all four channels)
+nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits
+
+# Verify all four ports are free
+for port in 8100 8300 8500 8700; do
+  nc -z localhost "$port" 2>/dev/null \
+    && echo "⚠️  Port $port in use" \
+    || echo "✅ Port $port free"
+done
+
+# Confirm tmux is available (required for council-launch.sh)
+tmux -V
+```
+
+### Launching and Validating the Council
+
+```bash
+# Launch all four channels (creates tmux session "council")
+./council-launch.sh
+
+# Monitor resource usage while models load
+watch -n 5 ./council-monitor.sh
+
+# After models load, test each channel
+for port in 8100 8300 8500 8700; do
+  echo "--- Testing port $port ---"
+  ./test-connection.sh "$port"
+  echo ""
+done
+```
+
+### Automated Council Validation
+
+Run the Playwright test suite for council mode:
+
+```bash
+npm run test:council
+```
+
+Or run directly:
+
+```bash
+npx playwright test tests/e2e/council-validation.spec.ts
+```
+
+### Expected Council Success Metrics
+
+| Check | Expected Result |
+|-------|----------------|
+| All four channels healthy | `curl http://localhost:{8100,8300,8500,8700}/health` returns `200` |
+| VRAM headroom | At least 4 GB free after all models load |
+| Chat completion on each channel | Each port returns valid OpenAI-format JSON |
+| Log files present | `./logs/council_{fast,edit,qa,plan}_*.log` exist |
+| tmux session active | `tmux has-session -t council` exits `0` |
+
+### Stopping the Council
+
+```bash
+# Kill the tmux council session and all child processes
+tmux kill-session -t council
+
+# Verify no vLLM processes remain
+pgrep -f "vllm.entrypoints" | wc -l   # should print 0
+```
+
+### Council Monitoring Reference
+
+| Tool | Purpose |
+|------|---------|
+| `./council-monitor.sh` | Snapshot of GPU, RAM, and channel health |
+| `watch -n 5 ./council-monitor.sh` | Continuous dashboard |
+| `nvidia-smi` | Raw GPU usage |
+| `tail -f ./logs/council_qa_8500.log` | Live log for a specific channel |
+| `free -h` | System RAM at a glance |
+
 ## 🎉 Next Steps After Testing
 
 Once you've identified and documented issues:
