@@ -206,6 +206,24 @@ else
   fi
 fi
 
+# --- Council awareness: warn if VRAM may be insufficient ---
+if [ -n "$TOTAL_MEM" ]; then
+  USED_MEM=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null | head -n1)
+  FREE_MEM=$((TOTAL_MEM - USED_MEM))
+  case "$TIER" in
+    1B)  MIN_VRAM=2048 ;;
+    4B)  MIN_VRAM=4096 ;;
+    7B)  MIN_VRAM=8192 ;;
+    15B) MIN_VRAM=16384 ;;
+  esac
+  if [ "$FREE_MEM" -lt "$MIN_VRAM" ]; then
+    echo "⚠️  WARNING: Available VRAM (${FREE_MEM}MB) may be insufficient for $MODEL_ROLE tier (~${MIN_VRAM}MB needed)"
+    echo "   Other models may be consuming GPU memory."
+    echo "   💡 For council mode guidance, see: docs/guides/council-mode.md"
+    echo ""
+  fi
+fi
+
 for PORT in $(seq "$START" "$END"); do
   if ! nc -z localhost "$PORT" 2>/dev/null; then
     LOG_FILE="./logs/${MODEL_ROLE}_${PORT}.log"
@@ -814,6 +832,281 @@ EOF
 write_if_missing_or_outdated "./validate-config.sh" "$VALIDATE_CONTENT"
 chmod +x ./validate-config.sh
 
+# --- council-launch.sh ---
+COUNCIL_LAUNCH_CONTENT=$(cat <<'EOF'
+#!/usr/bin/env bash
+# -------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction...
+# THE SOFTWARE IS PROVIDED "AS IS"...
+# -------------------------------------------------------------------
+# doctrine-version: 2025.10.12
+# council-launch.sh — Launch all four channels simultaneously using tmux.
+#
+# Minimum requirements:
+#   VRAM: 24GB+ recommended for all four channels (32GB+ for comfortable operation)
+#   RAM:  32GB+ system RAM recommended
+#   Disk: 50GB+ free space for model cache
+#
+# Usage:
+#   ./council-launch.sh [--dry-run]
+#
+#   --dry-run   Show what would be launched without actually launching
+
+set -e
+source ~/torch-env/bin/activate
+
+DRY_RUN=0
+if [ "${1:-}" = "--dry-run" ]; then
+  DRY_RUN=1
+fi
+
+MODELS_CONF="./models.conf"
+PORTS_CONF="./ports.conf"
+
+echo "🏛️  Council Mode Launcher — Four-Scroll Doctrine"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# --- VRAM check ---
+TOTAL_MEM=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -n1)
+
+if [ -z "$TOTAL_MEM" ]; then
+  echo "⚠️  No NVIDIA GPU detected."
+  echo "   Council mode requires a GPU with 24GB+ VRAM for all four channels."
+  echo "   Proceeding with CPU fallback — expect very limited performance."
+  echo ""
+else
+  echo "✅ GPU detected: ${TOTAL_MEM}MB VRAM total"
+  if [ "$TOTAL_MEM" -lt 20480 ]; then
+    echo "⚠️  WARNING: ${TOTAL_MEM}MB VRAM is below the 20GB minimum for council mode."
+    echo "   Recommended: 24GB+ for all four channels, 32GB+ for comfortable operation."
+    echo "   Consider running only 2-3 channels on this GPU."
+    echo ""
+    read -p "Continue anyway? (y/n): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "Aborted. Launch individual channels with: ./daily-bootstrap.sh {fast|edit|qa|plan}"
+      exit 0
+    fi
+  elif [ "$TOTAL_MEM" -lt 24576 ]; then
+    echo "⚠️  NOTE: ${TOTAL_MEM}MB VRAM may be tight for all four channels."
+    echo "   Council mode will use reduced GPU utilization fractions."
+    echo ""
+  else
+    echo "✅ Sufficient VRAM for council mode."
+    echo ""
+  fi
+fi
+
+# --- Check tmux ---
+if ! command -v tmux &>/dev/null; then
+  echo "❌ tmux is required for council mode."
+  echo "   Install with: sudo apt install tmux"
+  exit 1
+fi
+
+# --- Council GPU utilization fractions ---
+# Reduced values so all four models can share VRAM simultaneously.
+# Total fraction across all models: ~0.75 of GPU VRAM.
+UTIL_1B=0.07
+UTIL_4B=0.12
+UTIL_7B=0.22
+UTIL_15B=0.34
+
+# --- Read model names ---
+MODEL_1B=$(awk -F"=" '/^\[1B\]/{f=1} f && /default/{gsub(/ /,"",$2); print $2; exit}' "$MODELS_CONF")
+MODEL_4B=$(awk -F"=" '/^\[4B\]/{f=1} f && /default/{gsub(/ /,"",$2); print $2; exit}' "$MODELS_CONF")
+MODEL_7B=$(awk -F"=" '/^\[7B\]/{f=1} f && /default/{gsub(/ /,"",$2); print $2; exit}' "$MODELS_CONF")
+MODEL_15B=$(awk -F"=" '/^\[15B\]/{f=1} f && /default/{gsub(/ /,"",$2); print $2; exit}' "$MODELS_CONF")
+
+# --- Read port range starts ---
+PORT_1B=$(awk -F"=" '/1B/{gsub(/ /,"",$2); split($2,a,"-"); print a[1]; exit}' "$PORTS_CONF")
+PORT_4B=$(awk -F"=" '/4B/{gsub(/ /,"",$2); split($2,a,"-"); print a[1]; exit}' "$PORTS_CONF")
+PORT_7B=$(awk -F"=" '/7B/{gsub(/ /,"",$2); split($2,a,"-"); print a[1]; exit}' "$PORTS_CONF")
+PORT_15B=$(awk -F"=" '/15B/{gsub(/ /,"",$2); split($2,a,"-"); print a[1]; exit}' "$PORTS_CONF")
+
+mkdir -p ./logs
+
+echo "📋 Council configuration:"
+printf "   %-6s %-45s  port %s  gpu-util %s\n" "fast"  "$MODEL_1B"  "$PORT_1B"  "$UTIL_1B"
+printf "   %-6s %-45s  port %s  gpu-util %s\n" "edit"  "$MODEL_4B"  "$PORT_4B"  "$UTIL_4B"
+printf "   %-6s %-45s  port %s  gpu-util %s\n" "qa"    "$MODEL_7B"  "$PORT_7B"  "$UTIL_7B"
+printf "   %-6s %-45s  port %s  gpu-util %s\n" "plan"  "$MODEL_15B" "$PORT_15B" "$UTIL_15B"
+echo ""
+
+if [ "$DRY_RUN" -eq 1 ]; then
+  echo "🔍 Dry-run mode — no models were launched."
+  exit 0
+fi
+
+# --- Kill any existing council session ---
+tmux kill-session -t council 2>/dev/null || true
+
+# --- Create new tmux session with four windows ---
+tmux new-session -d -s council -n "fast" \
+  "source ~/torch-env/bin/activate && \
+   python3 -m vllm.entrypoints.openai.api_server \
+     --model '$MODEL_1B' --port $PORT_1B \
+     --gpu-memory-utilization $UTIL_1B \
+     2>&1 | tee ./logs/council_fast_${PORT_1B}.log; read"
+
+tmux new-window -t council -n "edit" \
+  "source ~/torch-env/bin/activate && \
+   python3 -m vllm.entrypoints.openai.api_server \
+     --model '$MODEL_4B' --port $PORT_4B \
+     --gpu-memory-utilization $UTIL_4B \
+     2>&1 | tee ./logs/council_edit_${PORT_4B}.log; read"
+
+tmux new-window -t council -n "qa" \
+  "source ~/torch-env/bin/activate && \
+   python3 -m vllm.entrypoints.openai.api_server \
+     --model '$MODEL_7B' --port $PORT_7B \
+     --gpu-memory-utilization $UTIL_7B \
+     2>&1 | tee ./logs/council_qa_${PORT_7B}.log; read"
+
+tmux new-window -t council -n "plan" \
+  "source ~/torch-env/bin/activate && \
+   python3 -m vllm.entrypoints.openai.api_server \
+     --model '$MODEL_15B' --port $PORT_15B \
+     --gpu-memory-utilization $UTIL_15B \
+     2>&1 | tee ./logs/council_plan_${PORT_15B}.log; read"
+
+echo "🏛️  Council session launched in tmux."
+echo ""
+echo "📺 Attach to session:    tmux attach -t council"
+echo "🔀 Switch between tiers: Ctrl+B then window number (0=fast, 1=edit, 2=qa, 3=plan)"
+echo "🚪 Detach from session:  Ctrl+B then D"
+echo "🛑 Kill the council:     tmux kill-session -t council"
+echo ""
+echo "📊 Monitor resources:    ./council-monitor.sh"
+echo ""
+echo "⏳ Allow 2-5 minutes for all models to load before testing."
+echo ""
+echo "🔍 Test all channels:"
+echo "   for port in $PORT_1B $PORT_4B $PORT_7B $PORT_15B; do"
+echo "     ./test-connection.sh \$port"
+echo "   done"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+EOF
+)
+write_if_missing_or_outdated "./council-launch.sh" "$COUNCIL_LAUNCH_CONTENT"
+chmod +x ./council-launch.sh
+
+# --- council-monitor.sh ---
+COUNCIL_MONITOR_CONTENT=$(cat <<'EOF'
+#!/usr/bin/env bash
+# -------------------------------------------------------------------
+# MIT License
+#
+# Copyright (c) 2025 Jeremiah Michael Cole Meyer (@jmeyer1980)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction...
+# THE SOFTWARE IS PROVIDED "AS IS"...
+# -------------------------------------------------------------------
+# doctrine-version: 2025.10.12
+# council-monitor.sh — Display resource usage for all running council channels.
+#
+# Usage:
+#   ./council-monitor.sh              # Single snapshot
+#   watch -n 5 ./council-monitor.sh   # Refresh every 5 seconds
+
+echo "📊 Council Mode Resource Monitor"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# --- GPU status ---
+if command -v nvidia-smi &>/dev/null && nvidia-smi &>/dev/null; then
+  echo "🖥️  GPU Status:"
+  nvidia-smi --query-gpu=name,memory.total,memory.used,memory.free,utilization.gpu \
+    --format=csv,noheader \
+    | awk -F', ' '{
+        printf "   GPU:       %s\n", $1
+        printf "   VRAM Total: %s\n", $2
+        printf "   VRAM Used:  %s\n", $3
+        printf "   VRAM Free:  %s\n", $4
+        printf "   GPU Util:   %s\n", $5
+      }'
+  echo ""
+else
+  echo "⚠️  No NVIDIA GPU detected — running in CPU mode."
+  echo ""
+fi
+
+# --- System RAM ---
+echo "💾 System Memory:"
+free -h | awk 'NR==2 {printf "   Total: %s  |  Used: %s  |  Free: %s\n", $2, $3, $4}'
+echo ""
+
+# --- Channel health ---
+echo "🔌 Channel Status:"
+CHANNELS_UP=0
+declare -A TIER_LABELS
+TIER_LABELS[8100]="fast  (1B)"
+TIER_LABELS[8300]="edit  (4B)"
+TIER_LABELS[8500]="qa    (7B)"
+TIER_LABELS[8700]="plan  (15B)"
+for PORT in 8100 8300 8500 8700; do
+  LABEL="${TIER_LABELS[$PORT]}"
+  HEALTH=$(curl -s -m 2 "http://localhost:$PORT/health" 2>/dev/null)
+  if echo "$HEALTH" | grep -q "." 2>/dev/null; then
+    echo "   ✅ $LABEL  →  http://localhost:$PORT/v1"
+    CHANNELS_UP=$((CHANNELS_UP + 1))
+  else
+    echo "   ⭕ $LABEL  →  not responding on port $PORT"
+  fi
+done
+echo ""
+echo "   Active channels: $CHANNELS_UP / 4"
+echo ""
+
+# --- vLLM processes ---
+echo "🔄 vLLM Processes:"
+PROC_COUNT=$(pgrep -f "vllm.entrypoints" 2>/dev/null | wc -l)
+echo "   Running vLLM servers: $PROC_COUNT"
+if [ "$PROC_COUNT" -gt 0 ]; then
+  ps -eo pid,pcpu,pmem,comm,args 2>/dev/null \
+    | grep "vllm.entrypoints" \
+    | grep -v grep \
+    | awk '{printf "   PID %-7s  CPU: %4s%%  MEM: %4s%%\n", $1, $2, $3}'
+fi
+echo ""
+
+# --- Disk cache ---
+HF_CACHE="${HF_HOME:-$HOME/.cache/huggingface}"
+if [ -d "$HF_CACHE" ]; then
+  CACHE_SIZE=$(du -sh "$HF_CACHE" 2>/dev/null | cut -f1)
+  echo "📁 HuggingFace model cache: $CACHE_SIZE  ($HF_CACHE)"
+else
+  echo "📁 HuggingFace model cache: not found at $HF_CACHE"
+fi
+echo ""
+
+# --- Council tmux session ---
+if command -v tmux &>/dev/null && tmux has-session -t council 2>/dev/null; then
+  echo "🪟 tmux council session: active"
+  tmux list-windows -t council 2>/dev/null | awk '{printf "   Window %s\n", $0}'
+else
+  echo "🪟 tmux council session: not running"
+  echo "   💡 Launch council with: ./council-launch.sh"
+fi
+echo ""
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "💡 Continuous monitoring: watch -n 5 ./council-monitor.sh"
+EOF
+)
+write_if_missing_or_outdated "./council-monitor.sh" "$COUNCIL_MONITOR_CONTENT"
+chmod +x ./council-monitor.sh
+
 echo ""
 echo "🎉 Ritual complete. All scrolls verified or created."
 echo ""
@@ -843,5 +1136,10 @@ echo "   - Add provider: OpenAI Compatible"
 echo "   - URL: http://localhost:8500/v1"
 echo "   - Test connection and start chatting!"
 echo ""
+echo "6️⃣ (Optional) Launch all four channels simultaneously (council mode):"
+echo "   ./council-launch.sh"
+echo "   ./council-monitor.sh   # Check resource usage"
+echo ""
 echo "📖 For complete guide, see: docs/guides/complete-setup.md"
+echo "🏛️  For council mode guide, see: docs/guides/council-mode.md"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

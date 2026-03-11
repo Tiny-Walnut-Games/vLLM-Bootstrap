@@ -1,16 +1,39 @@
 {
   "config": {
-    "configFile": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\playwright.config.ts",
-    "rootDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/tests/e2e",
-    "forbidOnly": false,
+    "configFile": "/home/runner/work/vLLM-Bootstrap/vLLM-Bootstrap/playwright.config.ts",
+    "rootDir": "/home/runner/work/vLLM-Bootstrap/vLLM-Bootstrap/tests/e2e",
+    "forbidOnly": true,
     "fullyParallel": false,
-    "globalSetup": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\tests\\setup\\global-setup.ts",
-    "globalTeardown": "e:\\Tiny_Walnut_Games\\vLLM-Bootstrap\\tests\\setup\\global-teardown.ts",
+    "globalSetup": "/home/runner/work/vLLM-Bootstrap/vLLM-Bootstrap/tests/setup/global-setup.ts",
+    "globalTeardown": "/home/runner/work/vLLM-Bootstrap/vLLM-Bootstrap/tests/setup/global-teardown.ts",
     "globalTimeout": 0,
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/commit/d1797419422df485f466f4d70651f06cb2c50f25",
+        "commitHash": "d1797419422df485f466f4d70651f06cb2c50f25",
+        "buildHref": "https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/actions/runs/22965258143"
+      },
+      "gitCommit": {
+        "shortHash": "d179741",
+        "hash": "d1797419422df485f466f4d70651f06cb2c50f25",
+        "subject": "Initial plan",
+        "body": "Initial plan\n",
+        "author": {
+          "name": "copilot-swe-agent[bot]",
+          "email": "198982749+Copilot@users.noreply.github.com",
+          "time": 1773249462000
+        },
+        "committer": {
+          "name": "copilot-swe-agent[bot]",
+          "email": "198982749+Copilot@users.noreply.github.com",
+          "time": 1773249462000
+        },
+        "branch": "copilot/determine-minimum-requirements"
+      }
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -37,13 +60,36 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/test-results",
+        "outputDir": "/home/runner/work/vLLM-Bootstrap/vLLM-Bootstrap/test-results",
         "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
+        "retries": 2,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/commit/d1797419422df485f466f4d70651f06cb2c50f25",
+            "commitHash": "d1797419422df485f466f4d70651f06cb2c50f25",
+            "buildHref": "https://github.com/Tiny-Walnut-Games/vLLM-Bootstrap/actions/runs/22965258143"
+          },
+          "gitCommit": {
+            "shortHash": "d179741",
+            "hash": "d1797419422df485f466f4d70651f06cb2c50f25",
+            "subject": "Initial plan",
+            "body": "Initial plan\n",
+            "author": {
+              "name": "copilot-swe-agent[bot]",
+              "email": "198982749+Copilot@users.noreply.github.com",
+              "time": 1773249462000
+            },
+            "committer": {
+              "name": "copilot-swe-agent[bot]",
+              "email": "198982749+Copilot@users.noreply.github.com",
+              "time": 1773249462000
+            },
+            "branch": "copilot/determine-minimum-requirements"
+          }
+        },
         "id": "api-tests",
         "name": "api-tests",
-        "testDir": "e:/Tiny_Walnut_Games/vLLM-Bootstrap/tests/e2e",
+        "testDir": "/home/runner/work/vLLM-Bootstrap/vLLM-Bootstrap/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "/.*\\.(test|spec)\\.ts/"
@@ -71,8 +117,8 @@
     }
   ],
   "stats": {
-    "startTime": "2025-11-06T15:17:20.975Z",
-    "duration": 40.26900000000023,
+    "startTime": "2026-03-11T17:29:07.913Z",
+    "duration": 27.476999999999975,
     "expected": 0,
     "skipped": 0,
     "unexpected": 0,
